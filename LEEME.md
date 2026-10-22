@@ -143,10 +143,10 @@ caparazón verde esmeralda, embestida que daña a lo que atropellas, planeo al c
 ### Violent Emotion y Heroic Emotion (solo como Dex)
 El Driver responde a lo que siente quien lo lleva. Se despiertan solas:
 - **Violent Emotion**: al bajar del 30 % de vida o recibir de golpe el 40 % de tu vida en 3 s. 20 s con Fuerza III,
-  Velocidad II y golpes ×1.3; el traje se oscurece a carmesí y morado con un cristal violeta en el pecho.
+  Velocidad II y golpes ×1.3; el traje se oscurece a carmesí y morado, le salen púas en hombros, guanteletes, casco y espinazo, y un cristal violeta brilla en la frente.
   Cobra su precio: medio corazón cada 2 s (nunca te deja por debajo de 2 corazones).
 - **Heroic Emotion**: cuando un amigo Rider tuyo o un aldeano cercano recibe un golpe de un monstruo. 20 s con
-  Regeneración II, Resistencia II, un 20 % menos de daño recibido y golpes ×1.15; traje azul y blanco con cristal blanco.
+  Regeneración II, Resistencia II, un 20 % menos de daño recibido y golpes ×1.15; traje azul y blanco con un cristal blanco en la frente.
 - En las dos, las cartas del Ride Booker responden solas: elegir una con **Z / X** ya la activa, sin insertarla.
 - No tienen recarga: en cuanto una se apaga, puede volver a despertar.
 
@@ -503,6 +503,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.25.2** — Violent Emotion con púas y cristal morado en la frente; Heroic Emotion con cristal blanco en la frente (`emotions_preview.png`).
 - **0.25.1** — Kaixa: el visor pasa a un triángulo invertido violeta (carta y blasón del K-Touch a juego).
 - **0.25.0** — Kaixa (Tetsuya) como undécima Kamen Ride, con eco, amigo, poderes y diálogos, y la Carta de Complete Form II. Blasones de la Complete Form: invocan proyecciones o potencian al amigo presente. Upgrade Form (carta, traje propio y Form Ride amplificadas).
 - **0.24.0** — Dai-Shocker: combatientes, Kaijin Mantis y Rinoceronte, la Quimera (jefe) y emboscadas (`daishocker_preview.png`). Casa de la montaña de los Kagami (equipo Blaster en el sótano) y depósito de la Comisión. Vehicle Ride: Scarab, el escarabajo que se fusiona con la moto (`scarab_preview.png`). Logros nuevos.

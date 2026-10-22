@@ -32,6 +32,7 @@ import net.minecraft.world.item.ItemStack;
  */
 public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderState> extends GeoArmorRenderer<DexArmorItem, R> {
 
+    public static final DataTicket<String> EMOTION = DataTicket.create("dexrider_emotion", String.class);
     public static final DataTicket<Boolean> UPGRADE = DataTicket.create("dexrider_upgrade", Boolean.class);
     public static final DataTicket<Integer> MAIN_COLOR = DataTicket.create("dexrider_main_color", Integer.class);
     public static final DataTicket<Integer> EYE_COLOR = DataTicket.create("dexrider_eye_color", Integer.class);
@@ -94,6 +95,7 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
 
         String emotion = chest.get(DexComponents.EMOTION.get());
         int[] emo = com.draxer.dexrider.rider.DexEmotions.colors(emotion);
+        renderState.addGeckolibData(EMOTION, emotion == null ? "" : emotion);
         renderState.addGeckolibData(MAIN_COLOR, emo != null ? emo[0] : form != null ? form.suitColor() : suit.mainColor());
         renderState.addGeckolibData(HALF, form == FormRide.HALF);
         String rider = chest.get(DexComponents.RIDER.get());
@@ -120,6 +122,11 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
         hide(snapshots, "hornsShort", horns != SuitConfig.Horns.SHORT);
         hide(snapshots, "hornsInner", horns == SuitConfig.Horns.NONE);
         hide(snapshots, "booker", Boolean.FALSE.equals(state.getGeckolibData(SHOW_BOOKER)));
+        // Emotion: cristal en la frente (las dos) y puas (solo Violent)
+        String emo = state.getGeckolibData(EMOTION);
+        boolean violent = "violent".equals(emo), any = emo != null && !emo.isEmpty();
+        hide(snapshots, "emotionCrystal", !any);
+        for (String b : new String[]{"spikesHead", "spikesBody", "spikesRArm", "spikesLArm"}) hide(snapshots, b, !violent);
     }
 
     private static void hide(BoneSnapshots snapshots, String bone, boolean hidden) {
