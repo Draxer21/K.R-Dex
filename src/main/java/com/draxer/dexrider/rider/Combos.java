@@ -150,7 +150,7 @@ public final class Combos {
             switch (style) {
                 case CROSS -> {
                     for (int i = 0; i < from.size(); i++) FX.line(level, from.get(i), c, colors[i % colors.length], 1.4F, 0.4);
-                    level.sendParticles(ParticleTypes.FLASH, c.x, c.y, c.z, 1, 0, 0, 0, 0);
+                    level.sendParticles(ParticleTypes.END_ROD, c.x, c.y, c.z, 20, 0.2, 0.2, 0.2, 0.25);
                     FX.hit(level, p, target, dmg * 1.15F);
                 }
                 case PILLAR -> {

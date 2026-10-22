@@ -36,15 +36,15 @@ public class SignalTrackerItem extends Item {
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
-        if (!(level instanceof ServerLevel server)) return InteractionResult.SUCCESS;
+        if (!(level instanceof ServerLevel server) || !(player instanceof net.minecraft.server.level.ServerPlayer sp)) return InteractionResult.SUCCESS;
         player.getCooldowns().addCooldown(stack, 60);
         if (server.dimension() != Level.OVERWORLD) {
-            player.sendSystemMessage(Component.translatable("message.dexrider.tracker_static").withStyle(ChatFormatting.GRAY), true);
+            sp.sendSystemMessage(Component.translatable("message.dexrider.tracker_static").withStyle(ChatFormatting.GRAY), true);
             return InteractionResult.SUCCESS;
         }
         BlockPos found = server.findNearestMapStructure(TARGET, player.blockPosition(), 100, false);
         if (found == null) {
-            player.sendSystemMessage(Component.translatable("message.dexrider.tracker_static").withStyle(ChatFormatting.GRAY), true);
+            sp.sendSystemMessage(Component.translatable("message.dexrider.tracker_static").withStyle(ChatFormatting.GRAY), true);
             return InteractionResult.SUCCESS;
         }
         stack.set(DataComponents.LODESTONE_TRACKER, new LodestoneTracker(Optional.of(GlobalPos.of(server.dimension(), found)), false));
@@ -53,7 +53,7 @@ public class SignalTrackerItem extends Item {
         String dir = Math.abs(dx) > Math.abs(dz) * 2 ? (dx > 0 ? "east" : "west")
                 : Math.abs(dz) > Math.abs(dx) * 2 ? (dz > 0 ? "south" : "north")
                 : (dz > 0 ? "south" : "north") + (dx > 0 ? "east" : "west");
-        player.sendSystemMessage(dist < 40
+        sp.sendSystemMessage(dist < 40
                 ? Component.translatable("message.dexrider.tracker_here").withStyle(ChatFormatting.RED)
                 : Component.translatable("message.dexrider.tracker_found", dist, Component.translatable("direction.dexrider." + dir))
                         .withStyle(ChatFormatting.DARK_RED), true);
