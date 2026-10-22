@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "dexrider:item/card_attack_ride_chimera_dive"
+  }
+}

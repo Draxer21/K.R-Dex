@@ -22,7 +22,8 @@ public enum BikeKind {
     PROTO_RACER(DexCard.VEHICLE_RIDE_PROTO_RACER, 0.58F, 0xFF8418),
     WARDEN_INTERCEPTOR(DexCard.VEHICLE_RIDE_WARDEN_INTERCEPTOR, 0.66F, 0x2E3038),
     PSYGA_GLIDER(DexCard.VEHICLE_RIDE_PSYGA_GLIDER, 0.58F, 0x5AAAF0),
-    ORGA_MONARCH(DexCard.VEHICLE_RIDE_ORGA_MONARCH, 0.54F, 0xF2C230);
+    ORGA_MONARCH(DexCard.VEHICLE_RIDE_ORGA_MONARCH, 0.54F, 0xF2C230),
+    COBALT_SIDEWINDER(DexCard.VEHICLE_RIDE_COBALT_SIDEWINDER, 0.57F, 0x385CBE);
 
     public final DexCard card;
     public final float speed;
@@ -54,6 +55,7 @@ public enum BikeKind {
             case WARDEN -> WARDEN_INTERCEPTOR;
             case PSYGA -> PSYGA_GLIDER;
             case ORGA -> ORGA_MONARCH;
+            case KAIXA -> COBALT_SIDEWINDER;
             default -> null;
         };
     }

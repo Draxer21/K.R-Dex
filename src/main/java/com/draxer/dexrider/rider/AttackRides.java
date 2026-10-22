@@ -40,7 +40,8 @@ public final class AttackRides {
     public static boolean handles(DexCard card) {
         return switch (card) {
             case ATTACK_RIDE_OVERCLOCK, ATTACK_RIDE_GALE, ATTACK_RIDE_RAZOR_FEATHER,
-                 ATTACK_RIDE_NITRO_BURST, ATTACK_RIDE_GROUND_WAVE -> true;
+                 ATTACK_RIDE_NITRO_BURST, ATTACK_RIDE_GROUND_WAVE,
+                 ATTACK_RIDE_MANTIS_REAP, ATTACK_RIDE_RHINO_CHARGE, ATTACK_RIDE_CHIMERA_DIVE -> true;
             default -> false;
         };
     }
@@ -55,6 +56,9 @@ public final class AttackRides {
             case ATTACK_RIDE_RAZOR_FEATHER -> razorFeather(level, p, lvl);
             case ATTACK_RIDE_NITRO_BURST -> nitroBurst(level, p, lvl);
             case ATTACK_RIDE_GROUND_WAVE -> groundWave(level, p, lvl);
+            case ATTACK_RIDE_MANTIS_REAP -> mantisReap(level, p, lvl);
+            case ATTACK_RIDE_RHINO_CHARGE -> rhinoCharge(level, p, lvl);
+            case ATTACK_RIDE_CHIMERA_DIVE -> chimeraDive(level, p, lvl);
             default -> 0;
         };
         if (cd > 0) DexAdvancements.award(p, "attack_ride");
@@ -228,5 +232,81 @@ public final class AttackRides {
         level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.RAVAGER_ROAR, SoundSource.PLAYERS, 0.8F, 1.4F);
         level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 0.6F, 0.6F);
         return 240 - 40 * lvl;
+    }
+
+    // ------------------------------------------------------------------ Kaijin de Dai-Shocker
+
+    /** Mantis Reap: salto corto hacia delante y dos tajos en arco que hacen sangrar. */
+    private static int mantisReap(ServerLevel level, ServerPlayer p, int lvl) {
+        Vec3 look = p.getLookAngle().multiply(1, 0, 1).normalize();
+        p.setDeltaMovement(look.scale(0.9 + 0.2 * lvl).add(0, 0.45, 0));
+        p.hurtMarked = true;
+        p.fallDistance = 0;
+        for (int k = 0; k < 2; k++) {
+            final int side = k == 0 ? -1 : 1;
+            Scheduler.later(p, 6 + k * 5, () -> {
+                Vec3 fwd = p.getLookAngle().multiply(1, 0, 1).normalize();
+                for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, p.getBoundingBox().inflate(3.5 + 0.5 * lvl), e -> foe(p, e))) {
+                    Vec3 to = e.position().subtract(p.position()).multiply(1, 0, 1);
+                    if (to.lengthSqr() > 0.01 && to.normalize().dot(fwd) < -0.1) continue;
+                    hit(level, p, e, 5.0F + 1.5F * lvl);
+                    e.addEffect(new MobEffectInstance(MobEffects.WITHER, 40 + 20 * lvl, lvl >= 3 ? 1 : 0));
+                }
+                for (int a = -70; a <= 70; a += 20) {
+                    Vec3 at = p.position().add(FX.yaw(fwd, a * side).scale(2.4)).add(0, 1.0 + a * side * 0.006, 0);
+                    level.sendParticles(ParticleTypes.SWEEP_ATTACK, at.x, at.y, at.z, 1, 0, 0, 0, 0);
+                    FX.dust(level, 0x96DC5A, 0.8F, at, 1, 0.05);
+                }
+                level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1.0F, 1.5F);
+            });
+        }
+        return 200 - 30 * lvl;
+    }
+
+    /** Rhino Charge: embestida en linea recta con el hombro; lanza por los aires a lo que atraviesa. */
+    private static int rhinoCharge(ServerLevel level, ServerPlayer p, int lvl) {
+        Vec3 dir = p.getLookAngle().multiply(1, 0, 1).normalize();
+        Vec3 from = p.position();
+        double len = 7 + 2 * lvl;
+        Vec3 end = FX.rayEnd(level, p, from.add(0, 0.5, 0), dir, len);
+        Vec3 to = end.subtract(dir.scale(0.6)).add(0, -0.5, 0);
+        for (LivingEntity e : FX.alongLine(level, p, from.add(0, 1, 0), to.add(0, 1, 0), 1.1)) {
+            hit(level, p, e, 7.0F + 2.0F * lvl);
+            FX.push(e, from, 1.6 + 0.3 * lvl, 0.7);
+            e.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 40, 3));
+        }
+        for (double d = 0; d < from.distanceTo(to); d += 0.8) FX.particle(level, ParticleTypes.CLOUD, from.add(dir.scale(d)).add(0, 0.2, 0), 2, 0.2, 0.02);
+        if (level.noCollision(p, p.getBoundingBox().move(to.subtract(from)))) p.teleportTo(to.x, to.y, to.z);
+        if (lvl >= 2) p.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 40, 1, false, false, true));
+        level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.RAVAGER_ROAR, SoundSource.PLAYERS, 0.7F, 1.3F);
+        level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.ANVIL_LAND, SoundSource.PLAYERS, 0.6F, 0.7F);
+        return 220 - 40 * lvl;
+    }
+
+    /** Chimera Dive: alas de membrana; subes alto, planeas un instante y caes aplastando todo alrededor. */
+    private static int chimeraDive(ServerLevel level, ServerPlayer p, int lvl) {
+        p.setDeltaMovement(p.getDeltaMovement().x, 1.3 + 0.15 * lvl, p.getDeltaMovement().z);
+        p.hurtMarked = true;
+        p.addEffect(new MobEffectInstance(MobEffects.SLOW_FALLING, 30, 0, false, false, true));
+        FX.particle(level, ParticleTypes.LARGE_SMOKE, FX.center(p), 20, 0.6, 0.05);
+        FX.dust(level, 0x46283C, 1.6F, FX.center(p), 20, 0.8);
+        level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.PHANTOM_FLAP, SoundSource.PLAYERS, 1.2F, 0.6F);
+        for (int t = 20; t <= 40; t++) Scheduler.later(p, t, () -> p.fallDistance = 0);   // la caida no le hace dano
+        Scheduler.later(p, 26, () -> {
+            p.setDeltaMovement(p.getDeltaMovement().x * 0.3, -2.4, p.getDeltaMovement().z * 0.3);
+            p.hurtMarked = true;
+        });
+        Scheduler.later(p, 34, () -> {
+            p.fallDistance = 0;
+            double r = 4 + lvl;
+            for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, p.getBoundingBox().inflate(r, 2, r), e -> foe(p, e))) {
+                hit(level, p, e, 9.0F + 3.0F * lvl);
+                FX.push(e, p.position(), 1.2, 0.6);
+                if (lvl >= 2) e.addEffect(new MobEffectInstance(MobEffects.WITHER, 60, 0));
+            }
+            level.sendParticles(ParticleTypes.EXPLOSION, p.getX(), p.getY() + 0.2, p.getZ(), 4, 1.5, 0.2, 1.5, 0);
+            level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 1.2F, 0.7F);
+        });
+        return 400 - 60 * lvl;
     }
 }

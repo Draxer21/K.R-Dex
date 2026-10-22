@@ -599,6 +599,9 @@ public final class RiderPowers {
     }
 
     /** Final Attack Ride: Cobalt Breaker. Salta, fija al objetivo con seis disparos y cae con un tajo en cruz. */
+    /** El mismo final, desde la espada-pistola (Armed Ride: Kaixa Gunblade). */
+    public static void cobaltBreaker(ServerLevel level, ServerPlayer p) { kaixaBreaker(level, p); }
+
     private static void kaixaBreaker(ServerLevel level, ServerPlayer p) {
         LivingEntity target = FX.findTarget(level, p, 24, 0.55);
         p.setDeltaMovement(p.getDeltaMovement().x, 1.1, p.getDeltaMovement().z);

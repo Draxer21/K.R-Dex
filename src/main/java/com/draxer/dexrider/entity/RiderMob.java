@@ -282,7 +282,8 @@ public abstract class RiderMob extends PathfinderMob implements GeoEntity {
 
     /** Los OC de la familia Kagami pueden quitarse el traje en este mundo (su Rider System se lo permite). */
     public static boolean canDetransform(KamenRide rider) {
-        return rider == KamenRide.CIPHER || rider == KamenRide.WARDEN || rider == KamenRide.PSYGA || rider == KamenRide.ORGA;
+        return rider == KamenRide.CIPHER || rider == KamenRide.WARDEN || rider == KamenRide.PSYGA || rider == KamenRide.ORGA
+                || rider == KamenRide.KAIXA;
     }
 
     public static boolean hasWeapon(KamenRide rider) {

@@ -140,6 +140,7 @@ public final class DexItems {
     public static final DeferredItem<DexWeaponItem> WARDEN_BATON = weapon("warden_baton", WeaponKind.WARDEN_BATON, 6, -2.0);
     public static final DeferredItem<DexWeaponItem> ORGA_HALBERD = weapon("orga_halberd", WeaponKind.ORGA_HALBERD, 13, -3.0);
     public static final DeferredItem<DexWeaponItem> SPORE_ROD = weapon("spore_rod", WeaponKind.SPORE_ROD, 2, -2.0);
+    public static final DeferredItem<DexWeaponItem> KAIXA_GUNBLADE = weapon("kaixa_gunblade", WeaponKind.KAIXA_GUNBLADE, 7, -2.2);
 
     private static DeferredItem<DexWeaponItem> weapon(String name, WeaponKind kind, double damage, double speed) {
         return ITEMS.registerItem(name, props -> new DexWeaponItem(props
@@ -173,6 +174,7 @@ public final class DexItems {
             case ARMED_RIDE_WARDEN_BATON -> WARDEN_BATON.get();
             case ARMED_RIDE_ORGA_HALBERD -> ORGA_HALBERD.get();
             case ARMED_RIDE_SPORE_ROD -> SPORE_ROD.get();
+            case ARMED_RIDE_KAIXA_GUNBLADE -> KAIXA_GUNBLADE.get();
             default -> null;
         };
     }

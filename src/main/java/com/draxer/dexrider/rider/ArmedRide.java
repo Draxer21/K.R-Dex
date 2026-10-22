@@ -105,4 +105,16 @@ public final class ArmedRide {
         return !activeWeapon(player).isEmpty()
                 || DexItems.isDexWeapon(player.containerMenu.getCarried().getItem());
     }
+
+    /**
+     * Mejora por sustitucion de las armas: si re-escaneas un arma que ya tienes (verla otra vez en uso real), la carta
+     * sube de nivel y el arma pega mas: +20 % por nivel (Nv2 x1.2, Nv3 x1.4). Se aplica a todo lo que hagas con ella en la mano.
+     */
+    public static float weaponScale(ServerPlayer p) {
+        if (!(p.getMainHandItem().getItem() instanceof com.draxer.dexrider.item.DexWeaponItem w)) return 1.0F;
+        com.draxer.dexrider.item.DexCard card = com.draxer.dexrider.item.DexCard.byId("armed_ride_" + w.kind().name().toLowerCase(java.util.Locale.ROOT));
+        if (card == null) return 1.0F;
+        int lvl = com.draxer.dexrider.item.DexDriverItem.getDeck(com.draxer.dexrider.item.DexDriverItem.findDriver(p)).level(card);
+        return 1.0F + 0.2F * Math.max(0, lvl - 1);
+    }
 }

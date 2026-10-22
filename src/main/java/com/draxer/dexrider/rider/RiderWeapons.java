@@ -119,6 +119,25 @@ public final class RiderWeapons {
                 sound(level, p, SoundEvents.CHAIN_PLACE, 1.2F, 0.8F);
                 return 100;
             }
+            case KAIXA_GUNBLADE -> {                    // dos disparos; Shift: tajo de remate en linea
+                if (p.isShiftKeyDown()) {
+                    Vec3 dir = flat(look);
+                    Vec3 from = p.position();
+                    Vec3 to = FX.rayEnd(level, p, from.add(0, 0.3, 0), dir, 6).subtract(dir.scale(0.6)).add(0, -0.3, 0);
+                    for (LivingEntity e : FX.alongLine(level, p, from.add(0, 1, 0), to.add(0, 1, 0), 0.9)) {
+                        FX.hit(level, p, e, e.getHealth() < e.getMaxHealth() * 0.5F ? 11.0F : 7.0F);
+                    }
+                    FX.line(level, from.add(0, 1, 0), to.add(0, 1, 0), 0xFFC434, 1.1F, 0.4);
+                    if (level.noCollision(p, p.getBoundingBox().move(to.subtract(from)))) p.teleportTo(to.x, to.y, to.z);
+                    sound(level, p, SoundEvents.PLAYER_ATTACK_SWEEP, 1.2F, 1.3F);
+                    return 40;
+                }
+                for (int i = 0; i < 2; i++) {
+                    Scheduler.later(p, 1 + i * 4, () -> FX.beam(level, p, p.getLookAngle(), 28.0, 6.0F, 0xFFC434, 0.9F, false));
+                }
+                sound(level, p, SoundEvents.FIREWORK_ROCKET_BLAST, 0.9F, 1.6F);
+                return 14;
+            }
             case ORGA_HALBERD -> {                      // barrido en arco
                 for (LivingEntity e : cone(level, p, 4.5, -0.2)) {
                     FX.hit(level, p, e, 9.0F);
@@ -174,6 +193,10 @@ public final class RiderWeapons {
                 FX.push(target, p.position(), 1.2, 0.4);
                 FX.dust(level, 0xF2C230, 1.2F, FX.center(target), 10, 0.4);
             }
+            case KAIXA_GUNBLADE -> {                    // remata: mas dano a los que ya estan tocados
+                if (target.getHealth() < target.getMaxHealth() * 0.5F) FX.hit(level, p, target, 3.0F);
+                FX.dust(level, 0xFFC434, 0.9F, FX.center(target), 6, 0.3);
+            }
             case SPORE_ROD -> {                         // no corta: traba y empuja
                 target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 40, 2));
                 FX.push(target, p.position(), 0.6, 0.1);
@@ -194,6 +217,7 @@ public final class RiderWeapons {
             case WARDEN_BATON -> wardenArrest(level, p);
             case ORGA_HALBERD -> orgaJudgement(level, p);
             case SPORE_ROD -> bloomBurst(level, p);
+            case KAIXA_GUNBLADE -> RiderPowers.cobaltBreaker(level, p);
             default -> { return false; }
         }
         DexSounds.play(level, p, DexSounds.FAR_CHARGE, 1.5F, 1.0F);

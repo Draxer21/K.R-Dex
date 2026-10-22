@@ -29,6 +29,10 @@ public enum DexCard {
     ATTACK_RIDE_RAZOR_FEATHER(Family.ATTACK_RIDE, 2), // ver atacar a un vex
     ATTACK_RIDE_NITRO_BURST(Family.ATTACK_RIDE, 1),   // ver una explosion (creeper, TNT)
     ATTACK_RIDE_GROUND_WAVE(Family.ATTACK_RIDE, 2),   // ver un golpe de maza o el rugido sonico del warden
+    // Attack Ride de los Kaijin de Dai-Shocker (el Driver copia lo que hacen los humanos modificados)
+    ATTACK_RIDE_MANTIS_REAP(Family.ATTACK_RIDE, 2),   // ver atacar a un Kaijin Mantis
+    ATTACK_RIDE_RHINO_CHARGE(Family.ATTACK_RIDE, 2),  // ver atacar a un Kaijin Rinoceronte
+    ATTACK_RIDE_CHIMERA_DIVE(Family.ATTACK_RIDE, 3),  // ver atacar a la Quimera
     FINAL_ATTACK_RIDE_DEX(Family.FINAL_ATTACK_RIDE, 0),
 
     ARMED_RIDE_RIDE_BOOKER(Family.ARMED_RIDE, 0),
@@ -45,6 +49,7 @@ public enum DexCard {
     ARMED_RIDE_WARDEN_BATON(Family.ARMED_RIDE, 2),
     ARMED_RIDE_ORGA_HALBERD(Family.ARMED_RIDE, 3),
     ARMED_RIDE_SPORE_ROD(Family.ARMED_RIDE, 2),
+    ARMED_RIDE_KAIXA_GUNBLADE(Family.ARMED_RIDE, 2),
 
     // Form Ride: una sola forma activa; suben de nivel (1-3) re-escaneando
     FORM_RIDE_SPEED(Family.FORM_RIDE, 2),          // un caballo (o similar) galopando con jinete
@@ -69,6 +74,7 @@ public enum DexCard {
     VEHICLE_RIDE_WARDEN_INTERCEPTOR(Family.VEHICLE_RIDE, 0),
     VEHICLE_RIDE_PSYGA_GLIDER(Family.VEHICLE_RIDE, 0),
     VEHICLE_RIDE_ORGA_MONARCH(Family.VEHICLE_RIDE, 0),
+    VEHICLE_RIDE_COBALT_SIDEWINDER(Family.VEHICLE_RIDE, 0),
     // el escarabajo de Nine: no es una moto, se fusiona con la que conduces (te lo da Izuku al hacerse amigo)
     VEHICLE_RIDE_SCARAB(Family.VEHICLE_RIDE, 0);
 

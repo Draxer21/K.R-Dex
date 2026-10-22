@@ -119,6 +119,11 @@ public class DexMachineEntity extends Animal implements GeoEntity {
     private int idleTicks;
     private final BikeKind kind;
     private int boostTicks;
+    /** Nivel de la carta Vehicle Ride al invocarla (mejora por sustitucion): +12 % de velocidad y +25 % de embestida por nivel. */
+    private int cardLevel = 1;
+
+    public int cardLevel() { return cardLevel; }
+    public float levelScale() { return 1.0F + 0.25F * (cardLevel - 1); }
 
     public DexMachineEntity(EntityType<? extends Animal> type, Level level, BikeKind kind) {
         super(type, level);
@@ -163,6 +168,8 @@ public class DexMachineEntity extends Animal implements GeoEntity {
         machine.setYRot(player.getYRot());
         machine.yBodyRot = player.getYRot();
         machine.owner = player.getUUID();
+        machine.cardLevel = Math.max(1, com.draxer.dexrider.item.DexDriverItem.getDeck(
+                com.draxer.dexrider.item.DexDriverItem.findDriver(player)).level(kind.card));
         level.addFreshEntity(machine);
         ACTIVE.put(player.getUUID(), machine);
 
@@ -243,7 +250,7 @@ public class DexMachineEntity extends Animal implements GeoEntity {
             float x = rider.xxa * 0.3F;
             float z = rider.zza;
             if (z <= 0) z *= 0.25F;
-            setSpeed(kind.speed * (boostTicks > 0 ? 1.8F : 1.0F));
+            setSpeed(kind.speed * (1.0F + 0.12F * (cardLevel - 1)) * (boostTicks > 0 ? 1.8F : 1.0F));
             super.travel(new Vec3(x, pos.y, z));
         } else {
             super.travel(pos);

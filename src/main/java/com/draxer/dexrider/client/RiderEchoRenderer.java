@@ -62,6 +62,7 @@ public class RiderEchoRenderer<R extends LivingEntityRenderState & GeoRenderStat
                 case WARDEN -> "civil_isamu";
                 case PSYGA -> "civil_nagisa";
                 case ORGA -> "civil_genzo";
+                case KAIXA -> "civil_tetsuya";
                 default -> null;
             };
             this.civilModel = civil == null ? null : DexRider.id("item/armor/" + civil);

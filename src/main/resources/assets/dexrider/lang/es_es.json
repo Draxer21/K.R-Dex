@@ -951,7 +951,7 @@
   "dialog.dexrider.kaixa.reunion.2": "Encontraste a todos. Eso se llama terminar el trabajo.",
   "dialog.dexrider.kaixa.portal.1": "El portal aguanta. Pasen, yo vigilo el borde.",
   "dialog.dexrider.kaixa.portal.2": "Ordenados. Yo cierro.",
-  "dialog.dexrider.kaixa.farewell.1": "Me voy por el portal. Cuida ese Driver, sobrino. Y llama a Nagisa: te echa de menos.",
+  "dialog.dexrider.kaixa.farewell.1": "Te dejo la Cobalt Sidewinder. La terminé sin planos, así que cuídala. Y llama a Nagisa: te echa de menos.",
   "dialog.dexrider.kaixa.farewell.2": "Cruzo. La próxima vez que nos veamos, peleamos sin tonos.",
   "dialog.dexrider.kaixa.return.1": "Kaixa, de vuelta. ¿Qué quedó sin terminar?",
   "dialog.dexrider.kaixa.return.2": "Llegué por el portal. Dime dónde.",
@@ -999,5 +999,14 @@
   "advancements.dexrider.upgrade_form.description": "Activa la Upgrade Form",
   "advancements.dexrider.kaixa.title": "El hermano menor",
   "advancements.dexrider.kaixa.description": "Consigue la Kamen Ride de Kaixa",
-  "screen.dexrider.summon.crest": "blasón: invocar / liberar"
+  "screen.dexrider.summon.crest": "blasón: invocar / liberar",
+  "item.dexrider.kaixa_gunblade": "Espada-pistola de Kaixa",
+  "item.dexrider.card_armed_ride_kaixa_gunblade": "Carta: Armed Ride - Kaixa Gunblade",
+  "finisher.dexrider.kaixa_gunblade": "Cobalt Breaker",
+  "item.dexrider.card_vehicle_ride_cobalt_sidewinder": "Carta: Vehicle Ride - Cobalt Sidewinder",
+  "entity.dexrider.cobalt_sidewinder": "Cobalt Sidewinder",
+  "ability.dexrider.sidecar_barrage": "Ráfaga del sidecar",
+  "item.dexrider.card_attack_ride_mantis_reap": "Carta: Attack Ride - Mantis Reap",
+  "item.dexrider.card_attack_ride_rhino_charge": "Carta: Attack Ride - Rhino Charge",
+  "item.dexrider.card_attack_ride_chimera_dive": "Carta: Attack Ride - Chimera Dive"
 }

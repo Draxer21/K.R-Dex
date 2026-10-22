@@ -47,7 +47,7 @@ public class DexWeaponItem extends Item {
     public enum WeaponKind {
         RIDE_BOOKER, SHOCK_BATON, BLAST_SHOT, SWORD, VOLT_CHAIN, POWER_KNUCKLE,
         // armas de los Riders
-        CIPHER_EDGE, PRISM_EDGE, MODULE_DRIVER, FORGE_LANCE, WARDEN_BATON, ORGA_HALBERD, SPORE_ROD
+        CIPHER_EDGE, PRISM_EDGE, MODULE_DRIVER, FORGE_LANCE, WARDEN_BATON, ORGA_HALBERD, SPORE_ROD, KAIXA_GUNBLADE
     }
 
     private final WeaponKind kind;
@@ -93,7 +93,7 @@ public class DexWeaponItem extends Item {
                 lash(server, sp);
                 sp.getCooldowns().addCooldown(stack, 20);
             }
-            case CIPHER_EDGE, PRISM_EDGE, MODULE_DRIVER, FORGE_LANCE, WARDEN_BATON, ORGA_HALBERD, SPORE_ROD -> {
+            case CIPHER_EDGE, PRISM_EDGE, MODULE_DRIVER, FORGE_LANCE, WARDEN_BATON, ORGA_HALBERD, SPORE_ROD, KAIXA_GUNBLADE -> {
                 int cd = RiderWeapons.use(server, sp, kind, stack);
                 if (cd <= 0) return InteractionResult.PASS;
                 sp.getCooldowns().addCooldown(stack, cd);

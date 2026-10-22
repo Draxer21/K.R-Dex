@@ -129,6 +129,17 @@ public final class BikeAbilities {
                 sound(level, bike, SoundEvents.PHANTOM_FLAP, 1.2F, 1.4F);
                 return new RiderPowers.Used("sky_glide", 12);
             }
+            case COBALT_SIDEWINDER -> {   // el canon del sidecar: rafaga de seis disparos dorados hacia delante
+                for (int i = 0; i < 6; i++) {
+                    final int k = i;
+                    com.draxer.dexrider.rider.Scheduler.later(p, 1 + i * 3, () -> {
+                        Vec3 dir = FX.yaw(horizontal(p.getLookAngle()), (k % 2 == 0 ? -1 : 1) * (2 + k));
+                        FX.beam(level, p, dir, 26.0, 6.0F, 0xFFC434, 1.0F, false);
+                    });
+                }
+                sound(level, bike, SoundEvents.FIREWORK_ROCKET_BLAST, 1.2F, 1.2F);
+                return new RiderPowers.Used("sidecar_barrage", 9);
+            }
             case ORGA_MONARCH -> {
                 bike.boost(20);
                 ram(level, p, bike, look, 16.0F, 3.0);
@@ -188,6 +199,7 @@ public final class BikeAbilities {
     }
 
     private static void ram(ServerLevel level, ServerPlayer p, DexMachineEntity bike, Vec3 look, float damage, double push) {
+        damage *= bike.levelScale();
         Vec3 from = bike.position().add(0, 0.8, 0);
         Vec3 to = from.add(look.scale(7));
         for (LivingEntity e : FX.alongLine(level, p, from, to, 1.0)) {

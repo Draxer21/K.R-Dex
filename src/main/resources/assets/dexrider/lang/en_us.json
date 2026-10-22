@@ -951,7 +951,7 @@
   "dialog.dexrider.kaixa.reunion.2": "You found everyone. That's called finishing the job.",
   "dialog.dexrider.kaixa.portal.1": "The portal holds. Go through, I'll watch the edge.",
   "dialog.dexrider.kaixa.portal.2": "In order. I'll close.",
-  "dialog.dexrider.kaixa.farewell.1": "I'm taking the portal. Look after that Driver, nephew. And call Nagisa: she misses you.",
+  "dialog.dexrider.kaixa.farewell.1": "I'm leaving you the Cobalt Sidewinder. I finished it without blueprints, so take care of it. And call Nagisa: she misses you.",
   "dialog.dexrider.kaixa.farewell.2": "Crossing. Next time we meet, we fight without tones.",
   "dialog.dexrider.kaixa.return.1": "Kaixa, back. What's left unfinished?",
   "dialog.dexrider.kaixa.return.2": "Came through the portal. Tell me where.",
@@ -999,5 +999,14 @@
   "advancements.dexrider.upgrade_form.description": "Activate the Upgrade Form",
   "advancements.dexrider.kaixa.title": "The youngest brother",
   "advancements.dexrider.kaixa.description": "Get Kaixa's Kamen Ride",
-  "screen.dexrider.summon.crest": "crest: summon / release"
+  "screen.dexrider.summon.crest": "crest: summon / release",
+  "item.dexrider.kaixa_gunblade": "Kaixa Gunblade",
+  "item.dexrider.card_armed_ride_kaixa_gunblade": "Card: Armed Ride - Kaixa Gunblade",
+  "finisher.dexrider.kaixa_gunblade": "Cobalt Breaker",
+  "item.dexrider.card_vehicle_ride_cobalt_sidewinder": "Card: Vehicle Ride - Cobalt Sidewinder",
+  "entity.dexrider.cobalt_sidewinder": "Cobalt Sidewinder",
+  "ability.dexrider.sidecar_barrage": "Sidecar Barrage",
+  "item.dexrider.card_attack_ride_mantis_reap": "Card: Attack Ride - Mantis Reap",
+  "item.dexrider.card_attack_ride_rhino_charge": "Card: Attack Ride - Rhino Charge",
+  "item.dexrider.card_attack_ride_chimera_dive": "Card: Attack Ride - Chimera Dive"
 }

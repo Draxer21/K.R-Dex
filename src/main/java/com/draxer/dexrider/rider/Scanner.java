@@ -109,9 +109,9 @@ public final class Scanner {
         if (type == EntityType.BREEZE) return DexCard.ATTACK_RIDE_GALE;
         if (attacker instanceof com.draxer.dexrider.entity.KaijinEntity k) {
             return switch (k.kind()) {
-                case MANTIS -> DexCard.ARMED_RIDE_SWORD;
-                case RHINO -> DexCard.ARMED_RIDE_POWER_KNUCKLE;
-                case CHIMERA -> DexCard.ATTACK_RIDE_GROUND_WAVE;
+                case MANTIS -> DexCard.ATTACK_RIDE_MANTIS_REAP;
+                case RHINO -> DexCard.ATTACK_RIDE_RHINO_CHARGE;
+                case CHIMERA -> DexCard.ATTACK_RIDE_CHIMERA_DIVE;
                 default -> null;
             };
         }
@@ -144,6 +144,7 @@ public final class Scanner {
             case WARDEN -> DexCard.ARMED_RIDE_WARDEN_BATON;
             case ORGA -> DexCard.ARMED_RIDE_ORGA_HALBERD;
             case SPORE -> DexCard.ARMED_RIDE_SPORE_ROD;
+            case KAIXA -> DexCard.ARMED_RIDE_KAIXA_GUNBLADE;
             default -> null;
         };
     }
@@ -199,7 +200,8 @@ public final class Scanner {
         if (driver.isEmpty()) return;
         DriverDeck deck = DexDriverItem.getDeck(driver);
 
-        boolean canLevel = (card.family() == DexCard.Family.FORM_RIDE || card.family() == DexCard.Family.ATTACK_RIDE)
+        boolean canLevel = (card.family() == DexCard.Family.FORM_RIDE || card.family() == DexCard.Family.ATTACK_RIDE
+                || card.family() == DexCard.Family.ARMED_RIDE || card.family() == DexCard.Family.VEHICLE_RIDE)
                 && card.samplesToScan() > 0 && deck.level(card) < DriverDeck.MAX_LEVEL;
         if (deck.has(card) && !canLevel) return;
 
