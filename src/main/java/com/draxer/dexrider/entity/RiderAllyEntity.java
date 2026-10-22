@@ -93,7 +93,8 @@ public class RiderAllyEntity extends RiderMob {
     @Nullable
     public ServerPlayer ownerPlayer() {
         if (owner == null || !(level() instanceof ServerLevel level)) return null;
-        return level.getServer().getPlayerList().getPlayer(owner);
+        ServerPlayer p = level.getServer().getPlayerList().getPlayer(owner);
+        return p != null ? p : (level.getPlayerByUUID(owner) instanceof ServerPlayer sp ? sp : null);
     }
 
     @Override
