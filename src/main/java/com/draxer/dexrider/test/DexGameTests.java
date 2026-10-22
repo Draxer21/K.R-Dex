@@ -130,7 +130,7 @@ public final class DexGameTests {
                 ItemStack stack = new ItemStack(DexItems.card(c).get());
                 p.setItemInHand(InteractionHand.MAIN_HAND, stack);
                 ((RiderCardItem) stack.getItem()).activate(level, p, stack, InteractionHand.MAIN_HAND);
-                p.getCooldowns().removeCooldown(stack);
+                p.getCooldowns().removeCooldown(p.getCooldowns().getCooldownGroup(stack));
                 if (p.getVehicle() != null) p.stopRiding();
                 used++;
             } catch (Throwable e) {
