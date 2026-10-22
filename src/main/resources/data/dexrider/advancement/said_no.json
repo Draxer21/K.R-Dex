@@ -1,0 +1,23 @@
+{
+  "parent": "dexrider:signal_base",
+  "display": {
+    "icon": {
+      "id": "minecraft:chain"
+    },
+    "title": {
+      "translate": "advancements.dexrider.said_no.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.said_no.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

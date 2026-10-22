@@ -1,0 +1,23 @@
+{
+  "parent": "dexrider:said_no",
+  "display": {
+    "icon": {
+      "id": "dexrider:card_attack_ride_severance"
+    },
+    "title": {
+      "translate": "advancements.dexrider.architect.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.architect.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

@@ -109,6 +109,12 @@ public final class DexItems {
                             .build()),
                     com.draxer.dexrider.item.CipherGearItem.Kind.BLASTER));
 
+    // ---------- Arco de la Senal (Dai-Shocker que no es la casa de la montania) ----------
+    public static final DeferredItem<com.draxer.dexrider.item.SignalTrackerItem> SIGNAL_TRACKER = ITEMS.registerItem("signal_tracker",
+            props -> new com.draxer.dexrider.item.SignalTrackerItem(props.stacksTo(1).rarity(Rarity.RARE)));
+    public static final DeferredItem<net.minecraft.world.item.BlockItem> SIGNAL_CORE = ITEMS.registerItem("signal_core",
+            props -> new net.minecraft.world.item.BlockItem(DexBlocks.SIGNAL_CORE.get(), props.useBlockDescriptionPrefix().rarity(Rarity.EPIC)));
+
     // ---------- Cartas (una por cada valor de DexCard) ----------
     public static final Map<DexCard, DeferredItem<RiderCardItem>> CARDS = new EnumMap<>(DexCard.class);
 
@@ -193,6 +199,8 @@ public final class DexItems {
                         }
                         output.accept(K_TOUCH.get());
                         output.accept(COMPLETE_FORM_CARD.get());
+                        output.accept(SIGNAL_TRACKER.get());
+                        output.accept(SIGNAL_CORE.get());
                         output.accept(COMPLETE_FORM_CARD_2.get());
                         output.accept(CIPHER_ACCEL.get());
                         output.accept(CIPHER_BLASTER.get());

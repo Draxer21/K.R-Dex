@@ -1,0 +1,116 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:written_book",
+          "functions": [
+            {
+              "function": "minecraft:set_book_cover",
+              "title": {
+                "raw": "Proyecto Diez"
+              },
+              "author": "???"
+            },
+            {
+              "function": "minecraft:set_written_book_pages",
+              "mode": "replace_all",
+              "pages": [
+                {
+                  "translate": "note.dexrider.signal.1"
+                },
+                {
+                  "translate": "note.dexrider.signal.2"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_name",
+              "target": "item_name",
+              "name": {
+                "translate": "note.dexrider.signal.title1"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:written_book",
+          "functions": [
+            {
+              "function": "minecraft:set_book_cover",
+              "title": {
+                "raw": "Proyecto Diez"
+              },
+              "author": "???"
+            },
+            {
+              "function": "minecraft:set_written_book_pages",
+              "mode": "replace_all",
+              "pages": [
+                {
+                  "translate": "note.dexrider.signal.3"
+                },
+                {
+                  "translate": "note.dexrider.signal.4"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_name",
+              "target": "item_name",
+              "name": {
+                "translate": "note.dexrider.signal.title2"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:written_book",
+          "functions": [
+            {
+              "function": "minecraft:set_book_cover",
+              "title": {
+                "raw": "Proyecto Diez"
+              },
+              "author": "???"
+            },
+            {
+              "function": "minecraft:set_written_book_pages",
+              "mode": "replace_all",
+              "pages": [
+                {
+                  "translate": "note.dexrider.signal.5"
+                },
+                {
+                  "translate": "note.dexrider.signal.6"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_name",
+              "target": "item_name",
+              "name": {
+                "translate": "note.dexrider.signal.title3"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}

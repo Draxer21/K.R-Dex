@@ -1,0 +1,23 @@
+{
+  "parent": "dexrider:henshin",
+  "display": {
+    "icon": {
+      "id": "minecraft:shield"
+    },
+    "title": {
+      "translate": "advancements.dexrider.parry.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.parry.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

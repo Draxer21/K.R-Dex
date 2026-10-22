@@ -34,6 +34,7 @@ public enum DexCard {
     ATTACK_RIDE_MANTIS_REAP(Family.ATTACK_RIDE, 2),   // ver atacar a un Kaijin Mantis
     ATTACK_RIDE_RHINO_CHARGE(Family.ATTACK_RIDE, 2),  // ver atacar a un Kaijin Rinoceronte
     ATTACK_RIDE_CHIMERA_DIVE(Family.ATTACK_RIDE, 3),  // ver atacar a la Quimera
+    ATTACK_RIDE_SEVERANCE(Family.ATTACK_RIDE, 0),     // cortar la correa: la deja el Arquitecto al caer
     FINAL_ATTACK_RIDE_DEX(Family.FINAL_ATTACK_RIDE, 0),
 
     ARMED_RIDE_RIDE_BOOKER(Family.ARMED_RIDE, 0),

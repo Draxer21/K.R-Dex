@@ -38,6 +38,7 @@ public final class DexEvents {
         if (!(player.level() instanceof ServerLevel level)) return;
 
         RiderKick.tick(level, player);
+        Guard.tick(player);
         if (player.tickCount % 100 == 0) AllyManager.tickPlayer(player);
         if (player.tickCount % 100 == 50) DaiShocker.tickPlayer(player);
         AllyManager.tickReunion(player);
@@ -106,6 +107,8 @@ public final class DexEvents {
 
         // Debilidades e inmunidades de la Form Ride activa del que recibe el golpe
         if (victim instanceof ServerPlayer target && Transformation.isTransformed(target)) {
+            // Parada (Shift justo a tiempo) o bloqueo (Shift mantenido) contra golpes de frente
+            if (Guard.onIncoming(level, target, event)) return;
             FormRide form = FormRide.current(target);
             // El traje del Rider System absorbe parte de cada golpe
             event.setAmount(event.getAmount() * Transformation.SUIT_DAMAGE_TAKEN * DexEmotions.takenScale(target));
@@ -160,6 +163,7 @@ public final class DexEvents {
                     * (UpgradeForm.isActive(attacker) ? 1.2F : 1.0F) * ArmedRide.weaponScale(attacker);
             if (FormRide.current(attacker) != null) mult *= deck.multiplier(DexCard.Family.FORM_RIDE);
             if (KamenRide.current(attacker) == KamenRide.COMPLETE) mult *= RiderPowers.completeMultiplier(attacker);
+            mult *= Guard.counterScale(attacker, victim);
             event.setAmount(event.getAmount() * mult);
             return;   // los ataques del propio Dex no se escanean
         }
@@ -267,6 +271,8 @@ public final class DexEvents {
             FormRide.revokeFlight(player);
             DexMachineEntity.dismissFor(player);
             AllyManager.cancelReunion(player);
+            Guard.forget(player.getUUID());
+            Combos.forget(player.getUUID());
         }
     }
 

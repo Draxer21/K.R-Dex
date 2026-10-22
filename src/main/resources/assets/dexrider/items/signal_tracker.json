@@ -1,0 +1,129 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "minecraft:compass",
+    "target": "lodestone",
+    "scale": 16.0,
+    "entries": [
+      {
+        "threshold": 0.0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/signal_tracker_00"
+        }
+      },
+      {
+        "threshold": 0.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/signal_tracker_01"
+        }
+      },
+      {
+        "threshold": 1.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/signal_tracker_02"
+        }
+      },
+      {
+        "threshold": 2.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/signal_tracker_03"
+        }
+      },
+      {
+        "threshold": 3.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/signal_tracker_04"
+        }
+      },
+      {
+        "threshold": 4.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/signal_tracker_05"
+        }
+      },
+      {
+        "threshold": 5.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/signal_tracker_06"
+        }
+      },
+      {
+        "threshold": 6.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/signal_tracker_07"
+        }
+      },
+      {
+        "threshold": 7.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/signal_tracker_08"
+        }
+      },
+      {
+        "threshold": 8.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/signal_tracker_09"
+        }
+      },
+      {
+        "threshold": 9.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/signal_tracker_10"
+        }
+      },
+      {
+        "threshold": 10.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/signal_tracker_11"
+        }
+      },
+      {
+        "threshold": 11.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/signal_tracker_12"
+        }
+      },
+      {
+        "threshold": 12.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/signal_tracker_13"
+        }
+      },
+      {
+        "threshold": 13.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/signal_tracker_14"
+        }
+      },
+      {
+        "threshold": 14.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/signal_tracker_15"
+        }
+      },
+      {
+        "threshold": 15.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/signal_tracker_00"
+        }
+      }
+    ]
+  }
+}

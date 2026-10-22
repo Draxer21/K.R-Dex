@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "spent=false": {
+      "model": "dexrider:block/signal_core"
+    },
+    "spent=true": {
+      "model": "dexrider:block/signal_core_spent"
+    }
+  }
+}

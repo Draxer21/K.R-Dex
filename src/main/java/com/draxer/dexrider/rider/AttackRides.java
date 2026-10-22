@@ -41,7 +41,8 @@ public final class AttackRides {
         return switch (card) {
             case ATTACK_RIDE_OVERCLOCK, ATTACK_RIDE_GALE, ATTACK_RIDE_RAZOR_FEATHER,
                  ATTACK_RIDE_NITRO_BURST, ATTACK_RIDE_GROUND_WAVE,
-                 ATTACK_RIDE_MANTIS_REAP, ATTACK_RIDE_RHINO_CHARGE, ATTACK_RIDE_CHIMERA_DIVE -> true;
+                 ATTACK_RIDE_MANTIS_REAP, ATTACK_RIDE_RHINO_CHARGE, ATTACK_RIDE_CHIMERA_DIVE,
+                 ATTACK_RIDE_SEVERANCE -> true;
             default -> false;
         };
     }
@@ -59,6 +60,7 @@ public final class AttackRides {
             case ATTACK_RIDE_MANTIS_REAP -> mantisReap(level, p, lvl);
             case ATTACK_RIDE_RHINO_CHARGE -> rhinoCharge(level, p, lvl);
             case ATTACK_RIDE_CHIMERA_DIVE -> chimeraDive(level, p, lvl);
+            case ATTACK_RIDE_SEVERANCE -> severance(level, p);
             default -> 0;
         };
         if (cd > 0) DexAdvancements.award(p, "attack_ride");
@@ -308,5 +310,43 @@ public final class AttackRides {
             level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 1.2F, 0.7F);
         });
         return 400 - 60 * lvl;
+    }
+
+    // ------------------------------------------------------------------ el Arquitecto
+
+    /**
+     * Severance: cortar la correa. Un pulso blanco que corta lo que tira de ti y de los tuyos: termina tu correa
+     * y tu Violent Emotion, limpia los efectos negativos a ti y a tus Riders amigos, y a los enemigos cercanos les
+     * corta las ordenes (pierden el objetivo, quedan lentos y debiles). Al Arquitecto le corta la Senal.
+     */
+    private static int severance(ServerLevel level, ServerPlayer p) {
+        if (KTouch.correa(p) >= 0) KTouch.cutCorrea(p);
+        if (DexEmotions.VIOLENT.equals(DexEmotions.current(p))) DexEmotions.clear(p);
+        cleanse(p);
+        for (RiderAllyEntity a : level.getEntitiesOfClass(RiderAllyEntity.class, p.getBoundingBox().inflate(12),
+                a -> p.getUUID().equals(a.owner()))) {
+            cleanse(a);
+            FX.line(level, FX.center(p), FX.center(a), FX.WHITE, 0.8F, 0.6);
+        }
+        for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, p.getBoundingBox().inflate(7), e -> foe(p, e))) {
+            if (e instanceof net.minecraft.world.entity.Mob m) m.setTarget(null);
+            e.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 70, 3));
+            e.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 70, 1));
+            hit(level, p, e, 6.0F);
+            if (e instanceof com.draxer.dexrider.entity.ArchitectEntity boss) boss.sever(level);
+        }
+        for (int k = 0; k < 3; k++) {
+            final int kk = k;
+            Scheduler.later(p, k * 3, () -> FX.ring(level, p, FX.WHITE, 2.0 + kk * 2.5, 2));
+        }
+        level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.CHAIN_PLACE, SoundSource.PLAYERS, 1.5F, 0.5F);
+        level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.5F, 1.6F);
+        return 300;
+    }
+
+    private static void cleanse(LivingEntity e) {
+        for (var inst : java.util.List.copyOf(e.getActiveEffects())) {
+            if (inst.getEffect().value().getCategory() == net.minecraft.world.effect.MobEffectCategory.HARMFUL) e.removeEffect(inst.getEffect());
+        }
     }
 }

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "side": "dexrider:block/signal_core_side_spent",
+    "top": "dexrider:block/signal_core_top_spent",
+    "bottom": "dexrider:block/signal_core_bottom"
+  }
+}

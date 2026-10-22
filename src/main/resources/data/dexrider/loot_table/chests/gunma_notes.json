@@ -117,6 +117,16 @@
           ]
         }
       ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "dexrider:signal_tracker",
+          "weight": 1
+        }
+      ]
     }
   ]
 }

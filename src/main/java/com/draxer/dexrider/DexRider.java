@@ -36,6 +36,7 @@ public class DexRider {
     public DexRider(IEventBus modEventBus, ModContainer modContainer) {
         DexComponents.COMPONENTS.register(modEventBus);
         DexSounds.SOUNDS.register(modEventBus);
+        com.draxer.dexrider.registry.DexBlocks.BLOCKS.register(modEventBus);
         DexItems.ITEMS.register(modEventBus);
         DexItems.TABS.register(modEventBus);
         DexEntities.ENTITIES.register(modEventBus);

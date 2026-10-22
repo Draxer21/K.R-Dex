@@ -326,6 +326,9 @@ public final class KTouch {
             p.sendSystemMessage(Component.translatable("message.dexrider.correa_cut").withStyle(ChatFormatting.AQUA));
     }
 
+    /** La carta Severance corta la correa en seco. */
+    public static void cutCorrea(ServerPlayer p) { endCorrea(p, false); }
+
     /** Para pruebas: empuja el contagio. */
     public static void forceCorrea(ServerPlayer p, int ticks) { CORREA.put(p.getUUID(), ticks); }
 }

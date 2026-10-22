@@ -59,6 +59,9 @@ public final class DexGameTests {
         FUNCTIONS.register("tones", () -> DexGameTests::tones);
         FUNCTIONS.register("correa", () -> DexGameTests::correa);
         FUNCTIONS.register("lent_driver", () -> DexGameTests::lentDriver);
+        FUNCTIONS.register("guard", () -> DexGameTests::guard);
+        FUNCTIONS.register("combos", () -> DexGameTests::combos);
+        FUNCTIONS.register("architect", () -> DexGameTests::architect);
     }
 
     // ------------------------------------------------------------------ utilidades
@@ -262,6 +265,7 @@ public final class DexGameTests {
         List<KaijinEntity> mobs = new ArrayList<>();
         int i = 0;
         for (KaijinEntity.Kind k : KaijinEntity.Kind.values()) {
+            if (k == KaijinEntity.Kind.ARCHITECT) continue;   // tiene su propia prueba
             KaijinEntity e = h.spawn(DexEntities.KAIJIN.get(k).get(), new BlockPos(2 + i * 4, 1, 2));
             e.setTarget(p);
             mobs.add(e);
@@ -332,7 +336,7 @@ public final class DexGameTests {
     static void structures(GameTestHelper h) {
         String t = "structures";
         var manager = h.getLevel().getStructureManager();
-        for (String name : new String[]{"mountain_house", "commission_depot", "gunma_lab"}) {
+        for (String name : new String[]{"mountain_house", "commission_depot", "gunma_lab", "signal_base"}) {
             var tpl = manager.get(DexRider.id(name));
             if (tpl.isEmpty()) { fail(h, t, name + " no carga"); return; }
             log(t, name + " ok, tamano " + tpl.get().getSize());
@@ -387,5 +391,127 @@ public final class DexGameTests {
         if (Transformation.isTransformed(bearer) || driver(owner).isEmpty()) fail(h, t, "revocar no devolvio el Driver");
         log(t, "ok: prestar, transformarse, nacer la carta y revocar");
         h.succeed();
+    }
+
+    private static float life(ServerPlayer p) { return p.getHealth() + p.getAbsorptionAmount(); }
+
+    /** Mira hacia +X (donde se ponen los enemigos de las pruebas). */
+    private static void faceEast(ServerPlayer p) {
+        p.setYRot(-90.0F); p.setYHeadRot(-90.0F); p.setXRot(0.0F);
+    }
+
+    static void guard(GameTestHelper h) {
+        String t = "guard";
+        ServerPlayer p = player(h, DexCard.KAMEN_RIDE_DEX);
+        transform(h, t, p);
+        faceEast(p);
+        ServerLevel level = h.getLevel();
+        var zombie = h.spawn(net.minecraft.world.entity.EntityType.ZOMBIE, new BlockPos(10, 1, 8));
+        zombie.setNoAi(true);
+        var src = level.damageSources().mobAttack(zombie);
+        // golpe sin guardia
+        p.setAbsorptionAmount(0);
+        float hp = life(p);
+        p.invulnerableTime = 0;
+        p.hurtServer(level, src, 6.0F);
+        float plain = hp - life(p);
+        p.setHealth(p.getMaxHealth()); p.setAbsorptionAmount(0);
+        // parada: Shift pulsado justo ahora
+        p.setShiftKeyDown(true);
+        com.draxer.dexrider.rider.Guard.press(p, level.getGameTime());
+        hp = life(p);
+        p.invulnerableTime = 0;
+        p.hurtServer(level, src, 6.0F);
+        if (life(p) < hp) fail(h, t, "la parada no anulo el golpe");
+        if (!com.draxer.dexrider.rider.Guard.counterReady(p)) fail(h, t, "no quedo listo el contraataque");
+        if (!zombie.hasEffect(net.minecraft.world.effect.MobEffects.SLOWNESS)) fail(h, t, "el atacante no quedo aturdido");
+        // bloqueo: Shift mantenido (pulsado hace 20 ticks)
+        h.runAfterDelay(12, () -> {
+            com.draxer.dexrider.rider.Guard.press(p, level.getGameTime() - 20);
+            p.setHealth(p.getMaxHealth()); p.setAbsorptionAmount(0);
+            float before = life(p);
+            p.invulnerableTime = 0;
+            p.hurtServer(level, src, 6.0F);
+            float blocked = before - life(p);
+            if (plain <= 0 || blocked > plain * 0.6F || blocked <= 0) fail(h, t, "bloqueo raro: sin guardia " + plain + ", con bloqueo " + blocked);
+            log(t, "ok: parada anula, contraataque listo, bloqueo " + plain + " -> " + blocked);
+            h.succeed();
+        });
+    }
+
+    static void combos(GameTestHelper h) {
+        String t = "combos";
+        ServerPlayer p = player(h, DexCard.values());
+        transform(h, t, p);
+        faceEast(p);
+        tickPlayer(h, p);
+        ServerLevel level = h.getLevel();
+        com.draxer.dexrider.rider.AllyManager.befriend(level, p, KamenRide.KAIXA, h.absolutePos(new BlockPos(7, 1, 10)));
+        for (var a : level.getEntitiesOfClass(com.draxer.dexrider.entity.RiderAllyEntity.class, p.getBoundingBox().inflate(16))) a.setCivilian(false);
+        var golem = h.spawn(net.minecraft.world.entity.EntityType.IRON_GOLEM, new BlockPos(12, 1, 8));
+        golem.setNoAi(true);
+        golem.setLastHurtByMob(p);
+        float hp0 = golem.getHealth();
+        int joined = com.draxer.dexrider.rider.Combos.onFinisher(level, p);
+        if (joined < 1) { fail(h, t, "Kaixa no se unio al combo"); return; }
+        // dos jugadores
+        ServerPlayer p2 = player(h, DexCard.KAMEN_RIDE_DEX);
+        transform(h, t, p2);
+        faceEast(p2);
+        tickPlayer(h, p2);
+        h.runAfterDelay(30, () -> {
+            if (golem.getHealth() >= hp0) fail(h, t, "el golpe combinado no hizo dano");
+            com.draxer.dexrider.rider.Combos.forget(p.getUUID());
+            com.draxer.dexrider.rider.Combos.onFinisher(level, p2);
+            int pair = com.draxer.dexrider.rider.Combos.onFinisher(level, p);
+            if (pair != 1) fail(h, t, "dos jugadores rematando juntos no hicieron combo");
+            log(t, "ok: combo con Kaixa (golem " + hp0 + " -> " + golem.getHealth() + ") y combo entre jugadores");
+            h.succeed();
+        });
+    }
+
+    static void architect(GameTestHelper h) {
+        String t = "architect";
+        ServerPlayer p = player(h, DexCard.values());
+        transform(h, t, p);
+        faceEast(p);
+        tickPlayer(h, p);
+        ServerLevel level = h.getLevel();
+        BlockPos corePos = h.absolutePos(new BlockPos(14, 1, 8));
+        level.setBlockAndUpdate(corePos, com.draxer.dexrider.registry.DexBlocks.SIGNAL_CORE.get().defaultBlockState());
+        var boss = com.draxer.dexrider.block.SignalCoreBlock.awaken(level, corePos, p);
+        if (boss == null) { fail(h, t, "el Nucleo no desperto al Arquitecto"); return; }
+        boss.setNoAi(true);
+        // fase 2: se adapta
+        boss.setHealth(boss.getMaxHealth() * 0.6F);
+        h.runAfterDelay(2, () -> {
+            if (boss.phase() < 2) { fail(h, t, "no paso a la fase 2"); return; }
+            float a = boss.adaptScale(p), b = boss.adaptScale(p), c = boss.adaptScale(p);
+            if (!(a == 1.0F && b < a && c < b)) fail(h, t, "no se adapta: " + a + " " + b + " " + c);
+            p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(net.minecraft.world.item.Items.IRON_SWORD));
+            float s = boss.adaptScale(p);
+            if (s <= 1.0F) fail(h, t, "cambiar de arma no lo sorprendio: " + s);
+            // fase 3 y la Senal
+            boss.setHealth(boss.getMaxHealth() * 0.3F);
+        });
+        h.runAfterDelay(5, () -> {
+            if (boss.phase() < 3) { fail(h, t, "no paso a la fase 3"); return; }
+            boss.chargeSignal(level);
+            if (!boss.isSignalCharging()) fail(h, t, "la Senal no empezo a cargar");
+        });
+        h.runAfterDelay(52, () -> com.draxer.dexrider.rider.Guard.press(p, level.getGameTime()));   // "no"
+        h.runAfterDelay(66, () -> {
+            if (!boss.isStunned()) { fail(h, t, "decir que no no corto la Senal"); return; }
+            boss.hurtServer(level, p.damageSources().playerAttack(p), 100000.0F);
+        });
+        h.runAfterDelay(80, () -> {
+            if (boss.isAlive()) { fail(h, t, "el Arquitecto no cayo"); return; }
+            boolean card = !level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, boss.getBoundingBox().inflate(6),
+                    e -> e.getItem().is(DexItems.card(DexCard.ATTACK_RIDE_SEVERANCE).get())).isEmpty();
+            if (!card) fail(h, t, "no solto la carta Severance");
+            if (!level.getBlockState(corePos).getValue(com.draxer.dexrider.block.SignalCoreBlock.SPENT)) fail(h, t, "el Nucleo no se apago");
+            log(t, "ok: Nucleo, fases, adaptacion, la Senal cortada con un no, carta y Nucleo apagado");
+            h.succeed();
+        });
     }
 }

@@ -104,6 +104,7 @@ public class RiderCardItem extends Item {
                     KamenRide identity = KamenRide.current(sp);
                     if (RiderPowers.hasFinisher(identity)) RiderPowers.finalAttack(serverLevel, sp, identity);
                     else ArmedRide.finalAttack(serverLevel, sp, hand);
+                    com.draxer.dexrider.rider.Combos.onFinisher(serverLevel, sp);
                 }
             }
             default -> sp.sendSystemMessage(Component.translatable("message.dexrider.not_implemented"), true);

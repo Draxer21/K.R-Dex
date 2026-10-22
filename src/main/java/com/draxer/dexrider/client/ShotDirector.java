@@ -111,8 +111,16 @@ public final class ShotDirector {
         // 3: Dai-Shocker
         t = scene(s, t, "daishocker", lvl -> {
             int i = 0;
-            for (KaijinEntity.Kind k : KaijinEntity.Kind.values()) spawnStill(lvl, DexEntities.KAIJIN.get(k).get(), (i++ - 1.5) * 2.2, 7);
+            for (KaijinEntity.Kind k : KaijinEntity.Kind.values()) spawnStill(lvl, DexEntities.KAIJIN.get(k).get(), (i++ - 2.0) * 2.4, 7.5);
         }, 0, 2.0, 0.0, 0);
+        // 3b: el Arquitecto de cerca, con el Nucleo de la Senal encendido y otro apagado
+        t = scene(s, t, "arquitecto", lvl -> {
+            spawnStill(lvl, DexEntities.KAIJIN.get(KaijinEntity.Kind.ARCHITECT).get(), -0.8, 4.2);
+            net.minecraft.core.BlockPos c = net.minecraft.core.BlockPos.containing(bx + 1.6, by, bz + 3.6);
+            lvl.setBlockAndUpdate(c, com.draxer.dexrider.registry.DexBlocks.SIGNAL_CORE.get().defaultBlockState());
+            lvl.setBlockAndUpdate(c.east(), com.draxer.dexrider.registry.DexBlocks.SIGNAL_CORE.get().defaultBlockState()
+                    .setValue(com.draxer.dexrider.block.SignalCoreBlock.SPENT, true));
+        }, 0, 1.7, 0.15, 0);
         // 4: Dex y sus formas en soportes de armadura (normal, Violent, Heroic, Upgrade, Complete)
         t = scene(s, t, "dex_formas", lvl -> {
             stand(lvl, -3.2, null, null, false);

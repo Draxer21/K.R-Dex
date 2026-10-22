@@ -8,7 +8,7 @@ import net.minecraft.world.level.Level;
 
 /** El cuaderno de Takumi: guia del Rider System dentro del juego. Clic derecho para leerlo. */
 public class RiderGuideItem extends Item {
-    public static final int PAGES = 17;
+    public static final int PAGES = 19;
 
     public RiderGuideItem(Properties properties) {
         super(properties);

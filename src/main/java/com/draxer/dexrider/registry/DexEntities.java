@@ -70,9 +70,11 @@ public final class DexEntities {
     static {
         for (com.draxer.dexrider.entity.KaijinEntity.Kind kind : com.draxer.dexrider.entity.KaijinEntity.Kind.values()) {
             KAIJIN.put(kind, ENTITIES.register(kind.id, () -> EntityType.Builder.<com.draxer.dexrider.entity.KaijinEntity>of(
-                            (type, level) -> new com.draxer.dexrider.entity.KaijinEntity(type, level, kind), MobCategory.MONSTER)
+                            (type, level) -> kind == com.draxer.dexrider.entity.KaijinEntity.Kind.ARCHITECT
+                                    ? new com.draxer.dexrider.entity.ArchitectEntity(type, level)
+                                    : new com.draxer.dexrider.entity.KaijinEntity(type, level, kind), MobCategory.MONSTER)
                     .sized(0.6F * kind.scale, 1.95F * kind.scale)
-                    .clientTrackingRange(kind == com.draxer.dexrider.entity.KaijinEntity.Kind.CHIMERA ? 16 : 10)
+                    .clientTrackingRange(kind.boss() ? 16 : 10)
                     .build(ResourceKey.create(Registries.ENTITY_TYPE, DexRider.id(kind.id)))));
         }
     }
