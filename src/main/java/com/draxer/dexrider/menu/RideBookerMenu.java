@@ -248,10 +248,16 @@ public class RideBookerMenu extends AbstractContainerMenu {
         NonNullList<ItemStack> items = NonNullList.withSize(SIZE, ItemStack.EMPTY);
         BookerContents saved = driver.get(DexComponents.BOOKER.get());
         if (saved != null) saved.copyInto(items);
-        SimpleContainer storage = new SimpleContainer(SIZE);
-        for (int i = 0; i < SIZE; i++) storage.setItem(i, items.get(i));
         // cada cambio se guarda en el Driver
-        storage.addListener(c -> save(player, c));
+        SimpleContainer storage = new SimpleContainer(SIZE) {
+            private boolean loading = true;
+            @Override
+            public void setChanged() {
+                super.setChanged();
+                if (!loading) save(player, this);
+            }
+            { for (int i = 0; i < SIZE; i++) setItem(i, items.get(i)); loading = false; }
+        };
         if (player.level() instanceof ServerLevel level) DexSounds.play(level, player, DexSounds.CARD_INSERT, 0.6F, 0.8F);
         player.openMenu(new SimpleMenuProvider((id, inv, p) -> new RideBookerMenu(id, inv, storage),
                 Component.translatable("screen.dexrider.ride_booker")));

@@ -57,7 +57,7 @@ public class RideBookerScreen extends AbstractContainerScreen<RideBookerMenu> {
     }
 
     @Override
-    protected void extractBackground(GuiGraphicsExtractor g, int mouseX, int mouseY, float partialTick) {
+    public void extractBackground(GuiGraphicsExtractor g, int mouseX, int mouseY, float partialTick) {
         super.extractBackground(g, mouseX, mouseY, partialTick);
         int x = leftPos, y = topPos;
         // estuche negro con franjas plateadas y rojas (paleta del Ride Booker)
