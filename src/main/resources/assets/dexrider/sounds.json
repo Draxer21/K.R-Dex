@@ -1,0 +1,114 @@
+{
+  "card_insert": {
+    "sounds": [
+      {
+        "name": "dexrider:card_insert"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.card_insert"
+  },
+  "henshin": {
+    "sounds": [
+      {
+        "name": "dexrider:henshin"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.henshin"
+  },
+  "detransform": {
+    "sounds": [
+      {
+        "name": "dexrider:detransform"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.detransform"
+  },
+  "armed_ride": {
+    "sounds": [
+      {
+        "name": "dexrider:armed_ride"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.armed_ride"
+  },
+  "far_charge": {
+    "sounds": [
+      {
+        "name": "dexrider:far_charge"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.far_charge"
+  },
+  "far_impact": {
+    "sounds": [
+      {
+        "name": "dexrider:far_impact"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.far_impact"
+  },
+  "scan_sample": {
+    "sounds": [
+      {
+        "name": "dexrider:scan_sample"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.scan_sample"
+  },
+  "scan_complete": {
+    "sounds": [
+      {
+        "name": "dexrider:scan_complete"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.scan_complete"
+  },
+  "shot": {
+    "sounds": [
+      {
+        "name": "dexrider:shot"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.shot"
+  },
+  "mode_switch": {
+    "sounds": [
+      {
+        "name": "dexrider:mode_switch"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.mode_switch"
+  },
+  "voice_kamen_ride": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_kamen_ride"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_kamen_ride"
+  },
+  "voice_armed_ride": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_armed_ride"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_armed_ride"
+  },
+  "voice_attack_ride": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_attack_ride"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_attack_ride"
+  },
+  "voice_final_attack_ride": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_final_attack_ride"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_final_attack_ride"
+  }
+}

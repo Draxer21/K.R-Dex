@@ -1,0 +1,15 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": [
+    "minecraft:beach",
+    "minecraft:snowy_plains",
+    "minecraft:ice_spikes",
+    "minecraft:snowy_beach"
+  ],
+  "spawners": {
+    "type": "dexrider:echo_mirage",
+    "maxCount": 1,
+    "minCount": 1,
+    "weight": 4
+  }
+}

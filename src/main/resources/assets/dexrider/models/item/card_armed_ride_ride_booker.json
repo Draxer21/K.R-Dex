@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "dexrider:item/card_armed_ride_ride_booker"
+  }
+}

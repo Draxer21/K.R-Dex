@@ -1,0 +1,15 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": [
+    "minecraft:windswept_hills",
+    "minecraft:stony_peaks",
+    "minecraft:dripstone_caves",
+    "minecraft:windswept_gravelly_hills"
+  ],
+  "spawners": {
+    "type": "dexrider:echo_proto",
+    "maxCount": 1,
+    "minCount": 1,
+    "weight": 4
+  }
+}

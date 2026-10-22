@@ -1,0 +1,14 @@
+{
+  "layers": {
+    "humanoid": [
+      {
+        "texture": "dexrider:dex"
+      }
+    ],
+    "humanoid_leggings": [
+      {
+        "texture": "dexrider:dex"
+      }
+    ]
+  }
+}

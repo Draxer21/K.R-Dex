@@ -1,0 +1,14 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": [
+    "minecraft:cherry_grove",
+    "minecraft:flower_forest",
+    "minecraft:birch_forest"
+  ],
+  "spawners": {
+    "type": "dexrider:echo_forge",
+    "maxCount": 1,
+    "minCount": 1,
+    "weight": 4
+  }
+}
