@@ -98,11 +98,11 @@ El Driver responde a lo que siente quien lo lleva. Se despiertan solas:
 - **Heroic Emotion**: cuando un amigo Rider tuyo o un aldeano cercano recibe un golpe de un monstruo. 20 s con
   Regeneración II, Resistencia II, un 20 % menos de daño recibido y golpes ×1.15; traje azul y blanco con cristal blanco.
 - En las dos, las cartas del Ride Booker responden solas: elegir una con **Z / X** ya la activa, sin insertarla.
-- Después hay 90 s de recarga.
+- No tienen recarga: en cuanto una se apaga, puede volver a despertar.
 
 ### HUD del Rider
 Transformado, a la izquierda de la barra de objetos: la carta elegida del Ride Booker (con el color del mazo),
-la recarga de **R**, los segundos de Accel (parpadea al final) y la Emotion activa o su recarga.
+la recarga de **R**, los segundos de Accel (parpadea al final) y el tiempo que le queda a la Emotion activa.
 
 ### Configuración
 `config/dexrider-common.toml`: probabilidad de aparición de los Riders perdidos, multiplicador de daño de los Riders
@@ -453,6 +453,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.22.1** — Violent y Heroic Emotion sin recarga.
 - **0.22.0** — Dex rehecho: bodysuit con musculatura, Driver en 3D (anillo, lente que sobresale, luces laterales y punto verde), Ride Booker en 3D con tapa, cartas asomando y broche, mandíbula, nuca y mejillas del casco en relieve, hombreras en capas y rodilleras (`dex_0_22_preview.png`). Violent Emotion y Heroic Emotion, HUD del Rider y archivo de configuración.
 - **0.21.2** — Armas en alta resolución: el triple de píxeles por bloque (12 en vez de 4) y acabado propio: bisel con luz y sombra en cada pieza, brillo metálico en diagonal y desgaste fino (`armas_preview.png`).
 - **0.21.1** — Armas rehechas en 3D con piezas que se afinan: hojas con filo, nervio y punta (Cipher Edge, Prism Edge en facetas, Titan Blades con guarda en cruz), punta de lanza con aletas (Forge Lance, del color de las mitades), alabarda con hoja de media luna, gancho y púa (Orga), Pegasus Bow con brazos curvos y cuerda, Dragon Rod con puntas en ambos extremos, Cipher Blaster con cañón, empuñadura inclinada y hoja inferior, Module Driver y bastón de Warden telescópico (`armas_preview.png`).

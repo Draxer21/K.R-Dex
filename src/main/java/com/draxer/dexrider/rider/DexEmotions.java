@@ -35,7 +35,7 @@ import java.util.UUID;
  *            20 s: Regeneracion II, Resistencia II, recibe un 20 % menos y pega x1.15. El traje pasa a azul y blanco
  *            con un cristal blanco.
  *  En las dos, las cartas del Ride Booker responden solas: elegir una (Z / X) ya la activa, sin insertarla.
- *  Despues de una Emotion hay 90 s de recarga. Se pueden desactivar en la configuracion.
+ *  Sin recarga: en cuanto se apaga, puede volver a despertar. Se pueden desactivar en la configuracion.
  */
 public final class DexEmotions {
     private DexEmotions() {}
@@ -73,7 +73,7 @@ public final class DexEmotions {
 
     private static boolean canAwaken(ServerLevel level, ServerPlayer p) {
         return DexConfig.emotions() && Transformation.isTransformed(p) && KamenRide.current(p) == KamenRide.DEX
-                && current(p) == null && cooldownLeft(p, level.getGameTime()) == 0 && !RiderKick.isKicking(p);
+                && current(p) == null && !RiderKick.isKicking(p);
     }
 
     // ------------------------------------------------------------------ disparadores
@@ -159,7 +159,6 @@ public final class DexEmotions {
     private static void end(ServerLevel level, ServerPlayer p) {
         String emotion = current(p);
         clear(p);
-        READY_AT.put(p.getUUID(), level.getGameTime() + COOLDOWN);
         if (emotion == null) return;
         p.removeEffect(VIOLENT.equals(emotion) ? MobEffects.SPEED : MobEffects.REGENERATION);
         Transformation.applyFormEffects(p);
