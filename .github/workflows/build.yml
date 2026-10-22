@@ -2,8 +2,12 @@ name: Compilar el mod
 
 on:
   push:
+    branches-ignore: [ci-logs]
   pull_request:
   workflow_dispatch:
+
+permissions:
+  contents: write
 
 jobs:
   build:
@@ -21,9 +25,11 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Compilar
+        id: build
         run: |
           chmod +x gradlew
-          ./gradlew build --stacktrace
+          set -o pipefail
+          ./gradlew build --stacktrace 2>&1 | tee build.log
 
       - name: Subir el .jar
         if: success()
@@ -31,3 +37,20 @@ jobs:
         with:
           name: dexrider-jar
           path: build/libs/*.jar
+
+      # Guarda el registro de la compilacion (y el .jar si salio bien) en la rama ci-logs,
+      # para poder leerlo desde fuera de GitHub.
+      - name: Guardar registro en la rama ci-logs
+        if: always()
+        run: |
+          mkdir -p /tmp/out && cp build.log /tmp/out/build.log || true
+          cp build/libs/*.jar /tmp/out/ 2>/dev/null || true
+          echo "${{ job.status }} ${{ github.sha }}" > /tmp/out/status.txt
+          git config user.name "ci-bot"; git config user.email "ci-bot@users.noreply.github.com"
+          git fetch origin ci-logs || true
+          git checkout --orphan ci-tmp
+          git rm -rf --cached . >/dev/null
+          find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp /tmp/out/* .
+          git add -A && git commit -m "build ${{ github.sha }}: ${{ job.status }}"
+          git push -f origin ci-tmp:ci-logs
