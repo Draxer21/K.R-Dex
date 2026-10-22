@@ -100,6 +100,36 @@ Cada forma tiene **Nivel 1 a 3**: se sube re-escaneando su fuente (el doble de m
 
 Con una forma activa, el daño también se multiplica por el escalado de la familia Form Ride.
 
+### La Señal y el Arquitecto
+"No toda Dai-Shocker es la casa de la montaña": hay gente de fuera de la familia que pensó qué haría con diez Riders
+que se encienden con un botón.
+1. En el cofre de notas del **laboratorio de Gunma** hay un **Rastreador de la Señal** (la Quimera también lo suelta al caer).
+2. Clic derecho con él: la aguja apunta a la **base del Arquitecto** más cercana y te dice a cuántos bloques está.
+   La base está bajo tierra (llanuras, bosques, sabanas, taigas...): en la superficie solo se ve una caseta con un pozo y una escalera.
+3. Abajo: la sala de las diez cápsulas vacías, el laboratorio con sus notas, las celdas y la **arena**. Al fondo, el
+   **Núcleo de la Señal**. Clic derecho lo despierta.
+4. **El Arquitecto** (jefe, 3 fases):
+   - Fase 1: llama refuerzos, rayo a distancia y un pulso si lo rodean.
+   - Fase 2: **se adapta**. Cada golpe seguido con la misma identidad, forma y arma le hace menos daño (hasta un 75 % menos).
+     Cambia de Kamen Ride, Form Ride o arma y lo tomas por sorpresa (+25 %).
+   - Fase 3: carga **la Señal** (la correa). **Di que no**: pulsa Shift justo cuando la suelta (o haz una parada mientras carga).
+     Si lo logras, la Señal se corta y queda aturdido 3 s (recibe +50 %). Si no, te mareas, tus Riders amigos pierden el
+     control un rato y, en la Complete Form, la correa empieza a arrastrarte.
+5. Al caer deja la carta **Attack Ride: Severance** (cortar la correa): corta tu correa y tu Violent Emotion, limpia efectos
+   negativos de ti y de tus amigos, y deja sin órdenes a los enemigos cercanos. El Núcleo se apaga para siempre.
+
+### Parada y contraataque
+- **Parada**: pulsa **Shift** justo antes de que te llegue un golpe de frente (en la Upgrade Form tienes un poco más de margen).
+  El golpe se anula, el atacante queda aturdido y tu siguiente golpe en 2 s es un **contraataque** (+60 %).
+- **Bloqueo**: si mantienes Shift (hasta 1,5 s), los golpes de frente te hacen la mitad, a cambio de un poco de hambre.
+- Pulsar Shift sin parar no sirve: si lo aprietas más de dos veces por segundo, no hay parada.
+
+### Combos entre Riders
+- Usa el **Final Attack Ride** con tus Riders amigos cerca (invocados, dobles o proyecciones del K-Touch): lanzan su ataque
+  especial a la vez contra tu objetivo y se suma un **golpe combinado** con nombre propio (Fuego Cruzado con Kaixa,
+  Pilar del Monarca con Orga...). Con tres o más: **Diez Luces**.
+- Dos jugadores transformados que usen su Final Attack Ride cerca, con menos de 3 s de diferencia, hacen un **Doble Final Attack**.
+
 ### Tonos de las cartas
 Cada carta suena distinto al activarse (una nota propia). **Orga y Kaixa** que peleen contra ti leen los tonos:
 - Si usas la **misma carta dos veces en 10 s**, la reconocen y **esquivan tu siguiente golpe**.
@@ -544,6 +574,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.27.0** — Arco de la Señal: Rastreador, base subterránea, el Arquitecto (jefe de 3 fases que se adapta y lanza la Señal) y la carta Severance. Parada y contraataque con Shift. Combos entre Riders y entre jugadores. 16 pruebas automáticas.
 - **0.26.0** — Kaixa completo (gunblade, Cobalt Sidewinder, forma civil), cartas de los Kaijin, niveles de armas y motos, motos con más detalle, laboratorio de Gunma, Complete Form Nv.2, tonos de las cartas, la correa por la sangre, Driver prestado, poses (con Player Animation Library). 13 pruebas automáticas dentro del juego.
 - **0.25.4** — Pruebas automáticas dentro del juego (9 pruebas con jugador simulado: `runGameTestServer`) y fotos automáticas con gráficos (`runShots`), las dos en GitHub Actions. Arreglos encontrados por las pruebas: los amigos Rider encuentran a su dueño aunque no esté en la lista de jugadores, el HUD no se envía a clientes sin el mod, animación vacía de la armadura.
 - **0.25.3** — Kaixa: líneas doradas que brillan en el traje, el Driver y el arma; sus disparos también son dorados.

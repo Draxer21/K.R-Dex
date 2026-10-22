@@ -405,37 +405,46 @@ public final class DexGameTests {
         ServerPlayer p = player(h, DexCard.KAMEN_RIDE_DEX);
         transform(h, t, p);
         faceEast(p);
+        tickPlayer(h, p);   // el jugador simulado tiene que "terminar de cargar" para poder recibir golpes
+        try { net.minecraft.world.entity.player.Player.class.getMethod("setClientLoaded", boolean.class).invoke(p, true); }
+        catch (ReflectiveOperationException ignored) { /* en otras versiones se carga solo al pasar el tiempo */ }
         ServerLevel level = h.getLevel();
         var zombie = h.spawn(net.minecraft.world.entity.EntityType.ZOMBIE, new BlockPos(10, 1, 8));
         zombie.setNoAi(true);
-        var src = level.damageSources().mobAttack(zombie);
-        // golpe sin guardia
-        p.setAbsorptionAmount(0);
-        float hp = life(p);
-        p.invulnerableTime = 0;
-        p.hurtServer(level, src, 6.0F);
-        float plain = hp - life(p);
-        p.setHealth(p.getMaxHealth()); p.setAbsorptionAmount(0);
-        // parada: Shift pulsado justo ahora
-        p.setShiftKeyDown(true);
-        com.draxer.dexrider.rider.Guard.press(p, level.getGameTime());
-        hp = life(p);
-        p.invulnerableTime = 0;
-        p.hurtServer(level, src, 6.0F);
-        if (life(p) < hp) fail(h, t, "la parada no anulo el golpe");
-        if (!com.draxer.dexrider.rider.Guard.counterReady(p)) fail(h, t, "no quedo listo el contraataque");
-        if (!zombie.hasEffect(net.minecraft.world.effect.MobEffects.SLOWNESS)) fail(h, t, "el atacante no quedo aturdido");
-        // bloqueo: Shift mantenido (pulsado hace 20 ticks)
-        h.runAfterDelay(12, () -> {
-            com.draxer.dexrider.rider.Guard.press(p, level.getGameTime() - 20);
+        h.runAfterDelay(70, () -> {
+            faceEast(p);
+            var src = level.damageSources().mobAttack(zombie);
+            // golpe sin guardia
+            p.setShiftKeyDown(false);
             p.setHealth(p.getMaxHealth()); p.setAbsorptionAmount(0);
-            float before = life(p);
+            float hp = life(p);
             p.invulnerableTime = 0;
             p.hurtServer(level, src, 6.0F);
-            float blocked = before - life(p);
-            if (plain <= 0 || blocked > plain * 0.6F || blocked <= 0) fail(h, t, "bloqueo raro: sin guardia " + plain + ", con bloqueo " + blocked);
-            log(t, "ok: parada anula, contraataque listo, bloqueo " + plain + " -> " + blocked);
-            h.succeed();
+            float plain = hp - life(p);
+            if (plain <= 0) { fail(h, t, "el golpe sin guardia no hizo dano (jugador invulnerable?)"); return; }
+            // parada: Shift pulsado justo ahora
+            p.setHealth(p.getMaxHealth()); p.setAbsorptionAmount(0);
+            p.setShiftKeyDown(true);
+            com.draxer.dexrider.rider.Guard.press(p, level.getGameTime());
+            hp = life(p);
+            p.invulnerableTime = 0;
+            p.hurtServer(level, src, 6.0F);
+            if (life(p) < hp) { fail(h, t, "la parada no anulo el golpe"); return; }
+            if (!com.draxer.dexrider.rider.Guard.counterReady(p)) { fail(h, t, "no quedo listo el contraataque"); return; }
+            if (!zombie.hasEffect(net.minecraft.world.effect.MobEffects.SLOWNESS)) { fail(h, t, "el atacante no quedo aturdido"); return; }
+            // bloqueo: Shift mantenido (pulsado hace 20 ticks)
+            h.runAfterDelay(12, () -> {
+                faceEast(p);
+                com.draxer.dexrider.rider.Guard.press(p, level.getGameTime() - 20);
+                p.setHealth(p.getMaxHealth()); p.setAbsorptionAmount(0);
+                float before = life(p);
+                p.invulnerableTime = 0;
+                p.hurtServer(level, src, 6.0F);
+                float blocked = before - life(p);
+                if (blocked > plain * 0.6F || blocked <= 0) { fail(h, t, "bloqueo raro: sin guardia " + plain + ", con bloqueo " + blocked); return; }
+                log(t, "ok: parada anula, contraataque listo, bloqueo " + plain + " -> " + blocked);
+                h.succeed();
+            });
         });
     }
 
@@ -460,12 +469,16 @@ public final class DexGameTests {
         faceEast(p2);
         tickPlayer(h, p2);
         h.runAfterDelay(30, () -> {
-            if (golem.getHealth() >= hp0) fail(h, t, "el golpe combinado no hizo dano");
+            if (golem.isAlive() && golem.getHealth() >= hp0) fail(h, t, "el golpe combinado no hizo dano");
+            var golem2 = h.spawn(net.minecraft.world.entity.EntityType.IRON_GOLEM, new BlockPos(12, 1, 8));
+            golem2.setNoAi(true);
+            golem2.setLastHurtByMob(p);
+            faceEast(p); faceEast(p2);
             com.draxer.dexrider.rider.Combos.forget(p.getUUID());
             com.draxer.dexrider.rider.Combos.onFinisher(level, p2);
             int pair = com.draxer.dexrider.rider.Combos.onFinisher(level, p);
             if (pair != 1) fail(h, t, "dos jugadores rematando juntos no hicieron combo");
-            log(t, "ok: combo con Kaixa (golem " + hp0 + " -> " + golem.getHealth() + ") y combo entre jugadores");
+            log(t, "ok: combo con Kaixa (golem " + hp0 + " -> " + (golem.isAlive() ? golem.getHealth() : 0) + ") y combo entre jugadores");
             h.succeed();
         });
     }

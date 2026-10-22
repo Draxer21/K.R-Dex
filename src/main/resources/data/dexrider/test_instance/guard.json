@@ -3,7 +3,7 @@
   "function": "dexrider:guard",
   "environment": "dexrider:default",
   "structure": "dexrider:test_platform",
-  "max_ticks": 60,
+  "max_ticks": 140,
   "setup_ticks": 0,
   "required": true
 }

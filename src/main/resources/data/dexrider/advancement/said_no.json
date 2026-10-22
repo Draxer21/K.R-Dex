@@ -2,7 +2,7 @@
   "parent": "dexrider:signal_base",
   "display": {
     "icon": {
-      "id": "minecraft:chain"
+      "id": "minecraft:iron_bars"
     },
     "title": {
       "translate": "advancements.dexrider.said_no.title"
