@@ -94,7 +94,14 @@ public final class DexGameTests {
         ServerPlayer p = new ServerPlayer(server, level, cookie.gameProfile(), cookie.clientInformation());
         var connection = new net.minecraft.network.Connection(net.minecraft.network.protocol.PacketFlow.SERVERBOUND);
         new io.netty.channel.embedded.EmbeddedChannel(connection);
-        p.connection = new net.minecraft.server.network.ServerGamePacketListenerImpl(server, connection, p, cookie);
+        // los paquetes de mods (Curios, el HUD...) no tienen cliente que los reciba: se descartan
+        p.connection = new net.minecraft.server.network.ServerGamePacketListenerImpl(server, connection, p, cookie) {
+            @Override
+            public void send(net.minecraft.network.protocol.Packet<?> packet) {
+                if (packet instanceof net.minecraft.network.protocol.common.ClientboundCustomPayloadPacket) return;
+                super.send(packet);
+            }
+        };
         p.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
         level.addNewPlayer(p);
         return p;
