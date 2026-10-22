@@ -142,9 +142,9 @@ public final class ShotDirector {
             }
         }, 0, 3.5, 0.6, 0);
         t = scene(s, t, "scarab", lvl -> {
-            DexMachineEntity m = (DexMachineEntity) spawnStill(lvl, DexEntities.bike(BikeKind.DEX_MACHINE).get(), 0, 4);
-            if (m != null) { m.setYRot(120); m.showScarab(); }
-        }, 0, 1.5, 0.3, 0);
+            DexMachineEntity m = (DexMachineEntity) spawnStill(lvl, DexEntities.bike(BikeKind.DEX_MACHINE).get(), 0, 4.5);
+            if (m != null) { m.setYRot(60); m.yBodyRot = 60; m.yHeadRot = 60; m.showScarab(); }
+        }, -1.5, 2.2, 1.2, 0);
         // 7: el HUD y la pantalla del K-Touch no se fotografian aqui (necesitan jugador transformado)
         s.add(new Step(t + 10, () -> {
             DexRider.LOGGER.info("SHOTS: terminado");
@@ -158,8 +158,13 @@ public final class ShotDirector {
         s.add(new Step(t, () -> server(srv -> {
             for (Entity e : SCENE) e.discard();
             SCENE.clear();
+            cmd(srv, "kill @e[type=!minecraft:player]");   // companeros que traen los Riders perdidos, etc.
             build.accept(srv.overworld());
             cmd(srv, String.format(java.util.Locale.ROOT, "tp @a %.2f %.2f %.2f 0 %.1f", bx + camX, by + camY, bz, pitchDown * 20));
+        })));
+        // los Kagami se quitan el traje cuando no pelean: para la foto, con traje
+        s.add(new Step(t + 26, () -> server(srv -> {
+            for (Entity e : SCENE) if (e instanceof com.draxer.dexrider.entity.RiderMob rm) rm.setCivilian(false);
         })));
         s.add(new Step(t + 30, () -> shoot(name)));
         return t + 36;
