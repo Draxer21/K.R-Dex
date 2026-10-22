@@ -197,7 +197,7 @@ public final class Scanner {
 
     private static void sample(ServerLevel level, ServerPlayer player, DexCard card) {
         ItemStack driver = DexDriverItem.findDriver(player);
-        if (driver.isEmpty()) return;
+        if (driver.isEmpty() || LentDriver.isLent(driver)) return;   // el portador no escanea
         DriverDeck deck = DexDriverItem.getDeck(driver);
 
         boolean canLevel = (card.family() == DexCard.Family.FORM_RIDE || card.family() == DexCard.Family.ATTACK_RIDE

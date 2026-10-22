@@ -35,6 +35,9 @@ public class DexDriverItem extends Item {
             }
             return InteractionResult.SUCCESS;
         }
+        if (player instanceof ServerPlayer sp && com.draxer.dexrider.rider.LentDriver.returnIt(sp, player.getItemInHand(hand))) {
+            return InteractionResult.SUCCESS;   // un Driver prestado: clic derecho lo devuelve
+        }
         if (player instanceof ServerPlayer sp) {
             ItemStack driver = player.getItemInHand(hand);
             DriverDeck deck = getDeck(driver);
@@ -65,6 +68,15 @@ public class DexDriverItem extends Item {
             }
         }
         return InteractionResult.SUCCESS;
+    }
+
+    /** Clic derecho sobre otro jugador: prestarle el Driver. */
+    @Override
+    public InteractionResult interactLivingEntity(ItemStack stack, Player player, net.minecraft.world.entity.LivingEntity target, InteractionHand hand) {
+        if (player instanceof ServerPlayer owner && target instanceof ServerPlayer other && owner.level() instanceof ServerLevel level) {
+            return com.draxer.dexrider.rider.LentDriver.lend(level, owner, other, stack) ? InteractionResult.SUCCESS : InteractionResult.FAIL;
+        }
+        return target instanceof Player ? InteractionResult.SUCCESS : InteractionResult.PASS;
     }
 
     /**

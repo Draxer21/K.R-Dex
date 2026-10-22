@@ -204,6 +204,11 @@ public class RideBookerMenu extends AbstractContainerMenu {
                     driver.set(DexComponents.BOOKER_SEL.get(), sel);
                 }
                 ItemStack card = items.get(sel).copy();
+                // Shift: cortar la carta a medio sonar (senuelo para quien lee los tonos)
+                if (player.isShiftKeyDown() && card.getItem() instanceof RiderCardItem decoy) {
+                    com.draxer.dexrider.rider.Tones.decoy(level, player, decoy.card());
+                    return;
+                }
                 if (card.getItem() instanceof RiderCardItem rc) {
                     DexSounds.play(level, player, DexSounds.CARD_INSERT, 1.0F, 1.2F);
                     rc.activate(level, player, card, InteractionHand.MAIN_HAND);

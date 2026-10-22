@@ -51,6 +51,12 @@ public final class RiderDialogue {
         return true;
     }
 
+    /** Dice un texto ya armado (palabras de salida, etc.). */
+    public static void sayRaw(ServerLevel level, Entity speaker, KamenRide rider, Component text) {
+        LAST_LINE.put(speaker.getUUID(), level.getGameTime());
+        broadcast(level, speaker, rider, text);
+    }
+
     /** Siempre habla (momentos de historia). */
     public static void force(ServerLevel level, Entity speaker, KamenRide rider, Line line, Object... args) {
         LAST_LINE.remove(speaker.getUUID());

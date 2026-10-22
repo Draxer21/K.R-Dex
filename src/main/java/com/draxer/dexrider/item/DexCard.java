@@ -22,6 +22,7 @@ public enum DexCard {
     KAMEN_RIDE_MIRAGE(Family.KAMEN_RIDE, 0),
     KAMEN_RIDE_PROTO(Family.KAMEN_RIDE, 0),
     KAMEN_RIDE_KAIXA(Family.KAMEN_RIDE, 0),       // la undecima: Tetsuya (abre la segunda carta de Complete Form)
+    KAMEN_RIDE_BEARER(Family.KAMEN_RIDE, 0),      // nace cuando otro jugador se transforma con tu Driver prestado
     ATTACK_RIDE_SLASH(Family.ATTACK_RIDE, 0),
     // Attack Ride del fanfic: suben de nivel re-escaneando
     ATTACK_RIDE_OVERCLOCK(Family.ATTACK_RIDE, 3),     // ver a un enderman pelear, o a Cipher en Accel

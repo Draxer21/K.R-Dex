@@ -66,16 +66,19 @@ public final class Transformation {
     private static void tryTransform(ServerPlayer player) {
         ItemStack driver = DexDriverItem.findDriver(player);
         if (driver.isEmpty()) {
+            if (LentDriver.revoke(player)) return;   // V sin Driver: revocar el prestamo
             player.sendSystemMessage(Component.translatable("message.dexrider.need_driver"), true);
             return;
         }
-        if (!"kamen_ride_dex".equals(driver.get(DexComponents.LOADED_CARD.get()))) {
+        boolean lent = LentDriver.isLent(driver);
+        if (!lent && !"kamen_ride_dex".equals(driver.get(DexComponents.LOADED_CARD.get()))) {
             player.sendSystemMessage(Component.translatable("message.dexrider.need_card"), true);
             return;
         }
         transform(player);
         // La carta vuelve al mazo al transformarse; para la proxima vez hay que insertarla de nuevo.
         driver.remove(DexComponents.LOADED_CARD.get());
+        if (lent) LentDriver.onBearerTransform(player, driver);
     }
 
     private static void transform(ServerPlayer player) {

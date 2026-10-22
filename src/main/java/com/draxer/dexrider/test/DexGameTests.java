@@ -56,6 +56,9 @@ public final class DexGameTests {
         FUNCTIONS.register("emotions_upgrade", () -> DexGameTests::emotionsUpgrade);
         FUNCTIONS.register("complete_form", () -> DexGameTests::completeForm);
         FUNCTIONS.register("structures", () -> DexGameTests::structures);
+        FUNCTIONS.register("tones", () -> DexGameTests::tones);
+        FUNCTIONS.register("correa", () -> DexGameTests::correa);
+        FUNCTIONS.register("lent_driver", () -> DexGameTests::lentDriver);
     }
 
     // ------------------------------------------------------------------ utilidades
@@ -334,6 +337,55 @@ public final class DexGameTests {
             if (tpl.isEmpty()) { fail(h, t, name + " no carga"); return; }
             log(t, name + " ok, tamano " + tpl.get().getSize());
         }
+        h.succeed();
+    }
+
+    static void tones(GameTestHelper h) {
+        String t = "tones";
+        ServerPlayer p = player(h, DexCard.values());
+        transform(h, t, p);
+        ServerLevel level = h.getLevel();
+        var orga = h.spawn(DexEntities.ECHOES.get(KamenRide.ORGA).get(), new BlockPos(11, 1, 8));
+        com.draxer.dexrider.rider.Tones.onCard(level, p, DexCard.ATTACK_RIDE_SLASH);
+        com.draxer.dexrider.rider.Tones.onCard(level, p, DexCard.ATTACK_RIDE_SLASH);   // la misma carta: Orga la lee
+        if (!com.draxer.dexrider.rider.Tones.dodges(orga, p.damageSources().playerAttack(p))) fail(h, t, "Orga no leyo el tono");
+        com.draxer.dexrider.rider.Tones.decoy(level, p, DexCard.ATTACK_RIDE_GALE);
+        if (com.draxer.dexrider.rider.Tones.exposed(orga) < 1.4F) fail(h, t, "el senuelo no dejo expuesto a Orga");
+        log(t, "ok: leer, esquivar y senuelo");
+        h.succeed();
+    }
+
+    static void correa(GameTestHelper h) {
+        String t = "correa";
+        ServerPlayer p = player(h, DexCard.values());
+        transform(h, t, p);
+        ServerLevel level = h.getLevel();
+        p.getInventory().add(new ItemStack(DexItems.K_TOUCH.get()));
+        p.getInventory().add(new ItemStack(DexItems.COMPLETE_FORM_CARD.get()));
+        com.draxer.dexrider.rider.AllyManager.befriend(level, p, KamenRide.CIPHER, h.absolutePos(new BlockPos(10, 1, 8)));
+        KTouch.enter(p);
+        KTouch.toggleCrest(p, KamenRide.CIPHER);   // Takumi esta aqui de verdad
+        KTouch.onHurt(level, p, 1.0F);
+        if (KTouch.correa(p) < 0) { fail(h, t, "la correa no desperto con un familiar presente"); return; }
+        KTouch.toggleCrest(p, KamenRide.CIPHER);   // "no" a tiempo: soltar su blason
+        if (KTouch.correa(p) >= 0) fail(h, t, "soltar el blason no corto la correa");
+        log(t, "ok: la correa viaja por la sangre y se corta diciendo no a tiempo");
+        h.succeed();
+    }
+
+    static void lentDriver(GameTestHelper h) {
+        String t = "lent_driver";
+        ServerPlayer owner = player(h, DexCard.KAMEN_RIDE_DEX);
+        ServerPlayer bearer = mockPlayer(h);
+        ServerLevel level = h.getLevel();
+        if (!com.draxer.dexrider.rider.LentDriver.lend(level, owner, bearer, driver(owner))) { fail(h, t, "no se pudo prestar"); return; }
+        if (!driver(owner).isEmpty() || driver(bearer).isEmpty()) fail(h, t, "el Driver no cambio de manos");
+        Transformation.toggle(bearer);
+        if (!Transformation.isTransformed(bearer)) fail(h, t, "el portador no se transformo");
+        if (!DexDriverItem.getDeck(driver(bearer)).has(DexCard.KAMEN_RIDE_BEARER)) fail(h, t, "no nacio la Kamen Ride del portador");
+        com.draxer.dexrider.rider.LentDriver.giveBack(bearer, owner, true);
+        if (Transformation.isTransformed(bearer) || driver(owner).isEmpty()) fail(h, t, "revocar no devolvio el Driver");
+        log(t, "ok: prestar, transformarse, nacer la carta y revocar");
         h.succeed();
     }
 }

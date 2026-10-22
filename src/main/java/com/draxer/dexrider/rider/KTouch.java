@@ -187,8 +187,14 @@ public final class KTouch {
     public static void toggleCrest(ServerPlayer player, KamenRide k) {
         if (!(player.level() instanceof ServerLevel level) || KamenRide.current(player) != KamenRide.COMPLETE) return;
         var set = HELD.computeIfAbsent(player.getUUID(), u -> java.util.EnumSet.noneOf(KamenRide.class));
+        if (set.contains(k) && inLoop(player) && player.getRandom().nextBoolean()) {
+            // en el bucle, tu "no" deja de ser fiable
+            player.sendSystemMessage(Component.translatable("message.dexrider.correa_no_fails").withStyle(ChatFormatting.DARK_PURPLE), true);
+            return;
+        }
         if (set.remove(k)) {
             FX.ring(level, player, k.color, 1.0, 3);
+            checkCorreaEnd(player, set);
             player.sendSystemMessage(Component.translatable("message.dexrider.crest_release", k.displayName()), true);
             return;
         }
@@ -216,7 +222,7 @@ public final class KTouch {
         for (KamenRide k : set) {
             var present = AllyManager.nearbyFriend(player, k, 48);
             if (present != null) {
-                cost += 0.012F;
+                cost += isFamily(k) ? 0.006F : 0.012F;   // la sangre: un Kagami cuesta la mitad de sostener
                 if (player.tickCount % 20 == 0) {
                     present.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 40, 1, false, false));
                     present.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 40, 1, false, false));
@@ -226,6 +232,7 @@ public final class KTouch {
             } else cost += 0.025F;
         }
         if (isLevel2(player)) cost *= 0.75F;   // la Nv.2 aguanta mas
+        correaTick(level, player, set);
         if (!player.isCreative()) player.causeFoodExhaustion(cost);
     }
 
@@ -235,5 +242,89 @@ public final class KTouch {
 
     public static void releaseAll(ServerLevel level, ServerPlayer player) {
         HELD.remove(player.getUUID());
+        CORREA.remove(player.getUUID());
     }
+
+    // ------------------------------------------------------------------ la correa y la sangre (dex_biblia: contagio)
+
+    /** Los Kagami: misma arquitectura de Rider System, linea paterna. */
+    public static boolean isFamily(KamenRide k) {
+        return k == KamenRide.CIPHER || k == KamenRide.WARDEN || k == KamenRide.PSYGA || k == KamenRide.ORGA || k == KamenRide.KAIXA;
+    }
+
+    /** Progreso del contagio (ticks). 0-160 eco, 160-500 arrastre, 500-900 bucle; a los 900 la correa te consume. */
+    private static final java.util.Map<java.util.UUID, Integer> CORREA = new java.util.HashMap<>();
+    public static final int ECHO_END = 160, DRAG_END = 500, LOOP_END = 900;
+
+    public static int correa(Player p) { return CORREA.getOrDefault(p.getUUID(), -1); }
+    public static boolean isDragged(Player p) { return correa(p) >= ECHO_END; }
+    public static boolean inLoop(Player p) { return correa(p) >= DRAG_END; }
+
+    private static boolean familyPresent(ServerPlayer p, java.util.Set<KamenRide> set) {
+        for (KamenRide k : set) if (isFamily(k) && AllyManager.nearbyFriend(p, k, 48) != null) return true;
+        return false;
+    }
+
+    /** Un golpe que te deja bajo el 30 % con un familiar presente despierta la correa, y viaja por la sangre. */
+    public static void onHurt(ServerLevel level, ServerPlayer p, float healthAfter) {
+        if (KamenRide.current(p) != KamenRide.COMPLETE || CORREA.containsKey(p.getUUID())) return;
+        var set = HELD.get(p.getUUID());
+        if (set == null || healthAfter > p.getMaxHealth() * 0.3F || !familyPresent(p, set)) return;
+        CORREA.put(p.getUUID(), 0);
+        level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.WARDEN_HEARTBEAT, SoundSource.PLAYERS, 1.5F, 0.8F);
+        p.sendSystemMessage(Component.translatable("message.dexrider.correa_echo").withStyle(ChatFormatting.DARK_PURPLE));
+    }
+
+    private static void correaTick(ServerLevel level, ServerPlayer p, java.util.Set<KamenRide> set) {
+        Integer prog = CORREA.get(p.getUUID());
+        if (prog == null) return;
+        if (!familyPresent(p, set)) { endCorrea(p, true); return; }
+        // los amigos son toma de tierra: con alguno presente, el contagio avanza a la mitad
+        boolean ground = false;
+        for (KamenRide k : set) if (!isFamily(k) && AllyManager.nearbyFriend(p, k, 48) != null) ground = true;
+        int next = prog + (ground ? (p.tickCount % 2) : 1);
+        CORREA.put(p.getUUID(), next);
+        if (p.tickCount % 4 == 0) {
+            FX.dust(level, 0x8A2BE2, 1.0F, FX.center(p), 3, 0.5);
+            for (KamenRide k : set) {
+                var a = AllyManager.nearbyFriend(p, k, 48);
+                if (a != null && isFamily(k)) FX.line(level, FX.center(p), FX.center(a), 0x8A2BE2, 0.6F, 1.2);
+            }
+        }
+        if (prog < ECHO_END && next >= ECHO_END) p.sendSystemMessage(Component.translatable("message.dexrider.correa_drag").withStyle(ChatFormatting.DARK_PURPLE));
+        if (prog < DRAG_END && next >= DRAG_END) p.sendSystemMessage(Component.translatable("message.dexrider.correa_loop").withStyle(ChatFormatting.DARK_RED));
+        if (next >= ECHO_END && p.tickCount % 20 == 0) p.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 40, 1, false, false, true));
+        // palabras de salida (las que el fanfic ya fijo): Takumi "Tres", Nagisa "Sotano"
+        if (p.tickCount % 20 == 0) {
+            for (KamenRide k : java.util.List.copyOf(set)) {
+                if ((k != KamenRide.CIPHER && k != KamenRide.PSYGA) || p.getRandom().nextInt(25) != 0) continue;
+                var a = AllyManager.nearbyFriend(p, k, 48);
+                if (a == null) continue;
+                RiderDialogue.sayRaw(level, a, k, Component.translatable("exitword.dexrider." + k.id()));
+                set.remove(k);
+                FX.ring(level, a, k.color, 1.0, 4);
+                checkCorreaEnd(p, set);
+            }
+        }
+        if (next >= LOOP_END) {
+            CORREA.remove(p.getUUID());
+            p.sendSystemMessage(Component.translatable("message.dexrider.correa_consumed").withStyle(ChatFormatting.DARK_RED));
+            p.addEffect(new MobEffectInstance(MobEffects.WITHER, 100, 1));
+            exit(level, p, true);
+        }
+    }
+
+    private static void checkCorreaEnd(ServerPlayer p, java.util.Set<KamenRide> set) {
+        if (!CORREA.containsKey(p.getUUID())) return;
+        for (KamenRide k : set) if (isFamily(k)) return;
+        endCorrea(p, false);
+    }
+
+    private static void endCorrea(ServerPlayer p, boolean quiet) {
+        if (CORREA.remove(p.getUUID()) != null && !quiet)
+            p.sendSystemMessage(Component.translatable("message.dexrider.correa_cut").withStyle(ChatFormatting.AQUA));
+    }
+
+    /** Para pruebas: empuja el contagio. */
+    public static void forceCorrea(ServerPlayer p, int ticks) { CORREA.put(p.getUUID(), ticks); }
 }

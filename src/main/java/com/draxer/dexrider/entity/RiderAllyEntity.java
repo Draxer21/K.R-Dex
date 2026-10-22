@@ -160,7 +160,7 @@ public class RiderAllyEntity extends RiderMob {
                 vanish(level);
                 return;
             }
-            followOwner(level);
+            if (!com.draxer.dexrider.rider.KTouch.isDragged(o)) followOwner(level);   // arrastre: ya no te siguen
             if (tickCount % 10 == 0) pickTarget(level);
             if (tickCount % 5 == 0) FX.dust(level, rider.color, 0.7F, position().add(0, 1.0, 0), 2, 0.4);
             return;

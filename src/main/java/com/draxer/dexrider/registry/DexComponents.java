@@ -102,6 +102,17 @@ public final class DexComponents {
                     .persistent(Codec.BOOL)
                     .networkSynchronized(ByteBufCodecs.BOOL));
 
+    /** Driver prestado: uuid del duenio y su nombre (el Driver los lleva mientras esta prestado). */
+    public static final Supplier<DataComponentType<String>> LENT_BY =
+            COMPONENTS.registerComponentType("lent_by", builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
+    public static final Supplier<DataComponentType<String>> LENT_OWNER =
+            COMPONENTS.registerComponentType("lent_owner", builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
+    /** Forma del ultimo portador del Driver (para la carta Kamen Ride: Portador). */
+    public static final Supplier<DataComponentType<SuitConfig>> BEARER_SUIT =
+            COMPONENTS.registerComponentType("bearer_suit", builder -> builder.persistent(SuitConfig.CODEC).networkSynchronized(SuitConfig.STREAM_CODEC));
+    public static final Supplier<DataComponentType<String>> BEARER_NAME =
+            COMPONENTS.registerComponentType("bearer_name", builder -> builder.persistent(Codec.STRING).networkSynchronized(ByteBufCodecs.STRING_UTF8));
+
     /** Upgrade Form activa (en el peto, para que todos vean el traje). */
     public static final Supplier<DataComponentType<Boolean>> UPGRADE =
             COMPONENTS.registerComponentType("upgrade", builder -> builder

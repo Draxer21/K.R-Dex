@@ -53,6 +53,7 @@ public class RiderCardItem extends Item {
      */
     public InteractionResult activate(ServerLevel serverLevel, ServerPlayer sp, ItemStack stack, InteractionHand hand) {
         if (sp.getCooldowns().isOnCooldown(stack)) return InteractionResult.FAIL;
+        com.draxer.dexrider.rider.Tones.onCard(serverLevel, sp, card);
 
         DexDriverItem.registerCard(sp, card);
 
@@ -116,6 +117,10 @@ public class RiderCardItem extends Item {
     }
 
     private void loadKamenRide(ServerLevel level, ServerPlayer player) {
+        if (card == DexCard.KAMEN_RIDE_BEARER) {
+            com.draxer.dexrider.rider.LentDriver.useBearerCard(level, player);
+            return;
+        }
         if (Transformation.isTransformed(player)) {
             // Transformado: la carta cambia de identidad (Nine, Cipher...) o vuelve a Dex
             KamenRide target = KamenRide.byCard(card);

@@ -49,6 +49,7 @@ public final class DexEvents {
             }
             FormRide.tick(level, player);
             CipherModes.tick(level, player);
+            LentDriver.tick(player);
             DexEmotions.tick(level, player);
             if (player.tickCount % 5 == 0) com.draxer.dexrider.network.HudSyncPayload.send(level, player);
             KamenRide identity = KamenRide.current(player);
@@ -94,6 +95,10 @@ public final class DexEvents {
         // Heroic Emotion: alguien a quien Dex protege recibe un golpe
         DexEmotions.onProtectedHurt(level, victim, event.getSource());
 
+        // Tonos: Orga y Kaixa esquivan la carta que ya leyeron; el senuelo los deja expuestos
+        if (Tones.dodges(victim, event.getSource())) { event.setCanceled(true); return; }
+        if (event.getSource().getEntity() instanceof ServerPlayer) event.setAmount(event.getAmount() * Tones.exposed(victim));
+
         // Un Rider perdido atacado pide ayuda a los que esten cerca
         if (victim instanceof com.draxer.dexrider.entity.RiderEchoEntity lost && event.getSource().getEntity() instanceof LivingEntity src) {
             lost.callForHelp(level, src);
@@ -104,6 +109,7 @@ public final class DexEvents {
             FormRide form = FormRide.current(target);
             // El traje del Rider System absorbe parte de cada golpe
             event.setAmount(event.getAmount() * Transformation.SUIT_DAMAGE_TAKEN * DexEmotions.takenScale(target));
+            KTouch.onHurt(level, target, target.getHealth() - event.getAmount());
             // Violent Emotion: Dex al borde o recibiendo una paliza de golpe
             DexEmotions.onDexHurt(level, target, event.getAmount());
             // Orga leyendo los tonos: esquiva los golpes cuerpo a cuerpo
