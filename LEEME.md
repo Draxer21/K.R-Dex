@@ -503,6 +503,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.25.4** — Pruebas automáticas dentro del juego (9 pruebas con jugador simulado: `runGameTestServer`) y fotos automáticas con gráficos (`runShots`), las dos en GitHub Actions. Arreglos encontrados por las pruebas: los amigos Rider encuentran a su dueño aunque no esté en la lista de jugadores, el HUD no se envía a clientes sin el mod, animación vacía de la armadura.
 - **0.25.3** — Kaixa: líneas doradas que brillan en el traje, el Driver y el arma; sus disparos también son dorados.
 - **0.25.2** — Violent Emotion con púas y cristal morado en la frente; Heroic Emotion con cristal blanco en la frente (`emotions_preview.png`).
 - **0.25.1** — Kaixa: el visor pasa a un triángulo invertido violeta (carta y blasón del K-Touch a juego).
