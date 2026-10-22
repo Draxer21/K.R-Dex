@@ -564,7 +564,7 @@ public final class RiderPowers {
 
     // ---------------------------------------------------------------- Kaixa (Tetsuya)
 
-    private static final int KAIXA_VIOLET = 0x966EFF;
+    private static final int KAIXA_VIOLET = 0xFFC434;   // lineas doradas del traje
 
     /** Dos disparos de la espada-pistola, uno detras de otro, al primer objetivo en la linea. */
     private static Used kaixaTwinShot(ServerLevel level, ServerPlayer p) {

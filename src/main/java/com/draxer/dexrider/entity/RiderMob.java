@@ -453,7 +453,7 @@ public abstract class RiderMob extends PathfinderMob implements GeoEntity {
             case WARDEN -> FX.dust(level, 0xFF9628, 0.6F, position().add(0, 1.6, 0), 1, 0.3);
             case PSYGA -> FX.particle(level, ParticleTypes.CLOUD, position().add(0, 1.0, 0).subtract(getLookAngle().scale(0.5)), 1, 0.1, 0.01);
             case ORGA -> FX.dust(level, 0xF2C230, 0.7F, position().add(0, 1, 0), 1, 0.4);
-            case KAIXA -> FX.dust(level, 0x966EFF, 0.6F, position().add(0, 1, 0), 1, 0.4);
+            case KAIXA -> FX.dust(level, 0xFFC434, 0.6F, position().add(0, 1, 0), 1, 0.4);
             case PROTO -> FX.particle(level, ParticleTypes.SMALL_FLAME, position().add(0, 1.0, 0).subtract(getLookAngle().scale(0.4)), 1, 0.1, 0.01);
             default -> { }
         }

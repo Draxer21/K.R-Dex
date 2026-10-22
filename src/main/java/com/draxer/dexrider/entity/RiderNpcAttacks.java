@@ -275,7 +275,7 @@ public final class RiderNpcAttacks {
     /** Kaixa (Tetsuya): dos disparos de la espada-pistola y, si el objetivo esta cerca, un tajo. */
     private static void kaixaShots(ServerLevel level, RiderMob self, LivingEntity target) {
         net.minecraft.world.phys.Vec3 from = self.getEyePosition(), to = FX.center(target);
-        FX.line(level, from, to, 0x966EFF, 0.9F, 0.4);
+        FX.line(level, from, to, 0xFFC434, 0.9F, 0.4);
         hurt(level, self, target, 5.0F);
         FX.line(level, from.add(0, -0.2, 0), to, 0x385CBE, 0.9F, 0.4);
         hurt(level, self, target, 4.0F);
