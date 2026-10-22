@@ -123,6 +123,7 @@ public final class KTouch {
         Integer clv = drv.get(DexComponents.COMPLETE_LEVEL.get());
         KamenRide.set(level, player, KamenRide.COMPLETE);
         DexAdvancements.award(player, "complete_form");
+        com.draxer.dexrider.network.PosePayload.send(player, "complete");
         if (fromUpgrade && (clv == null || clv < 2)) {
             drv.set(DexComponents.COMPLETE_LEVEL.get(), 2);
             clv = 2;

@@ -54,6 +54,7 @@ public class RiderCardItem extends Item {
     public InteractionResult activate(ServerLevel serverLevel, ServerPlayer sp, ItemStack stack, InteractionHand hand) {
         if (sp.getCooldowns().isOnCooldown(stack)) return InteractionResult.FAIL;
         com.draxer.dexrider.rider.Tones.onCard(serverLevel, sp, card);
+        com.draxer.dexrider.network.PosePayload.send(sp, card.family() == DexCard.Family.FINAL_ATTACK_RIDE ? "finisher" : "card");
 
         DexDriverItem.registerCard(sp, card);
 

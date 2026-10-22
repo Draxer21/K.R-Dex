@@ -37,6 +37,16 @@ repositories {
         }
         filter { includeGroupAndSubgroups('com.geckolib') }
     }
+    // Player Animation Library (poses del jugador; dependencia OPCIONAL)
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = 'Redlance'
+                url = 'https://repo.redlance.org/public'
+            }
+        }
+        filter { includeGroupAndSubgroups('com.zigythebird') }
+    }
     // Curios (ranura de cinturon para el Dex Driver)
     maven {
         name = 'Curios'
@@ -139,6 +149,9 @@ dependencies {
     // Curios: API para compilar + mod completo para ejecutar
     compileOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}:api"
     runtimeOnly "top.theillusivec4.curios:curios-neoforge:${curios_version}"
+    // Poses del jugador: opcional (si no esta instalada, el mod funciona igual, sin poses)
+    compileOnly "com.zigythebird.playeranim:PlayerAnimationLibNeo:${pal_version}"
+    localRuntime "com.zigythebird.playeranim:PlayerAnimationLibNeo:${pal_version}"
 
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime

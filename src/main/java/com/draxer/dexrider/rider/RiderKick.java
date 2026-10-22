@@ -59,6 +59,7 @@ public final class RiderKick {
     }
 
     public static void start(ServerLevel level, ServerPlayer player) {
+        com.draxer.dexrider.network.PosePayload.send(player, "kick");
         KickState state = new KickState();
         Vec3 look = player.getLookAngle();
         state.fallbackDir = new Vec3(look.x, Math.min(look.y, -0.6), look.z).normalize();

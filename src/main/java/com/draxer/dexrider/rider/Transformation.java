@@ -119,6 +119,7 @@ public final class Transformation {
 
         player.sendSystemMessage(Component.translatable("message.dexrider.kamen_ride_dex"), true);
         DexAdvancements.award(player, "henshin");
+        com.draxer.dexrider.network.PosePayload.send(player, "henshin");
     }
 
     /**

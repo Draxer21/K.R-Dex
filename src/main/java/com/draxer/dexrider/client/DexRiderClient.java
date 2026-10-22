@@ -113,6 +113,7 @@ public class DexRiderClient {
     @SubscribeEvent
     static void onClientSetup(FMLClientSetupEvent event) {
         ICurioRenderer.register(DexItems.DEX_DRIVER.get(), DexDriverCurioRenderer::new);
+        if (net.neoforged.fml.ModList.get().isLoaded(com.draxer.dexrider.network.PosePayload.PAL)) PoseClient.init();
     }
 
     @SubscribeEvent
