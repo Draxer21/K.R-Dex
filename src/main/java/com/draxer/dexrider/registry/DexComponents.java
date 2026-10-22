@@ -90,6 +90,18 @@ public final class DexComponents {
                     .persistent(Codec.INT)
                     .networkSynchronized(ByteBufCodecs.VAR_INT));
 
+    /** La carta de Complete Form ya subio a Nv.2 (en el Driver). */
+    public static final Supplier<DataComponentType<Integer>> COMPLETE_LEVEL =
+            COMPONENTS.registerComponentType("complete_level", builder -> builder
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.VAR_INT));
+
+    /** Complete Form Nv.2 activa (en el peto, para el modelo). */
+    public static final Supplier<DataComponentType<Boolean>> COMPLETE_LV2 =
+            COMPONENTS.registerComponentType("complete_lv2", builder -> builder
+                    .persistent(Codec.BOOL)
+                    .networkSynchronized(ByteBufCodecs.BOOL));
+
     /** Upgrade Form activa (en el peto, para que todos vean el traje). */
     public static final Supplier<DataComponentType<Boolean>> UPGRADE =
             COMPONENTS.registerComponentType("upgrade", builder -> builder

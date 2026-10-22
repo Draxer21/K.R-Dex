@@ -1,0 +1,14 @@
+{
+  "structures": [
+    {
+      "structure": "dexrider:gunma_lab",
+      "weight": 1
+    }
+  ],
+  "placement": {
+    "type": "minecraft:random_spread",
+    "spacing": 64,
+    "separation": 24,
+    "salt": 731412
+  }
+}

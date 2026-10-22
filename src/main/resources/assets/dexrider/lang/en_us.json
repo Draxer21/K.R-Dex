@@ -1008,5 +1008,21 @@
   "ability.dexrider.sidecar_barrage": "Sidecar Barrage",
   "item.dexrider.card_attack_ride_mantis_reap": "Card: Attack Ride - Mantis Reap",
   "item.dexrider.card_attack_ride_rhino_charge": "Card: Attack Ride - Rhino Charge",
-  "item.dexrider.card_attack_ride_chimera_dive": "Card: Attack Ride - Chimera Dive"
+  "item.dexrider.card_attack_ride_chimera_dive": "Card: Attack Ride - Chimera Dive",
+  "note.dexrider.gunma.title1": "Report: Project Leash",
+  "note.dexrider.gunma.title2": "Subject 12 log",
+  "note.dexrider.gunma.title3": "Last entry",
+  "note.dexrider.gunma.1": "Project Leash.\n\nGoal: a Rider System that can be switched off from outside.\n\nThe wearer's fear opens the channel. We call it Violent Emotion.",
+  "note.dexrider.gunma.2": "Test 14.\n\nThe wearer keeps some control: they choose who to aim at, not whether to aim.\n\nFor us, that's enough.",
+  "note.dexrider.gunma.3": "Margin note, different handwriting:\n\n\"This isn't a leash. It's a wound we left open.\"",
+  "note.dexrider.gunma.4": "Subject 12.\n\nAdmitted at age twelve. Reflex modification complete. Responds well to pressure.",
+  "note.dexrider.gunma.5": "The subject asks about home every night.\n\nRecommendation: do not answer.",
+  "note.dexrider.gunma.6": "The subject escaped during transfer.\n\nA family wearer is being sent to retrieve them.",
+  "note.dexrider.gunma.7": "The basement gave way.\n\nThe columns weren't built for what happened down here.",
+  "note.dexrider.gunma.8": "Someone else was here that night. They shouldn't have been.\n\nClose the laboratory.",
+  "advancements.dexrider.gunma_lab.title": "Gunma",
+  "advancements.dexrider.gunma_lab.description": "Find Dai-Shocker's abandoned laboratory",
+  "message.dexrider.complete_lv2": "You went in without fear: the Complete Form card rises to Lv.2. The white returns, and the torn cape keeps time.",
+  "advancements.dexrider.complete_form_2.title": "The cape is a clock",
+  "advancements.dexrider.complete_form_2.description": "Enter the Complete Form from the Upgrade Form"
 }

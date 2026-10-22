@@ -131,12 +131,20 @@ public final class ShotDirector {
             stand(lvl, 3.2, null, "complete", false);
         }, 0, 1.4, 0.2, 0);
         s.add(new Step(t, () -> server(srv -> cmd(srv, "time set noon"))));
+        // Complete Form normal y Nv.2 (de frente y de espaldas para ver la capa)
+        t = scene(s, t + 2, "complete_nv2", lvl -> {
+            stand(lvl, -1.2, null, "complete", false);
+            ArmorStand a = stand(lvl, 1.2, null, "complete", false);
+            if (a != null) a.getItemBySlot(EquipmentSlot.CHEST).set(DexComponents.COMPLETE_LV2.get(), true);
+            ArmorStand b = stand(lvl, 3.4, null, "complete", false);
+            if (b != null) { b.getItemBySlot(EquipmentSlot.CHEST).set(DexComponents.COMPLETE_LV2.get(), true); b.setYRot(0); b.yBodyRot = 0; }
+        }, 1.0, 1.4, 0.2, 0);
         // 6: motos (la Dex Machine con el escarabajo fusionado)
         t = scene(s, t + 2, "motos", lvl -> {
             int i = 0;
             BikeKind[] kinds = BikeKind.values();
             for (BikeKind k : kinds) {
-                DexMachineEntity m = (DexMachineEntity) spawnStill(lvl, DexEntities.bike(k).get(), (i % 5 - 2) * 2.6, 7 + (i / 5) * 4);
+                DexMachineEntity m = (DexMachineEntity) spawnStill(lvl, DexEntities.bike(k).get(), (i % 6 - 2.5) * 2.6, 7 + (i / 6) * 4);
                 if (m != null) m.setYRot(90);
                 i++;
             }
@@ -197,9 +205,9 @@ public final class ShotDirector {
         return e;
     }
 
-    private static void stand(ServerLevel level, double dx, String emotion, String rider, boolean upgrade) {
+    private static ArmorStand stand(ServerLevel level, double dx, String emotion, String rider, boolean upgrade) {
         ArmorStand a = (ArmorStand) spawnStill(level, EntityType.ARMOR_STAND, dx, 4.5);
-        if (a == null) return;
+        if (a == null) return null;
         ItemStack chest = new ItemStack(DexItems.DEX_CHESTPLATE.get());
         if (emotion != null) chest.set(DexComponents.EMOTION.get(), emotion);
         if (rider != null) chest.set(DexComponents.RIDER.get(), rider);
@@ -208,5 +216,6 @@ public final class ShotDirector {
         a.setItemSlot(EquipmentSlot.CHEST, chest);
         a.setItemSlot(EquipmentSlot.LEGS, new ItemStack(DexItems.DEX_LEGGINGS.get()));
         a.setItemSlot(EquipmentSlot.FEET, new ItemStack(DexItems.DEX_BOOTS.get()));
+        return a;
     }
 }

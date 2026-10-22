@@ -117,8 +117,19 @@ public final class KTouch {
             player.sendSystemMessage(Component.translatable("message.dexrider.ktouch_incomplete", miss), true);
             return;
         }
+        // Complete Form Nv.2: si entras desde la Upgrade Form, la carta sube de nivel (sustitucion) y ya no baja
+        ItemStack drv = DexDriverItem.findDriver(player);
+        boolean fromUpgrade = UpgradeForm.isActive(player);
+        Integer clv = drv.get(DexComponents.COMPLETE_LEVEL.get());
         KamenRide.set(level, player, KamenRide.COMPLETE);
         DexAdvancements.award(player, "complete_form");
+        if (fromUpgrade && (clv == null || clv < 2)) {
+            drv.set(DexComponents.COMPLETE_LEVEL.get(), 2);
+            clv = 2;
+            player.sendSystemMessage(Component.translatable("message.dexrider.complete_lv2").withStyle(ChatFormatting.LIGHT_PURPLE));
+            DexAdvancements.award(player, "complete_form_2");
+        }
+        if (clv != null && clv >= 2) player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST).set(DexComponents.COMPLETE_LV2.get(), true);
         // espectaculo: las nueve cartas giran alrededor y se clavan en la armadura
         Vec3 c = FX.center(player);
         KamenRide[] ring = KamenRide.ring(player);
@@ -214,7 +225,12 @@ public final class KTouch {
                 }
             } else cost += 0.025F;
         }
+        if (isLevel2(player)) cost *= 0.75F;   // la Nv.2 aguanta mas
         if (!player.isCreative()) player.causeFoodExhaustion(cost);
+    }
+
+    public static boolean isLevel2(Player player) {
+        return Boolean.TRUE.equals(player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST).get(DexComponents.COMPLETE_LV2.get()));
     }
 
     public static void releaseAll(ServerLevel level, ServerPlayer player) {

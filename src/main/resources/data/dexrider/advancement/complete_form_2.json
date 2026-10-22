@@ -1,0 +1,23 @@
+{
+  "parent": "dexrider:complete_form",
+  "display": {
+    "icon": {
+      "id": "dexrider:card_upgrade_form"
+    },
+    "title": {
+      "translate": "advancements.dexrider.complete_form_2.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.complete_form_2.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

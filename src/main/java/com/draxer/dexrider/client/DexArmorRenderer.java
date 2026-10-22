@@ -33,6 +33,7 @@ import net.minecraft.world.item.ItemStack;
 public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderState> extends GeoArmorRenderer<DexArmorItem, R> {
 
     public static final DataTicket<String> EMOTION = DataTicket.create("dexrider_emotion", String.class);
+    public static final DataTicket<Boolean> COMPLETE2 = DataTicket.create("dexrider_complete2", Boolean.class);
     public static final DataTicket<Boolean> UPGRADE = DataTicket.create("dexrider_upgrade", Boolean.class);
     public static final DataTicket<Integer> MAIN_COLOR = DataTicket.create("dexrider_main_color", Integer.class);
     public static final DataTicket<Integer> EYE_COLOR = DataTicket.create("dexrider_eye_color", Integer.class);
@@ -103,6 +104,7 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
         String cipherMode = chest.get(DexComponents.CIPHER_MODE.get());
         renderState.addGeckolibData(CIPHER_MODE, cipherMode == null ? "" : cipherMode);
         renderState.addGeckolibData(UPGRADE, Boolean.TRUE.equals(chest.get(DexComponents.UPGRADE.get())));
+        renderState.addGeckolibData(COMPLETE2, Boolean.TRUE.equals(chest.get(DexComponents.COMPLETE_LV2.get())));
         renderState.addGeckolibData(EYE_COLOR, emo != null ? emo[1] : suit.eyeColor());
         renderState.addGeckolibData(ACCENT_COLOR, emo != null ? emo[2] : suit.accentColor());
         renderState.addGeckolibData(HORNS, suit.horns().id());

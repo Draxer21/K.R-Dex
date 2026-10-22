@@ -1008,5 +1008,21 @@
   "ability.dexrider.sidecar_barrage": "Ráfaga del sidecar",
   "item.dexrider.card_attack_ride_mantis_reap": "Carta: Attack Ride - Mantis Reap",
   "item.dexrider.card_attack_ride_rhino_charge": "Carta: Attack Ride - Rhino Charge",
-  "item.dexrider.card_attack_ride_chimera_dive": "Carta: Attack Ride - Chimera Dive"
+  "item.dexrider.card_attack_ride_chimera_dive": "Carta: Attack Ride - Chimera Dive",
+  "note.dexrider.gunma.title1": "Informe: proyecto Correa",
+  "note.dexrider.gunma.title2": "Registro del Sujeto 12",
+  "note.dexrider.gunma.title3": "Última entrada",
+  "note.dexrider.gunma.1": "Proyecto Correa.\n\nObjetivo: un Rider System que se pueda apagar desde fuera.\n\nEl miedo del portador abre el canal. Lo llamamos Violent Emotion.",
+  "note.dexrider.gunma.2": "Prueba 14.\n\nEl portador conserva parte del control: elige a quién apunta, pero no si apunta.\n\nPara nosotros, basta.",
+  "note.dexrider.gunma.3": "Nota al margen, con otra letra:\n\n\"Esto no es una correa. Es una herida que dejamos abierta.\"",
+  "note.dexrider.gunma.4": "Sujeto 12.\n\nIngresó a los doce años. Modificación de reflejos completada. Responde bien a la presión.",
+  "note.dexrider.gunma.5": "El sujeto pregunta por su casa todas las noches.\n\nSe recomienda no responder.",
+  "note.dexrider.gunma.6": "El sujeto escapó durante el traslado.\n\nSe envía a un portador de la familia a recuperarlo.",
+  "note.dexrider.gunma.7": "El sótano cedió.\n\nLas columnas no estaban hechas para lo que pasó aquí abajo.",
+  "note.dexrider.gunma.8": "Había alguien más esa noche. No debía estar aquí.\n\nCierren el laboratorio.",
+  "advancements.dexrider.gunma_lab.title": "Gunma",
+  "advancements.dexrider.gunma_lab.description": "Encuentra el laboratorio abandonado de Dai-Shocker",
+  "message.dexrider.complete_lv2": "Entraste sin miedo: la carta de Complete Form sube a Nv.2. Vuelve el blanco, y la capa rota marca el tiempo.",
+  "advancements.dexrider.complete_form_2.title": "La capa es un reloj",
+  "advancements.dexrider.complete_form_2.description": "Entra en la Complete Form desde la Upgrade Form"
 }

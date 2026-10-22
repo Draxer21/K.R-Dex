@@ -305,7 +305,9 @@ public final class DexGameTests {
         ServerLevel level = h.getLevel();
         p.getInventory().add(new ItemStack(DexItems.K_TOUCH.get()));
         p.getInventory().add(new ItemStack(DexItems.COMPLETE_FORM_CARD.get()));
+        UpgradeForm.toggle(level, p);   // entrar desde la Upgrade sube la carta a Nv.2
         KTouch.enter(p);
+        if (!KTouch.isLevel2(p)) fail(h, t, "entrando desde la Upgrade no subio a la Complete Form Nv.2");
         if (KamenRide.current(p) != KamenRide.COMPLETE) { fail(h, t, "no entro en la Complete Form"); return; }
         KTouch.toggleCrest(p, KamenRide.NINE);
         KTouch.toggleCrest(p, KamenRide.CIPHER);
@@ -327,7 +329,7 @@ public final class DexGameTests {
     static void structures(GameTestHelper h) {
         String t = "structures";
         var manager = h.getLevel().getStructureManager();
-        for (String name : new String[]{"mountain_house", "commission_depot"}) {
+        for (String name : new String[]{"mountain_house", "commission_depot", "gunma_lab"}) {
             var tpl = manager.get(DexRider.id(name));
             if (tpl.isEmpty()) { fail(h, t, name + " no carga"); return; }
             log(t, name + " ok, tamano " + tpl.get().getSize());

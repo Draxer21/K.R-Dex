@@ -118,6 +118,7 @@ public enum KamenRide {
         ArmedRide.removeWeapons(player);
         ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
         chest.remove(DexComponents.UPGRADE.get());
+        chest.remove(DexComponents.COMPLETE_LV2.get());
         if (target == DEX) chest.remove(DexComponents.RIDER.get());
         else chest.set(DexComponents.RIDER.get(), target.id());
 

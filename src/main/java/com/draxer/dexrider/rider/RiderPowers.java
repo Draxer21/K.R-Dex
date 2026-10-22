@@ -189,7 +189,7 @@ public final class RiderPowers {
             }
             case COMPLETE -> {
                 // La Complete Form agota: consume hambre rapido. Sin comida, se cae.
-                if (!p.isCreative()) p.causeFoodExhaustion(0.06F);
+                if (!p.isCreative()) p.causeFoodExhaustion(KTouch.isLevel2(p) ? 0.045F : 0.06F);
                 KTouch.tickHeld(level, p);
                 if (p.tickCount % 10 == 0) {
                     for (KamenRide k : KamenRide.RING) {
@@ -874,7 +874,8 @@ public final class RiderPowers {
     /** +0,2 por cada Kamen Ride del mazo (con diez cartas, x3). */
     public static float completeMultiplier(ServerPlayer p) {
         DriverDeck deck = DexDriverItem.getDeck(DexDriverItem.findDriver(p));
-        return 1.0F + 0.2F * deck.count(DexCard.Family.KAMEN_RIDE);
+        // Nv.2: cada Kamen Ride suma +0,3 en vez de +0,2 (la forma crece con cada identidad nueva)
+        return 1.0F + (KTouch.isLevel2(p) ? 0.3F : 0.2F) * deck.count(DexCard.Family.KAMEN_RIDE);
     }
 
     // ================================================================== comun
