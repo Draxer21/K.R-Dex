@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "function": "dexrider:npc_riders",
+  "environment": "dexrider:default",
+  "structure": "dexrider:test_platform",
+  "max_ticks": 300,
+  "setup_ticks": 0,
+  "required": true
+}

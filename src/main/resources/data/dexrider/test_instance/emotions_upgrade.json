@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "function": "dexrider:emotions_upgrade",
+  "environment": "dexrider:default",
+  "structure": "dexrider:test_platform",
+  "max_ticks": 100,
+  "setup_ticks": 0,
+  "required": true
+}

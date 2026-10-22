@@ -40,6 +40,7 @@ public class DexRider {
         DexItems.TABS.register(modEventBus);
         DexEntities.ENTITIES.register(modEventBus);
         com.draxer.dexrider.registry.DexMenus.MENUS.register(modEventBus);
+        com.draxer.dexrider.test.DexGameTests.FUNCTIONS.register(modEventBus);
         modEventBus.addListener(DexEntities::registerAttributes);
         modEventBus.addListener(DexEntities::registerSpawnPlacements);
 

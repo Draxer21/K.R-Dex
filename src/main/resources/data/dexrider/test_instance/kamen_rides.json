@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "function": "dexrider:kamen_rides",
+  "environment": "dexrider:default",
+  "structure": "dexrider:test_platform",
+  "max_ticks": 800,
+  "setup_ticks": 0,
+  "required": true
+}

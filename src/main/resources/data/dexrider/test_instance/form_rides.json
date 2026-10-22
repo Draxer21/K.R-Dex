@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "function": "dexrider:form_rides",
+  "environment": "dexrider:default",
+  "structure": "dexrider:test_platform",
+  "max_ticks": 600,
+  "setup_ticks": 0,
+  "required": true
+}

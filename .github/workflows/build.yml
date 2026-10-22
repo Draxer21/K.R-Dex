@@ -52,6 +52,17 @@ jobs:
           sleep 5
           grep -nE 'ERROR|Exception|Failed|Couldn|dexrider' server.log | grep -v 'DEBUG' | head -300 > server_errors.log || true
 
+      # Pruebas dentro de un servidor de Minecraft real con jugadores simulados (src/.../test/DexGameTests.java).
+      - name: Pruebas dentro del juego
+        if: success()
+        continue-on-error: true
+        run: |
+          set +e
+          timeout 1200 ./gradlew runGameTestServer > gametest.log 2>&1
+          echo "exit code $?" >> gametest.log
+          grep -nE "DEXTEST|[Tt]ests? (passed|failed)|required test|GameTest|FAIL|Exception|exit code" gametest.log | grep -v DEBUG | head -500 > gametest_summary.log
+          true
+
       # Guarda el registro de la compilacion (y el .jar si salio bien) en la rama ci-logs,
       # para poder leerlo desde fuera de GitHub.
       - name: Guardar registro en la rama ci-logs
@@ -59,7 +70,7 @@ jobs:
         run: |
           mkdir -p /tmp/out && cp build.log /tmp/out/build.log || true
           cp build/libs/*.jar /tmp/out/ 2>/dev/null || true
-          cp server.log server_errors.log /tmp/out/ 2>/dev/null || true
+          cp server.log server_errors.log gametest.log gametest_summary.log /tmp/out/ 2>/dev/null || true
           echo "${{ job.status }} ${{ github.sha }}" > /tmp/out/status.txt
           git config user.name "ci-bot"; git config user.email "ci-bot@users.noreply.github.com"
           git fetch origin ci-logs || true
