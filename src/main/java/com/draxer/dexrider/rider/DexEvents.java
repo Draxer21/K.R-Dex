@@ -39,6 +39,7 @@ public final class DexEvents {
 
         RiderKick.tick(level, player);
         if (player.tickCount % 100 == 0) AllyManager.tickPlayer(player);
+        if (player.tickCount % 100 == 50) DaiShocker.tickPlayer(player);
         AllyManager.tickReunion(player);
         Scheduler.tick(player);
 

@@ -107,6 +107,14 @@ public final class Scanner {
         EntityType<?> type = attacker.getType();
         if (type == EntityType.GHAST) return DexCard.FORM_RIDE_GAS;
         if (type == EntityType.BREEZE) return DexCard.ATTACK_RIDE_GALE;
+        if (attacker instanceof com.draxer.dexrider.entity.KaijinEntity k) {
+            return switch (k.kind()) {
+                case MANTIS -> DexCard.ARMED_RIDE_SWORD;
+                case RHINO -> DexCard.ARMED_RIDE_POWER_KNUCKLE;
+                case CHIMERA -> DexCard.ATTACK_RIDE_GROUND_WAVE;
+                default -> null;
+            };
+        }
         if (type == EntityType.VEX) return DexCard.ATTACK_RIDE_RAZOR_FEATHER;
         if (type == EntityType.ENDERMAN) return DexCard.ATTACK_RIDE_OVERCLOCK;
         if (type == EntityType.BLAZE) return DexCard.FORM_RIDE_CINDER;

@@ -1,0 +1,30 @@
+{
+  "parent": "dexrider:ally",
+  "display": {
+    "icon": {
+      "id": "dexrider:card_vehicle_ride_scarab"
+    },
+    "title": {
+      "translate": "advancements.dexrider.scarab.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.scarab.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "dexrider:card_vehicle_ride_scarab"
+          }
+        ]
+      }
+    }
+  }
+}

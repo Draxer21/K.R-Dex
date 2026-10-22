@@ -92,6 +92,9 @@ public class DexRiderClient {
             renderers.accept(DexEntities.ECHOES.get(rider).get(), ctx -> new RiderEchoRenderer(ctx, rider));
             renderers.accept(DexEntities.ALLIES.get(rider).get(), ctx -> new RiderEchoRenderer(ctx, rider));
         }
+        for (com.draxer.dexrider.entity.KaijinEntity.Kind kind : com.draxer.dexrider.entity.KaijinEntity.Kind.values()) {
+            renderers.accept(DexEntities.KAIJIN.get(kind).get(), ctx -> new KaijinRenderer(ctx, kind));
+        }
     }
 
     /** Pantalla del Ride Booker. */

@@ -100,6 +100,21 @@ Cada forma tiene **Nivel 1 a 3**: se sube re-escaneando su fuente (el doble de m
 
 Con una forma activa, el daño también se multiplica por el escalado de la familia Form Ride.
 
+### Dai-Shocker (enemigos y estructuras)
+- **Combatiente** (máscara de hueso, visor de una ranura; van en grupo), **Kaijin Mantis** (guadañas, salta y hace sangrar;
+  junglas y pantanos), **Kaijin Rinoceronte** (blindado, embiste; sabanas y montes). Aparecen de noche como cualquier monstruo.
+- **Quimera** (jefe, 180 corazones, barra de jefe): salta y aplasta, embiste, barre con la guadaña y, herida, llama a combatientes.
+- **Emboscadas**: de noche, transformado y con 3+ Kamen Ride, a veces Dai-Shocker te tiende una; con 6+ puede venir la Quimera.
+- **Casa de la montaña de los Kagami** (biomas de montaña): cabaña con chimenea, mesa del té y la cama roja de Nagisa;
+  en el sótano, el taller con el **equipo Blaster** (cofre), vigilado por combatientes.
+- **Depósito de la Comisión** (llanuras y sabanas): Dai-Shocker lo está asaltando; cofres con cartas y materiales.
+- Escanear: la Mantis da Sword, el Rinoceronte Power Knuckle y la Quimera Ground Wave.
+
+### Vehicle Ride: Scarab
+Izuku te deja su escarabajo al hacerse amigo tuyo. La carta lo **fusiona con la moto que conduces** (o invoca la Dex Machine):
+caparazón verde esmeralda, embestida que daña a lo que atropellas, planeo al caer, Resistencia II para el piloto y
+**R = Scarab Rush**. Dura 2 minutos; después descansa 3.
+
 ### Cuaderno de Takumi y logros
 - **Cuaderno de Takumi** (pestaña creativa, o libro + tinte rojo + pepita de oro): guía del Rider System en 14 páginas.
 - **Logros** propios (pestaña Kamen Rider Dex): transformarse, escanear, Form Ride, Attack Ride, Nivel 3,
@@ -468,6 +483,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.24.0** — Dai-Shocker: combatientes, Kaijin Mantis y Rinoceronte, la Quimera (jefe) y emboscadas (`daishocker_preview.png`). Casa de la montaña de los Kagami (equipo Blaster en el sótano) y depósito de la Comisión. Vehicle Ride: Scarab, el escarabajo que se fusiona con la moto (`scarab_preview.png`). Logros nuevos.
 - **0.23.0** — Attack Ride del fanfic: Overclock, Gale, Razor Feather, Nitro Burst y Ground Wave, con niveles (`attack_rides_preview.png`). Cuaderno de Takumi (guía en el juego) y logros propios.
 - **0.22.1** — Violent y Heroic Emotion sin recarga.
 - **0.22.0** — Dex rehecho: bodysuit con musculatura, Driver en 3D (anillo, lente que sobresale, luces laterales y punto verde), Ride Booker en 3D con tapa, cartas asomando y broche, mandíbula, nuca y mejillas del casco en relieve, hombreras en capas y rodilleras (`dex_0_22_preview.png`). Violent Emotion y Heroic Emotion, HUD del Rider y archivo de configuración.

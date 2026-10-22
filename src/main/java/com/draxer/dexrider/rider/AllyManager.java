@@ -58,6 +58,7 @@ public final class AllyManager {
         if (!rider.implemented || DexEntities.ally(rider) == null) return;
         AllyBook book = book(player);
         DexAdvancements.award(player, "ally");
+        if (rider == KamenRide.NINE) giveScarab(player);
         int gen = book.gen(rider.id()) + 1;
         save(player, book.withGen(rider.id(), gen).withHome(rider.id(), where.asLong(), level.dimension().identifier().toString()));
         RiderAllyEntity ally = spawn(level, player, rider, gen, RiderAllyEntity.Mode.WANDER, Vec3.atBottomCenterOf(where), where);
@@ -369,5 +370,17 @@ public final class AllyManager {
         FX.particle(level, net.minecraft.core.particles.ParticleTypes.PORTAL, at.add(0, 1, 0), 40, 0.6, 0.5);
         level.playSound(null, at.x, at.y, at.z, net.minecraft.sounds.SoundEvents.ENDERMAN_TELEPORT,
                 net.minecraft.sounds.SoundSource.PLAYERS, 0.8F, 0.6F);
+    }
+
+    /** Izuku te deja su escarabajo (Vehicle Ride: Scarab) la primera vez que os haceis amigos. */
+    private static void giveScarab(ServerPlayer player) {
+        var driver = com.draxer.dexrider.item.DexDriverItem.findDriver(player);
+        if (driver.isEmpty()) return;
+        var deck = com.draxer.dexrider.item.DexDriverItem.getDeck(driver);
+        if (deck.has(com.draxer.dexrider.item.DexCard.VEHICLE_RIDE_SCARAB)) return;
+        com.draxer.dexrider.item.DexDriverItem.setDeck(driver, deck.withCard(com.draxer.dexrider.item.DexCard.VEHICLE_RIDE_SCARAB));
+        var card = new net.minecraft.world.item.ItemStack(com.draxer.dexrider.registry.DexItems.card(com.draxer.dexrider.item.DexCard.VEHICLE_RIDE_SCARAB).get());
+        if (!player.getInventory().add(card)) player.drop(card, false);
+        player.sendSystemMessage(Component.translatable("message.dexrider.scarab_gift"));
     }
 }

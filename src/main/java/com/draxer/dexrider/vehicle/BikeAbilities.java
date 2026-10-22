@@ -36,6 +36,14 @@ public final class BikeAbilities {
     @Nullable
     public static RiderPowers.Used use(ServerLevel level, ServerPlayer p, DexMachineEntity bike) {
         Vec3 look = horizontal(p.getLookAngle());
+        if (bike.scarab()) {   // Scarab Rush: el caparazon embiste con todo
+            bike.boost(30);
+            ram(level, p, bike, look, 16.0F, 2.6);
+            FX.particle(level, ParticleTypes.EXPLOSION, bike.position().add(look.scale(2.5)).add(0, 1, 0), 2, 0.5, 0);
+            FX.dust(level, 0x3CC882, 1.8F, bike.position().add(0, 1, 0), 40, 1.2);
+            sound(level, bike, SoundEvents.GENERIC_EXPLODE.value(), 1.0F, 1.2F);
+            return new RiderPowers.Used("scarab_rush", 12);
+        }
         switch (bike.kind()) {
             case DEX_MACHINE -> {
                 bike.boost(40);

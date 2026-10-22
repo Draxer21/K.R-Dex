@@ -1,0 +1,17 @@
+{
+  "type": "neoforge:add_spawns",
+  "biomes": [
+    "minecraft:jungle",
+    "minecraft:sparse_jungle",
+    "minecraft:bamboo_jungle",
+    "minecraft:swamp",
+    "minecraft:mangrove_swamp",
+    "minecraft:dark_forest"
+  ],
+  "spawners": {
+    "type": "dexrider:kaijin_mantis",
+    "maxCount": 1,
+    "minCount": 1,
+    "weight": 3
+  }
+}

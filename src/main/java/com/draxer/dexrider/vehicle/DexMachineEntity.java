@@ -46,6 +46,66 @@ import java.util.UUID;
 public class DexMachineEntity extends Animal implements GeoEntity {
     private final AnimatableInstanceCache cache = GeckoLibUtil.createInstanceCache(this);
 
+    // ------------------------------------------------------------------ Vehicle Ride: Scarab (fusion)
+    private static final net.minecraft.network.syncher.EntityDataAccessor<Boolean> DATA_SCARAB =
+            net.minecraft.network.syncher.SynchedEntityData.defineId(DexMachineEntity.class, net.minecraft.network.syncher.EntityDataSerializers.BOOLEAN);
+    public static final int SCARAB_TICKS = 2400, SCARAB_REST = 3600;
+    /** Cuando puede volver a fusionarse el escarabajo de cada jugador (necesita descansar). */
+    private static final Map<UUID, Long> SCARAB_READY = new HashMap<>();
+    private int scarabTicks;
+
+    @Override
+    protected void defineSynchedData(net.minecraft.network.syncher.SynchedEntityData.Builder builder) {
+        super.defineSynchedData(builder);
+        builder.define(DATA_SCARAB, false);
+    }
+
+    public boolean scarab() { return this.entityData.get(DATA_SCARAB); }
+
+    /** Fusiona el escarabajo con esta moto. Devuelve false si todavia esta descansando. */
+    public boolean fuseScarab(ServerLevel level, ServerPlayer p) {
+        long now = level.getGameTime();
+        Long ready = SCARAB_READY.get(p.getUUID());
+        if (ready != null && ready > now) {
+            p.sendSystemMessage(Component.translatable("message.dexrider.scarab_resting", (ready - now + 19) / 20), true);
+            return false;
+        }
+        this.entityData.set(DATA_SCARAB, true);
+        scarabTicks = SCARAB_TICKS;
+        FX.dust(level, 0x3CC882, 1.6F, position().add(0, 1, 0), 40, 1.0);
+        FX.particle(level, ParticleTypes.END_ROD, position().add(0, 1.2, 0), 20, 0.8, 0.05);
+        level.playSound(null, getX(), getY(), getZ(), net.minecraft.sounds.SoundEvents.ELYTRA_FLYING, net.minecraft.sounds.SoundSource.PLAYERS, 0.6F, 1.6F);
+        level.playSound(null, getX(), getY(), getZ(), net.minecraft.sounds.SoundEvents.ARMOR_EQUIP_NETHERITE.value(), net.minecraft.sounds.SoundSource.PLAYERS, 1.2F, 0.8F);
+        p.sendSystemMessage(Component.translatable("message.dexrider.scarab_fuse"), true);
+        return true;
+    }
+
+    private void scarabTick(ServerLevel level) {
+        LivingEntity rider = getControllingPassenger();
+        if (--scarabTicks <= 0) {
+            this.entityData.set(DATA_SCARAB, false);
+            if (owner != null) SCARAB_READY.put(owner, level.getGameTime() + SCARAB_REST);
+            FX.dust(level, 0x3CC882, 1.2F, position().add(0, 1, 0), 25, 0.8);
+            if (rider instanceof ServerPlayer sp) sp.sendSystemMessage(Component.translatable("message.dexrider.scarab_tired"), true);
+            return;
+        }
+        // planeo: cae despacio
+        if (!onGround() && getDeltaMovement().y < -0.12) setDeltaMovement(getDeltaMovement().multiply(1, 0.6, 1));
+        // protege al piloto
+        if (rider != null && tickCount % 20 == 0) rider.addEffect(new net.minecraft.world.effect.MobEffectInstance(
+                net.minecraft.world.effect.MobEffects.RESISTANCE, 40, 1, false, false, true));
+        // blindaje de embestida
+        if (getDeltaMovement().horizontalDistanceSqr() > 0.08 && tickCount % 5 == 0) {
+            Vec3 fwd = getLookAngle().multiply(1, 0, 1).normalize();
+            for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, getBoundingBox().move(fwd.scale(1.2)).inflate(0.4),
+                    e -> e != this && e != rider && e.isAlive() && !(e instanceof com.draxer.dexrider.entity.RiderAllyEntity))) {
+                e.hurtServer(level, rider instanceof Player pl ? damageSources().playerAttack(pl) : damageSources().mobAttack(this), 6.0F);
+                FX.push(e, position(), 1.2, 0.5);
+            }
+        }
+        if (tickCount % 6 == 0) FX.dust(level, 0x3CC882, 0.8F, position().add(0, 0.9, 0), 2, 0.6);
+    }
+
     private static final Map<UUID, DexMachineEntity> ACTIVE = new HashMap<>();
     private static final int IDLE_DESPAWN_TICKS = 600;
 
@@ -109,6 +169,12 @@ public class DexMachineEntity extends Animal implements GeoEntity {
                 kind.displayName()), true);
     }
 
+    @Nullable
+    public static DexMachineEntity activeFor(ServerPlayer player) {
+        DexMachineEntity m = ACTIVE.get(player.getUUID());
+        return m != null && m.isAlive() ? m : null;
+    }
+
     public static void dismissFor(ServerPlayer player) {
         DexMachineEntity old = ACTIVE.remove(player.getUUID());
         if (old != null && old.isAlive()) old.vanish();
@@ -129,6 +195,7 @@ public class DexMachineEntity extends Animal implements GeoEntity {
         super.tick();
         if (!(level() instanceof ServerLevel)) return;
         if (boostTicks > 0) boostTicks--;
+        if (scarab() && level() instanceof ServerLevel sl) scarabTick(sl);
         if (isVehicle()) {
             idleTicks = 0;
             if (level() instanceof ServerLevel server) BikeAbilities.ridingTick(server, this);

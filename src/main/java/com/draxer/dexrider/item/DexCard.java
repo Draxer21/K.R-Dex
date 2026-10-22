@@ -65,7 +65,9 @@ public enum DexCard {
     VEHICLE_RIDE_PROTO_RACER(Family.VEHICLE_RIDE, 0),
     VEHICLE_RIDE_WARDEN_INTERCEPTOR(Family.VEHICLE_RIDE, 0),
     VEHICLE_RIDE_PSYGA_GLIDER(Family.VEHICLE_RIDE, 0),
-    VEHICLE_RIDE_ORGA_MONARCH(Family.VEHICLE_RIDE, 0);
+    VEHICLE_RIDE_ORGA_MONARCH(Family.VEHICLE_RIDE, 0),
+    // el escarabajo de Nine: no es una moto, se fusiona con la que conduces (te lo da Izuku al hacerse amigo)
+    VEHICLE_RIDE_SCARAB(Family.VEHICLE_RIDE, 0);
 
     public enum Family { KAMEN_RIDE, FORM_RIDE, ATTACK_RIDE, ARMED_RIDE, VEHICLE_RIDE, FINAL_ATTACK_RIDE }
 

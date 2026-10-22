@@ -63,6 +63,20 @@ public final class DexEntities {
         }
     }
 
+    /** Dai-Shocker: combatientes, Kaijin y la Quimera (jefe). */
+    public static final java.util.Map<com.draxer.dexrider.entity.KaijinEntity.Kind, DeferredHolder<EntityType<?>, EntityType<com.draxer.dexrider.entity.KaijinEntity>>> KAIJIN =
+            new java.util.EnumMap<>(com.draxer.dexrider.entity.KaijinEntity.Kind.class);
+
+    static {
+        for (com.draxer.dexrider.entity.KaijinEntity.Kind kind : com.draxer.dexrider.entity.KaijinEntity.Kind.values()) {
+            KAIJIN.put(kind, ENTITIES.register(kind.id, () -> EntityType.Builder.<com.draxer.dexrider.entity.KaijinEntity>of(
+                            (type, level) -> new com.draxer.dexrider.entity.KaijinEntity(type, level, kind), MobCategory.MONSTER)
+                    .sized(0.6F * kind.scale, 1.95F * kind.scale)
+                    .clientTrackingRange(kind == com.draxer.dexrider.entity.KaijinEntity.Kind.CHIMERA ? 16 : 10)
+                    .build(ResourceKey.create(Registries.ENTITY_TYPE, DexRider.id(kind.id)))));
+        }
+    }
+
     @org.jetbrains.annotations.Nullable
     public static DeferredHolder<EntityType<?>, EntityType<RiderAllyEntity>> ally(KamenRide rider) {
         return ALLIES.get(rider);
@@ -72,6 +86,7 @@ public final class DexEntities {
         BIKES.values().forEach(h -> event.put(h.get(), DexMachineEntity.createAttributes().build()));
         ECHOES.values().forEach(h -> event.put(h.get(), RiderEchoEntity.createAttributes().build()));
         ALLIES.values().forEach(h -> event.put(h.get(), RiderAllyEntity.createAttributes().build()));
+        KAIJIN.forEach((kind, h) -> event.put(h.get(), com.draxer.dexrider.entity.KaijinEntity.createAttributes(kind).build()));
     }
 
     /** Los ecos aparecen como cualquier monstruo: en el suelo y con poca luz. */
@@ -79,6 +94,10 @@ public final class DexEntities {
         for (var holder : ECHOES.values()) {
             event.register(holder.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
                     RiderEchoEntity::checkSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
+        }
+        for (var holder : KAIJIN.values()) {
+            event.register(holder.get(), SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES,
+                    net.minecraft.world.entity.monster.Monster::checkMonsterSpawnRules, RegisterSpawnPlacementsEvent.Operation.REPLACE);
         }
     }
 }

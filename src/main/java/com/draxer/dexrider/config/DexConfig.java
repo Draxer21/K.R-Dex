@@ -16,6 +16,7 @@ public final class DexConfig {
     public static final ModConfigSpec.BooleanValue BLOCK_BREAKING;
     public static final ModConfigSpec.BooleanValue EMOTIONS;
     public static final ModConfigSpec.BooleanValue HUD;
+    public static final ModConfigSpec.BooleanValue AMBUSH;
 
     static {
         ModConfigSpec.Builder b = new ModConfigSpec.Builder();
@@ -26,6 +27,8 @@ public final class DexConfig {
                 .defineInRange("npcDamage", 1.0, 0.1, 5.0);
         BLOCK_BREAKING = b.comment("Si los finales fallados (Nine en Rising) rompen bloques. Tambien respeta la regla mobGriefing.")
                 .define("blockBreaking", true);
+        AMBUSH = b.comment("Emboscadas nocturnas de Dai-Shocker cuando llevas tres Kamen Ride o mas (y la Quimera con seis o mas).")
+                .define("daiShockerAmbush", true);
         b.pop();
         b.push("dex");
         DEX_DAMAGE = b.comment("Multiplicador del dano del jugador transformado.")
@@ -52,4 +55,5 @@ public final class DexConfig {
     public static boolean blockBreaking() { return bool(BLOCK_BREAKING, true); }
     public static boolean emotions() { return bool(EMOTIONS, true); }
     public static boolean hud() { return bool(HUD, true); }
+    public static boolean ambush() { return bool(AMBUSH, true); }
 }

@@ -22,6 +22,22 @@ public class DexMachineRenderer<R extends LivingEntityRenderState & GeoRenderSta
         withRenderLayer(AutoGlowingGeoLayer::new);
     }
 
+    private static final com.geckolib.constant.dataticket.DataTicket<Boolean> SCARAB =
+            com.geckolib.constant.dataticket.DataTicket.create("dexrider_bike_scarab", Boolean.class);
+
+    @Override
+    public void addRenderData(DexMachineEntity animatable, @org.jetbrains.annotations.Nullable Void relatedObject, R renderState, float partialTick) {
+        renderState.addGeckolibData(SCARAB, animatable.scarab());
+    }
+
+    /** El caparazon del escarabajo (hueso "scarab") solo se ve con la fusion activa. */
+    @Override
+    public void adjustModelBonesForRender(com.geckolib.renderer.base.RenderPassInfo<R> renderPassInfo, com.geckolib.renderer.base.BoneSnapshots snapshots) {
+        super.adjustModelBonesForRender(renderPassInfo, snapshots);
+        boolean on = Boolean.TRUE.equals(renderPassInfo.renderState().getGeckolibData(SCARAB));
+        snapshots.get("scarab").ifPresent(b -> b.skipRender(!on).skipChildrenRender(!on));
+    }
+
     static final class BikeModel extends GeoModel<DexMachineEntity> {
         private static final Identifier ANIMATIONS = DexRider.id("entity/rider_bike");
         private final Identifier model, texture;

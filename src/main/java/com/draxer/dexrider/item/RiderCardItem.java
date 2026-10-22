@@ -78,6 +78,16 @@ public class RiderCardItem extends Item {
             case VEHICLE_RIDE -> {
                 if (requireTransformed(sp)) {
                     sp.getCooldowns().addCooldown(stack, 40);
+                    if (card == DexCard.VEHICLE_RIDE_SCARAB) {
+                        // se fusiona con la moto que conduces (o con una Dex Machine nueva)
+                        DexMachineEntity bike = sp.getVehicle() instanceof DexMachineEntity m ? m : null;
+                        if (bike == null) {
+                            DexMachineEntity.summon(serverLevel, sp);
+                            bike = DexMachineEntity.activeFor(sp);
+                        }
+                        if (bike != null) bike.fuseScarab(serverLevel, sp);
+                        return InteractionResult.SUCCESS;
+                    }
                     com.draxer.dexrider.vehicle.BikeKind kind = com.draxer.dexrider.vehicle.BikeKind.byCard(card);
                     DexMachineEntity.summon(serverLevel, sp, kind != null ? kind : com.draxer.dexrider.vehicle.BikeKind.DEX_MACHINE);
                 }
