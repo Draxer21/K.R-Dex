@@ -102,7 +102,7 @@ Con una forma activa, el daño también se multiplica por el escalado de la fami
 
 ### Kaixa, la undécima Kamen Ride
 **Tetsuya Kagami**, el hermano menor, aparece perdido en taigas y bosques de montaña. Vencerlo da **Kamen Ride: Kaixa**
-(grafito y cobalto, visor de dos lentes violeta, espada-pistola). Pasivas: Fuerza I, Velocidad I, Prisa I, Salto I.
+(grafito y cobalto, visor violeta en triángulo invertido, espada-pistola). Pasivas: Fuerza I, Velocidad I, Prisa I, Salto I.
 R = **Twin Shot** (dos disparos) · Shift+R = **Tajo de remate** (avanza cortando; pega más a los que ya están tocados) ·
 FAR = **Cobalt Breaker** (seis disparos que lo frenan y un tajo en cruz).
 Con el K-Touch ya forjado, la undécima Kamen Ride forja la **Carta de Complete Form II** (Kaixa ocupa el hueco de Proto).
@@ -503,6 +503,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.25.1** — Kaixa: el visor pasa a un triángulo invertido violeta (carta y blasón del K-Touch a juego).
 - **0.25.0** — Kaixa (Tetsuya) como undécima Kamen Ride, con eco, amigo, poderes y diálogos, y la Carta de Complete Form II. Blasones de la Complete Form: invocan proyecciones o potencian al amigo presente. Upgrade Form (carta, traje propio y Form Ride amplificadas).
 - **0.24.0** — Dai-Shocker: combatientes, Kaijin Mantis y Rinoceronte, la Quimera (jefe) y emboscadas (`daishocker_preview.png`). Casa de la montaña de los Kagami (equipo Blaster en el sótano) y depósito de la Comisión. Vehicle Ride: Scarab, el escarabajo que se fusiona con la moto (`scarab_preview.png`). Logros nuevos.
 - **0.23.0** — Attack Ride del fanfic: Overclock, Gale, Razor Feather, Nitro Burst y Ground Wave, con niveles (`attack_rides_preview.png`). Cuaderno de Takumi (guía en el juego) y logros propios.
