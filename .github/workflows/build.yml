@@ -80,6 +80,7 @@ jobs:
           for i in $(seq 1 30); do sleep 2; pgrep -f 'net.neoforged.*server' > /dev/null || break; done
           pkill -f GradleDaemon; sleep 3
           mkdir -p run/saves && cp -r run/world run/saves/dextest
+          printf 'onboardAccessibility:false\nskipMultiplayerWarning:true\njoinedFirstServer:true\ntutorialStep:none\nnarrator:0\nsoundCategory_master:0.0\n' > run/options.txt
           export LIBGL_ALWAYS_SOFTWARE=1
           timeout 900 xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runShots > shots.log 2>&1
           echo "exit code $?" >> shots.log

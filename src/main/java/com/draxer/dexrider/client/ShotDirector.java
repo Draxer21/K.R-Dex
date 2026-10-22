@@ -47,10 +47,26 @@ public final class ShotDirector {
     private static List<Step> steps;
     private static int next;
 
+    private static int boot;
+    private static boolean triedOpen;
+
     @SubscribeEvent
     static void onTick(ClientTickEvent.Post event) {
         if (!ENABLED) return;
         Minecraft mc = Minecraft.getInstance();
+        boot++;
+        if (boot % 100 == 0 && tick < 0) {
+            DexRider.LOGGER.info("SHOTS: tick {} pantalla={} jugador={}", boot,
+                    mc.screen == null ? "ninguna" : mc.screen.getClass().getName(), mc.player != null);
+            if (boot == 300 || boot == 900) shoot("debug_" + boot);
+        }
+        // si el juego se quedo en el menu principal, abrimos el mundo a mano
+        if (!triedOpen && boot > 400 && mc.player == null && mc.screen instanceof net.minecraft.client.gui.screens.TitleScreen) {
+            triedOpen = true;
+            DexRider.LOGGER.info("SHOTS: abro el mundo dextest desde el menu");
+            mc.createWorldOpenFlows().openWorld("dextest", () -> DexRider.LOGGER.error("SHOTS: no se pudo abrir el mundo"));
+        }
+        if (boot > 6000) { DexRider.LOGGER.error("SHOTS: me rindo"); mc.stop(); return; }
         if (mc.player == null || mc.level == null || mc.getSingleplayerServer() == null) return;
         if (tick < 0) {
             tick = 0;
