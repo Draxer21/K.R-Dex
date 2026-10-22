@@ -38,6 +38,20 @@ jobs:
           name: dexrider-jar
           path: build/libs/*.jar
 
+      # Arranca un servidor dedicado unos minutos para comprobar que los datos (estructuras, botin, logros,
+      # biomas) cargan sin errores. No falla la compilacion: el registro queda en ci-logs (server.log).
+      - name: Probar en servidor
+        if: success()
+        continue-on-error: true
+        run: |
+          mkdir -p run && echo "eula=true" > run/eula.txt
+          (./gradlew runServer > server.log 2>&1 &) 
+          for i in $(seq 1 90); do sleep 5; grep -q 'Done (' server.log && break; done
+          sleep 30
+          pkill -f 'net.neoforged' || true; pkill -f GradleDaemon || true
+          sleep 5
+          grep -nE 'ERROR|Exception|Failed|Couldn|dexrider' server.log | grep -v 'DEBUG' | head -300 > server_errors.log || true
+
       # Guarda el registro de la compilacion (y el .jar si salio bien) en la rama ci-logs,
       # para poder leerlo desde fuera de GitHub.
       - name: Guardar registro en la rama ci-logs
@@ -45,6 +59,7 @@ jobs:
         run: |
           mkdir -p /tmp/out && cp build.log /tmp/out/build.log || true
           cp build/libs/*.jar /tmp/out/ 2>/dev/null || true
+          cp server.log server_errors.log /tmp/out/ 2>/dev/null || true
           echo "${{ job.status }} ${{ github.sha }}" > /tmp/out/status.txt
           git config user.name "ci-bot"; git config user.email "ci-bot@users.noreply.github.com"
           git fetch origin ci-logs || true
