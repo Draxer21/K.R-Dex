@@ -78,7 +78,7 @@ public final class DexEmotions {
 
     // ------------------------------------------------------------------ disparadores
 
-    /** Dano ya aplicado a un jugador. */
+    /** Dano que esta por recibir Dex (ya reducido por el traje). */
     public static void onDexHurt(ServerLevel level, ServerPlayer p, float amount) {
         if (amount <= 0 || !canAwaken(level, p)) return;
         long now = level.getGameTime();
@@ -87,7 +87,7 @@ public final class DexEmotions {
         float sum = 0;
         while (!q.isEmpty() && now - q.peekFirst()[0] > 60) q.removeFirst();
         for (float[] e : q) sum += e[1];
-        if (p.getHealth() < p.getMaxHealth() * 0.3F || sum >= p.getMaxHealth() * 0.4F) {
+        if (p.getHealth() - amount < p.getMaxHealth() * 0.3F || sum >= p.getMaxHealth() * 0.4F) {
             q.clear();
             start(level, p, VIOLENT);
         }

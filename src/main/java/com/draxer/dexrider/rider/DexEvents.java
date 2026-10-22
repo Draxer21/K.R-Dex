@@ -103,6 +103,8 @@ public final class DexEvents {
             FormRide form = FormRide.current(target);
             // El traje del Rider System absorbe parte de cada golpe
             event.setAmount(event.getAmount() * Transformation.SUIT_DAMAGE_TAKEN * DexEmotions.takenScale(target));
+            // Violent Emotion: Dex al borde o recibiendo una paliza de golpe
+            DexEmotions.onDexHurt(level, target, event.getAmount());
             // Orga leyendo los tonos: esquiva los golpes cuerpo a cuerpo
             if (KamenRide.current(target) == KamenRide.ORGA && RiderPowers.dodge(target, event.getSource())) {
                 event.setCanceled(true);
@@ -160,10 +162,7 @@ public final class DexEvents {
     /** Efectos al golpear cuerpo a cuerpo con algunas armas. */
     @SubscribeEvent
     public static void onDamageDealt(LivingDamageEvent.Post event) {
-        // Violent Emotion: Dex al borde o recibiendo una paliza de golpe
-        if (event.getEntity() instanceof ServerPlayer hurtPlayer && hurtPlayer.level() instanceof ServerLevel hl) {
-            DexEmotions.onDexHurt(hl, hurtPlayer, event.getNewDamage());
-        }
+
         if (!(event.getSource().getEntity() instanceof ServerPlayer player)) return;
         if (event.getSource().getDirectEntity() != player) return;   // solo golpes directos
         if (!(player.level() instanceof ServerLevel level)) return;
