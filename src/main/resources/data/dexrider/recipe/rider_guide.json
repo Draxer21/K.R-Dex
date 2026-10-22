@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:book",
+    "minecraft:red_dye",
+    "minecraft:gold_nugget"
+  ],
+  "result": {
+    "id": "dexrider:rider_guide",
+    "count": 1
+  }
+}

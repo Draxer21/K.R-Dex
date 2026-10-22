@@ -266,6 +266,7 @@ public class RideBookerMenu extends AbstractContainerMenu {
             { for (int i = 0; i < SIZE; i++) setItem(i, items.get(i)); loading = false; }
         };
         if (player.level() instanceof ServerLevel level) DexSounds.play(level, player, DexSounds.CARD_INSERT, 0.6F, 0.8F);
+        com.draxer.dexrider.rider.DexAdvancements.award(player, "ride_booker");
         player.openMenu(new SimpleMenuProvider((id, inv, p) -> new RideBookerMenu(id, inv, storage),
                 Component.translatable("screen.dexrider.ride_booker")));
     }

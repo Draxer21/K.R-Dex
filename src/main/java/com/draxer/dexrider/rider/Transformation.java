@@ -115,6 +115,7 @@ public final class Transformation {
         FX.ring(level, player, FX.GOLD, 1.1, 9);
 
         player.sendSystemMessage(Component.translatable("message.dexrider.kamen_ride_dex"), true);
+        DexAdvancements.award(player, "henshin");
     }
 
     /**

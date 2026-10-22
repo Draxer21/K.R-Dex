@@ -1,0 +1,23 @@
+{
+  "parent": "dexrider:henshin",
+  "display": {
+    "icon": {
+      "id": "dexrider:card_armed_ride_ride_booker"
+    },
+    "title": {
+      "translate": "advancements.dexrider.ride_booker.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.ride_booker.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

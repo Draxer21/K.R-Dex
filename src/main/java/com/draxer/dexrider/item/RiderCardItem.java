@@ -58,7 +58,14 @@ public class RiderCardItem extends Item {
 
         switch (card.family()) {
             case KAMEN_RIDE -> loadKamenRide(serverLevel, sp);
-            case ATTACK_RIDE -> attackRide(serverLevel, sp, stack);
+            case ATTACK_RIDE -> {
+                if (com.draxer.dexrider.rider.AttackRides.handles(card)) {
+                    if (requireTransformed(sp)) {
+                        int cd = com.draxer.dexrider.rider.AttackRides.use(serverLevel, sp, card, stack);
+                        if (cd > 0) sp.getCooldowns().addCooldown(stack, cd);
+                    }
+                } else attackRide(serverLevel, sp, stack);
+            }
             case ARMED_RIDE -> {
                 if (requireTransformed(sp)) ArmedRide.summon(serverLevel, sp, hand, card);
             }
@@ -78,6 +85,7 @@ public class RiderCardItem extends Item {
             case FINAL_ATTACK_RIDE -> {
                 if (requireTransformed(sp)) {
                     sp.getCooldowns().addCooldown(stack, 300);
+                    com.draxer.dexrider.rider.DexAdvancements.award(sp, "final_attack");
                     KamenRide identity = KamenRide.current(sp);
                     if (RiderPowers.hasFinisher(identity)) RiderPowers.finalAttack(serverLevel, sp, identity);
                     else ArmedRide.finalAttack(serverLevel, sp, hand);

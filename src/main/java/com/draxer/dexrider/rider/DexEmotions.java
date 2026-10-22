@@ -125,6 +125,7 @@ public final class DexEmotions {
         DexSounds.play(level, p, DexSounds.HENSHIN, 1.0F, VIOLENT.equals(emotion) ? 0.7F : 1.3F);
         p.sendSystemMessage(Component.translatable("message.dexrider.emotion_" + emotion), true);
         effects(p, emotion);
+        DexAdvancements.award(p, emotion + "_emotion");
     }
 
     public static void tick(ServerLevel level, ServerPlayer p) {

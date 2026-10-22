@@ -1,0 +1,23 @@
+{
+  "parent": "dexrider:henshin",
+  "display": {
+    "icon": {
+      "id": "dexrider:card_attack_ride_ground_wave"
+    },
+    "title": {
+      "translate": "advancements.dexrider.heroic_emotion.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.heroic_emotion.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": true
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

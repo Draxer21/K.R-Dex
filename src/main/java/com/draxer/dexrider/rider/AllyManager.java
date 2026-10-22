@@ -57,6 +57,7 @@ public final class AllyManager {
     public static void befriend(ServerLevel level, ServerPlayer player, KamenRide rider, BlockPos where) {
         if (!rider.implemented || DexEntities.ally(rider) == null) return;
         AllyBook book = book(player);
+        DexAdvancements.award(player, "ally");
         int gen = book.gen(rider.id()) + 1;
         save(player, book.withGen(rider.id(), gen).withHome(rider.id(), where.asLong(), level.dimension().identifier().toString()));
         RiderAllyEntity ally = spawn(level, player, rider, gen, RiderAllyEntity.Mode.WANDER, Vec3.atBottomCenterOf(where), where);

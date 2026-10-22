@@ -92,6 +92,12 @@ public final class Scanner {
 
     private static DexCard classifyDamage(DamageSource source, Entity attacker) {
         if (source.is(DamageTypes.LIGHTNING_BOLT)) return DexCard.ARMED_RIDE_SHOCK_BATON;
+        if (source.is(DamageTypes.SONIC_BOOM)) return DexCard.ATTACK_RIDE_GROUND_WAVE;
+        if (source.is(DamageTypeTags.IS_EXPLOSION) && !(attacker instanceof net.minecraft.world.entity.player.Player)
+                && (attacker == null || attacker.getType() == EntityType.CREEPER || attacker.getType() == EntityType.TNT
+                    || source.getDirectEntity() != null && source.getDirectEntity().getType() == EntityType.TNT)) {
+            return DexCard.ATTACK_RIDE_NITRO_BURST;
+        }
         if (attacker == null) return null;
 
         // Un Rider peleando con su arma fuera
@@ -100,6 +106,9 @@ public final class Scanner {
         }
         EntityType<?> type = attacker.getType();
         if (type == EntityType.GHAST) return DexCard.FORM_RIDE_GAS;
+        if (type == EntityType.BREEZE) return DexCard.ATTACK_RIDE_GALE;
+        if (type == EntityType.VEX) return DexCard.ATTACK_RIDE_RAZOR_FEATHER;
+        if (type == EntityType.ENDERMAN) return DexCard.ATTACK_RIDE_OVERCLOCK;
         if (type == EntityType.BLAZE) return DexCard.FORM_RIDE_CINDER;
         if (type == EntityType.STRAY || type == EntityType.SNOW_GOLEM) return DexCard.FORM_RIDE_FROST;
         if (type == EntityType.GUARDIAN || type == EntityType.ELDER_GUARDIAN) return DexCard.ARMED_RIDE_VOLT_CHAIN;
@@ -112,6 +121,7 @@ public final class Scanner {
                 return DexCard.ARMED_RIDE_BLAST_SHOT;
             }
             if (held.is(Items.TRIDENT)) return DexCard.ARMED_RIDE_SHOCK_BATON;
+            if (held.is(Items.MACE) && source.getDirectEntity() == attacker) return DexCard.ATTACK_RIDE_GROUND_WAVE;
             if (held.is(ItemTags.SWORDS) && source.getDirectEntity() == attacker) return DexCard.ARMED_RIDE_SWORD;
         }
         return null;
@@ -153,6 +163,10 @@ public final class Scanner {
         }
         // Terra: algo excavando o saliendo de la tierra (warden, sniffer)
         if (e.getPose() == Pose.DIGGING || e.getPose() == Pose.EMERGING) return DexCard.FORM_RIDE_TERRA;
+        // Overclock: Cipher en Accel (lo que Yusuke leyo de su padre)
+        if (e instanceof com.draxer.dexrider.entity.RiderMob rm && rm.rider() == KamenRide.CIPHER && rm.riderForm() == 1) {
+            return DexCard.ATTACK_RIDE_OVERCLOCK;
+        }
         // Sky: phantom en picada sobre un objetivo
         if (type == EntityType.PHANTOM && e instanceof Mob mob && mob.getTarget() != null) return DexCard.FORM_RIDE_SKY;
         // Vehicle: alguien montado en un vehiculo en marcha (bote, vagoneta, strider, caballo...)
@@ -177,7 +191,8 @@ public final class Scanner {
         if (driver.isEmpty()) return;
         DriverDeck deck = DexDriverItem.getDeck(driver);
 
-        boolean canLevel = card.family() == DexCard.Family.FORM_RIDE && deck.level(card) < DriverDeck.MAX_LEVEL;
+        boolean canLevel = (card.family() == DexCard.Family.FORM_RIDE || card.family() == DexCard.Family.ATTACK_RIDE)
+                && card.samplesToScan() > 0 && deck.level(card) < DriverDeck.MAX_LEVEL;
         if (deck.has(card) && !canLevel) return;
 
         String key = player.getUUID() + "|" + card.id();
@@ -209,6 +224,7 @@ public final class Scanner {
             player.sendSystemMessage(Component.translatable("message.dexrider.level_up",
                     Component.translatable(card.translationKey()), upgraded.level(card)), true);
             if (FormRide.current(player) == FormRide.byCard(card)) Transformation.applyFormEffects(player);
+            if (upgraded.level(card) >= DriverDeck.MAX_LEVEL) DexAdvancements.award(player, "max_level");
             return;
         }
 
@@ -216,6 +232,7 @@ public final class Scanner {
         DexDriverItem.setDeck(driver, deck.withCard(card));
         ItemStack newCard = new ItemStack(DexItems.card(card).get());
         if (!player.getInventory().add(newCard)) player.drop(newCard, false);
+        DexAdvancements.award(player, "first_scan");
         player.sendSystemMessage(Component.translatable("message.dexrider.scan_complete",
                 Component.translatable(card.translationKey())), true);
     }

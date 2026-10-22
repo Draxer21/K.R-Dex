@@ -1,0 +1,23 @@
+{
+  "parent": "dexrider:root",
+  "display": {
+    "icon": {
+      "id": "dexrider:card_kamen_ride_dex"
+    },
+    "title": {
+      "translate": "advancements.dexrider.henshin.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.henshin.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

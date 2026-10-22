@@ -1,0 +1,23 @@
+{
+  "parent": "dexrider:kamen_ride",
+  "display": {
+    "icon": {
+      "id": "dexrider:cipher_accel"
+    },
+    "title": {
+      "translate": "advancements.dexrider.accel.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.accel.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

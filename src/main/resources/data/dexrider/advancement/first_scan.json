@@ -1,0 +1,23 @@
+{
+  "parent": "dexrider:henshin",
+  "display": {
+    "icon": {
+      "id": "dexrider:card_armed_ride_sword"
+    },
+    "title": {
+      "translate": "advancements.dexrider.first_scan.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.first_scan.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

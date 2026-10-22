@@ -48,6 +48,7 @@ public final class KTouch {
             driver.set(DexComponents.KTOUCH_FORGED.get(), true);
             give(player, new ItemStack(DexItems.K_TOUCH.get()));
             give(player, new ItemStack(DexItems.COMPLETE_FORM_CARD.get()));
+            DexAdvancements.award(player, "ktouch");
             if (player.level() instanceof ServerLevel level) {
                 DexSounds.play(level, player, DexSounds.SCAN_COMPLETE, 1.4F, 0.6F);
                 level.playSound(null, player.getX(), player.getY(), player.getZ(),
@@ -96,6 +97,7 @@ public final class KTouch {
             return;
         }
         KamenRide.set(level, player, KamenRide.COMPLETE);
+        DexAdvancements.award(player, "complete_form");
         // espectaculo: las nueve cartas giran alrededor y se clavan en la armadura
         Vec3 c = FX.center(player);
         for (int i = 0; i < KamenRide.RING.length; i++) {

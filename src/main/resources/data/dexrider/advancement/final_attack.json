@@ -1,0 +1,23 @@
+{
+  "parent": "dexrider:henshin",
+  "display": {
+    "icon": {
+      "id": "dexrider:card_final_attack_ride_dex"
+    },
+    "title": {
+      "translate": "advancements.dexrider.final_attack.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.final_attack.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

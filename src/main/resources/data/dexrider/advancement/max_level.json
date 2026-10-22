@@ -1,0 +1,26 @@
+{
+  "parent": "dexrider:form_ride",
+  "display": {
+    "icon": {
+      "id": "dexrider:card_form_ride_half"
+    },
+    "title": {
+      "translate": "advancements.dexrider.max_level.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.max_level.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 100
+  }
+}

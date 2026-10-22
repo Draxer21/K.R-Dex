@@ -1,0 +1,35 @@
+{
+  "display": {
+    "icon": {
+      "id": "dexrider:dex_driver"
+    },
+    "title": {
+      "translate": "advancements.dexrider.root.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.root.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false,
+    "background": "minecraft:gui/advancements/backgrounds/stone"
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "dexrider:dex_driver"
+          }
+        ]
+      }
+    }
+  },
+  "rewards": {
+    "recipes": [
+      "dexrider:rider_guide"
+    ]
+  }
+}

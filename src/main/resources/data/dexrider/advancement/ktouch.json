@@ -1,0 +1,26 @@
+{
+  "parent": "dexrider:kamen_ride",
+  "display": {
+    "icon": {
+      "id": "dexrider:k_touch"
+    },
+    "title": {
+      "translate": "advancements.dexrider.ktouch.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.ktouch.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 200
+  }
+}

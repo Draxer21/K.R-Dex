@@ -1,0 +1,26 @@
+{
+  "parent": "dexrider:ktouch",
+  "display": {
+    "icon": {
+      "id": "dexrider:complete_form_card"
+    },
+    "title": {
+      "translate": "advancements.dexrider.complete_form.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.complete_form.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  },
+  "rewards": {
+    "experience": 500
+  }
+}

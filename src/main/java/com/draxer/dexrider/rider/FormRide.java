@@ -91,6 +91,7 @@ public enum FormRide {
             return;
         }
         FormRide active = current(player);
+        DexAdvancements.award(player, "form_ride");
         clearForm(player);
         ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
         if (active == form) {

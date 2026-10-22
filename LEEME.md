@@ -57,6 +57,16 @@ Sin arma, hace la Rider Kick de siempre.
 
 **Attack Ride: Slash** → Fuerza III por 10 s.
 
+**Attack Ride del fanfic** (se escanean y suben a Nv. 2 y 3 re-escaneando; sirven con cualquier identidad o forma):
+
+| Carta | Se escanea viendo… | Efecto | Nv. 2-3 |
+|---|---|---|---|
+| Overclock | un enderman peleando, o a Cipher en Accel | todo a tu alrededor va lento, tú vas rápido; al terminar, cansancio | el cuerpo alcanza a la cabeza (más velocidad y duración); aviso a los 7 s: "siete y vuelves" |
+| Gale | un breeze atacando | ráfaga en cono que empuja y deshace los proyectiles que vienen | más alcance y empuje |
+| Razor Feather | un vex atacando | plumas que buscan hasta 5 enemigos a la vez | más plumas; plumas vigía (los enemigos cercanos quedan marcados) |
+| Nitro Burst | una explosión (creeper, TNT) | detonación delante sin romper bloques; el retroceso te impulsa | 3 y 5 detonaciones encadenadas |
+| Ground Wave | un golpe de maza o el rugido sónico del warden | onda por el suelo que lanza y frena | más radio; anula la lentitud y el mareo que lleves |
+
 ### Form Ride (transformado)
 Clic derecho con una carta Form Ride cambia de forma; la misma carta otra vez vuelve a la Dex Form base.
 Solo una forma activa a la vez. La armadura cambia de color con cada forma (`form_rides_preview.png`).
@@ -89,6 +99,11 @@ Cada forma tiene **Nivel 1 a 3**: se sube re-escaneando su fuente (el doble de m
 | Half-Cold Half-Hot | **Choque térmico**: rayo de hielo y medio segundo después explosión de fuego en los congelados (salpica alrededor). Shift + R: muro de hielo | más daño | más daño |
 
 Con una forma activa, el daño también se multiplica por el escalado de la familia Form Ride.
+
+### Cuaderno de Takumi y logros
+- **Cuaderno de Takumi** (pestaña creativa, o libro + tinte rojo + pepita de oro): guía del Rider System en 14 páginas.
+- **Logros** propios (pestaña Kamen Rider Dex): transformarse, escanear, Form Ride, Attack Ride, Nivel 3,
+  Final Attack Ride, amigos, otras identidades, Accel, K-Touch, Complete Form y las dos Emotion (ocultas).
 
 ### Violent Emotion y Heroic Emotion (solo como Dex)
 El Driver responde a lo que siente quien lo lleva. Se despiertan solas:
@@ -453,6 +468,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.23.0** — Attack Ride del fanfic: Overclock, Gale, Razor Feather, Nitro Burst y Ground Wave, con niveles (`attack_rides_preview.png`). Cuaderno de Takumi (guía en el juego) y logros propios.
 - **0.22.1** — Violent y Heroic Emotion sin recarga.
 - **0.22.0** — Dex rehecho: bodysuit con musculatura, Driver en 3D (anillo, lente que sobresale, luces laterales y punto verde), Ride Booker en 3D con tapa, cartas asomando y broche, mandíbula, nuca y mejillas del casco en relieve, hombreras en capas y rodilleras (`dex_0_22_preview.png`). Violent Emotion y Heroic Emotion, HUD del Rider y archivo de configuración.
 - **0.21.2** — Armas en alta resolución: el triple de píxeles por bloque (12 en vez de 4) y acabado propio: bisel con luz y sombra en cada pieza, brillo metálico en diagonal y desgaste fino (`armas_preview.png`).

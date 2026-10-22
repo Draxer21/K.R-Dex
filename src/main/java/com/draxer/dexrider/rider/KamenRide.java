@@ -97,6 +97,7 @@ public enum KamenRide {
             return;
         }
         set(level, player, target);
+        DexAdvancements.award(player, "kamen_ride");
     }
 
     /** Cambia la identidad sin comprobaciones (tambien la usa el K-Touch). */

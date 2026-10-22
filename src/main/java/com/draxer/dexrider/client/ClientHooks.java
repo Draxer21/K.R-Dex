@@ -18,6 +18,15 @@ public final class ClientHooks {
         Minecraft.getInstance().setScreen(new SummonScreen());
     }
 
+    public static void openGuide() {
+        java.util.List<net.minecraft.network.chat.Component> pages = new java.util.ArrayList<>();
+        for (int i = 1; i <= com.draxer.dexrider.item.RiderGuideItem.PAGES; i++) {
+            pages.add(net.minecraft.network.chat.Component.translatable("guide.dexrider.page" + i));
+        }
+        Minecraft.getInstance().setScreen(new net.minecraft.client.gui.screens.inventory.BookViewScreen(
+                new net.minecraft.client.gui.screens.inventory.BookViewScreen.BookAccess(pages)));
+    }
+
     public static void openKTouchScreen() {
         Minecraft.getInstance().setScreen(new KTouchScreen());
     }

@@ -1,0 +1,23 @@
+{
+  "parent": "dexrider:ally",
+  "display": {
+    "icon": {
+      "id": "dexrider:card_kamen_ride_forge"
+    },
+    "title": {
+      "translate": "advancements.dexrider.kamen_ride.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.kamen_ride.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

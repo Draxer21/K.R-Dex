@@ -79,6 +79,10 @@ public final class DexItems {
     public static final DeferredItem<DexDriverItem> DEX_DRIVER = ITEMS.registerItem("dex_driver",
             props -> new DexDriverItem(props.stacksTo(1).rarity(Rarity.EPIC)));
 
+    // ---------- Guia del Rider System (el cuaderno de Takumi) ----------
+    public static final DeferredItem<com.draxer.dexrider.item.RiderGuideItem> RIDER_GUIDE = ITEMS.registerItem("rider_guide",
+            props -> new com.draxer.dexrider.item.RiderGuideItem(props.stacksTo(1)));
+
     // ---------- K-Touch y carta de Complete Form (los forja el Driver con nueve Kamen Ride) ----------
     public static final DeferredItem<KTouchItem> K_TOUCH = ITEMS.registerItem("k_touch",
             props -> new KTouchItem(props.stacksTo(1).rarity(Rarity.EPIC)));
@@ -178,6 +182,7 @@ public final class DexItems {
                     .icon(() -> DEX_DRIVER.get().getDefaultInstance())
                     .displayItems((params, output) -> {
                         output.accept(DEX_DRIVER.get());
+                        output.accept(RIDER_GUIDE.get());
                         for (DexCard card : DexCard.values()) {
                             output.accept(CARDS.get(card).get());
                         }

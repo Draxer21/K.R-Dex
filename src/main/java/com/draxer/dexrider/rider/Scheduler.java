@@ -19,22 +19,31 @@ public final class Scheduler {
     private static final class Task {
         int ticksLeft;
         final Runnable action;
+        final boolean soft;
 
-        Task(int ticks, Runnable action) {
+        Task(int ticks, Runnable action, boolean soft) {
             this.ticksLeft = ticks;
             this.action = action;
+            this.soft = soft;
         }
     }
 
     private static final Map<UUID, List<Task>> TASKS = new HashMap<>();
 
     public static void later(ServerPlayer player, int ticks, Runnable action) {
-        TASKS.computeIfAbsent(player.getUUID(), k -> new ArrayList<>()).add(new Task(ticks, action));
+        TASKS.computeIfAbsent(player.getUUID(), k -> new ArrayList<>()).add(new Task(ticks, action, false));
+    }
+
+    /** Como later, pero no bloquea la transformacion ni las patadas (efectos largos que no son un ataque en curso). */
+    public static void soft(ServerPlayer player, int ticks, Runnable action) {
+        TASKS.computeIfAbsent(player.getUUID(), k -> new ArrayList<>()).add(new Task(ticks, action, true));
     }
 
     public static boolean busy(ServerPlayer player) {
         List<Task> list = TASKS.get(player.getUUID());
-        return list != null && !list.isEmpty();
+        if (list == null) return false;
+        for (Task t : list) if (!t.soft) return true;
+        return false;
     }
 
     public static void cancel(ServerPlayer player) {

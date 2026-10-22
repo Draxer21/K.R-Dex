@@ -22,6 +22,12 @@ public enum DexCard {
     KAMEN_RIDE_MIRAGE(Family.KAMEN_RIDE, 0),
     KAMEN_RIDE_PROTO(Family.KAMEN_RIDE, 0),
     ATTACK_RIDE_SLASH(Family.ATTACK_RIDE, 0),
+    // Attack Ride del fanfic: suben de nivel re-escaneando
+    ATTACK_RIDE_OVERCLOCK(Family.ATTACK_RIDE, 3),     // ver a un enderman pelear, o a Cipher en Accel
+    ATTACK_RIDE_GALE(Family.ATTACK_RIDE, 2),          // ver atacar a un breeze (o una carga de viento)
+    ATTACK_RIDE_RAZOR_FEATHER(Family.ATTACK_RIDE, 2), // ver atacar a un vex
+    ATTACK_RIDE_NITRO_BURST(Family.ATTACK_RIDE, 1),   // ver una explosion (creeper, TNT)
+    ATTACK_RIDE_GROUND_WAVE(Family.ATTACK_RIDE, 2),   // ver un golpe de maza o el rugido sonico del warden
     FINAL_ATTACK_RIDE_DEX(Family.FINAL_ATTACK_RIDE, 0),
 
     ARMED_RIDE_RIDE_BOOKER(Family.ARMED_RIDE, 0),

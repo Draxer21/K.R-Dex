@@ -85,6 +85,7 @@ public final class CipherModes {
         level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.BEACON_POWER_SELECT, SoundSource.PLAYERS, 1.2F, 1.8F);
         DexSounds.play(level, p, DexSounds.HENSHIN, 1.0F, 1.6F);
         p.sendSystemMessage(Component.translatable("message.dexrider.accel_start"), true);
+        DexAdvancements.award(p, "accel");
         return true;
     }
 
