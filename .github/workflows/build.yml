@@ -63,6 +63,30 @@ jobs:
           grep -nE "DEXTEST|[Tt]ests? (passed|failed)|required test|GameTest|FAIL|Exception|exit code" gametest.log | grep -v DEBUG | head -500 > gametest_summary.log
           true
 
+      # Fotos dentro del juego, con graficos, en una pantalla virtual (src/.../client/ShotDirector.java).
+      - name: Fotos dentro del juego
+        if: success()
+        continue-on-error: true
+        run: |
+          set +e
+          sudo apt-get update -qq && sudo apt-get install -y -qq xvfb libgl1-mesa-dri mesa-utils > /dev/null
+          rm -rf run/world run/saves/dextest run/screenshots
+          printf 'level-type=minecraft\\:flat\ngenerate-structures=false\nspawn-monsters=false\nlevel-name=world\nonline-mode=false\nenable-rcon=true\nrcon.password=dexrider\nrcon.port=25575\n' > run/server.properties
+          echo "eula=true" > run/eula.txt
+          (./gradlew runServer > server2.log 2>&1 &)
+          for i in $(seq 1 90); do sleep 5; grep -q 'Done (' server2.log && break; done
+          python3 .github/scripts/rcon.py save-all flush
+          python3 .github/scripts/rcon.py stop
+          for i in $(seq 1 30); do sleep 2; pgrep -f 'net.neoforged.*server' > /dev/null || break; done
+          pkill -f GradleDaemon; sleep 3
+          mkdir -p run/saves && cp -r run/world run/saves/dextest
+          export LIBGL_ALWAYS_SOFTWARE=1
+          timeout 900 xvfb-run -a -s "-screen 0 1280x720x24" ./gradlew runShots > shots.log 2>&1
+          echo "exit code $?" >> shots.log
+          mkdir -p shots && cp run/screenshots/*.png shots/ 2>/dev/null
+          ls -la shots >> shots.log
+          true
+
       # Guarda el registro de la compilacion (y el .jar si salio bien) en la rama ci-logs,
       # para poder leerlo desde fuera de GitHub.
       - name: Guardar registro en la rama ci-logs
@@ -70,13 +94,14 @@ jobs:
         run: |
           mkdir -p /tmp/out && cp build.log /tmp/out/build.log || true
           cp build/libs/*.jar /tmp/out/ 2>/dev/null || true
-          cp server.log server_errors.log gametest.log gametest_summary.log /tmp/out/ 2>/dev/null || true
+          cp server.log server_errors.log gametest.log gametest_summary.log shots.log server2.log /tmp/out/ 2>/dev/null || true
+          mkdir -p /tmp/out/shots && cp shots/*.png /tmp/out/shots/ 2>/dev/null || true
           echo "${{ job.status }} ${{ github.sha }}" > /tmp/out/status.txt
           git config user.name "ci-bot"; git config user.email "ci-bot@users.noreply.github.com"
           git fetch origin ci-logs || true
           git checkout --orphan ci-tmp
           git rm -rf --cached . >/dev/null
           find . -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
-          cp /tmp/out/* .
+          cp -r /tmp/out/* .
           git add -A && git commit -m "build ${{ github.sha }}: ${{ job.status }}"
           git push -f origin ci-tmp:ci-logs

@@ -62,6 +62,12 @@ public class DexMachineEntity extends Animal implements GeoEntity {
 
     public boolean scarab() { return this.entityData.get(DATA_SCARAB); }
 
+    /** Solo para fotos/pruebas: muestra el caparazon sin gastar el escarabajo. */
+    public void showScarab() {
+        this.entityData.set(DATA_SCARAB, true);
+        scarabTicks = 200;
+    }
+
     /** Fusiona el escarabajo con esta moto. Devuelve false si todavia esta descansando. */
     public boolean fuseScarab(ServerLevel level, ServerPlayer p) {
         long now = level.getGameTime();

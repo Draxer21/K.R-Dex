@@ -67,6 +67,14 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
+        // Fotos automaticas con graficos (GitHub Actions + pantalla virtual): entra al mundo "dextest" y saca capturas
+        shots {
+            client()
+            gameDirectory = project.file('run')
+            systemProperty 'dexrider.shots', 'true'
+            programArguments.addAll '--quickPlaySingleplayer', 'dextest', '--width', '1280', '--height', '720'
+        }
+
         server {
             server()
             programArgument '--nogui'
