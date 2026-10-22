@@ -86,8 +86,11 @@ public final class DexItems {
     // ---------- K-Touch y carta de Complete Form (los forja el Driver con nueve Kamen Ride) ----------
     public static final DeferredItem<KTouchItem> K_TOUCH = ITEMS.registerItem("k_touch",
             props -> new KTouchItem(props.stacksTo(1).rarity(Rarity.EPIC)));
-    public static final DeferredItem<Item> COMPLETE_FORM_CARD = ITEMS.registerItem("complete_form_card",
-            props -> new Item(props.stacksTo(1).rarity(Rarity.EPIC)));
+    public static final DeferredItem<com.draxer.dexrider.item.CompleteFormCardItem> COMPLETE_FORM_CARD = ITEMS.registerItem("complete_form_card",
+            props -> new com.draxer.dexrider.item.CompleteFormCardItem(props.stacksTo(1).rarity(Rarity.EPIC), 0));
+    /** Segunda carta de Complete Form (con Kaixa): el Driver la forja al tener la undecima Kamen Ride. */
+    public static final DeferredItem<com.draxer.dexrider.item.CompleteFormCardItem> COMPLETE_FORM_CARD_2 = ITEMS.registerItem("complete_form_card_2",
+            props -> new com.draxer.dexrider.item.CompleteFormCardItem(props.stacksTo(1).rarity(Rarity.EPIC), 1));
 
     // ---------- Equipo de Cipher (del fanfic): el reloj Accel (Takumi) y el arma Blaster (la guarda Genzo) ----------
     public static final DeferredItem<com.draxer.dexrider.item.CipherGearItem> CIPHER_ACCEL = ITEMS.registerItem("cipher_accel",
@@ -188,6 +191,7 @@ public final class DexItems {
                         }
                         output.accept(K_TOUCH.get());
                         output.accept(COMPLETE_FORM_CARD.get());
+                        output.accept(COMPLETE_FORM_CARD_2.get());
                         output.accept(CIPHER_ACCEL.get());
                         output.accept(CIPHER_BLASTER.get());
                     })

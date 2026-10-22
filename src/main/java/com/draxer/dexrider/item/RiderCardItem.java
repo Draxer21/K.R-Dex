@@ -70,7 +70,10 @@ public class RiderCardItem extends Item {
                 if (requireTransformed(sp)) ArmedRide.summon(serverLevel, sp, hand, card);
             }
             case FORM_RIDE -> {
-                if (requireTransformed(sp)) {
+                if (card == DexCard.UPGRADE_FORM) {
+                    sp.getCooldowns().addCooldown(stack, 20);
+                    com.draxer.dexrider.rider.UpgradeForm.toggle(serverLevel, sp);
+                } else if (requireTransformed(sp)) {
                     sp.getCooldowns().addCooldown(stack, 20);
                     FormRide.use(serverLevel, sp, FormRide.byCard(card));
                 }

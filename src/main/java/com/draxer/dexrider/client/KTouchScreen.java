@@ -40,8 +40,8 @@ public class KTouchScreen extends Screen {
         cy = this.height / 2 + 6;
         DriverDeck deck = Minecraft.getInstance().player == null ? DriverDeck.EMPTY
                 : DexDriverItem.getDeck(DexDriverItem.findDriver(Minecraft.getInstance().player));
-        int count = KTouch.kamenRideCount(deck);
-        missing = Math.max(0, KTouch.COMPLETE_AT - count);
+        missing = Minecraft.getInstance().player == null ? 0 : KTouch.missing(Minecraft.getInstance().player, deck);
+        KamenRide[] ring = Minecraft.getInstance().player == null ? KamenRide.RING : KamenRide.ring(Minecraft.getInstance().player);
 
         for (int i = 0; i < 10; i++) {
             final int idx = i;
@@ -51,7 +51,7 @@ public class KTouchScreen extends Screen {
                 double a = Math.toRadians(-90 + i * 40);
                 x = cx + (int) Math.round(Math.cos(a) * RADIUS) - PAD / 2;
                 y = cy + (int) Math.round(Math.sin(a) * RADIUS) - PAD / 2;
-                k = KamenRide.RING[i];
+                k = ring[i];
                 lit[i] = k.card != null && deck.has(k.card);
             } else {
                 x = cx - PAD / 2;

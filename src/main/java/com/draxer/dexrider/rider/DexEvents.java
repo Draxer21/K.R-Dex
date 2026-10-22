@@ -150,7 +150,8 @@ public final class DexEvents {
             DriverDeck deck = DexDriverItem.getDeck(driver);
             DexCard.Family family = ArmedRide.hasWeapon(attacker) ? DexCard.Family.ARMED_RIDE : DexCard.Family.KAMEN_RIDE;
             float mult = deck.multiplier(family) * Transformation.SUIT_DAMAGE_DEALT * CipherModes.damageScale(attacker)
-                    * DexEmotions.damageScale(attacker) * com.draxer.dexrider.config.DexConfig.dexDamage();
+                    * DexEmotions.damageScale(attacker) * com.draxer.dexrider.config.DexConfig.dexDamage()
+                    * (UpgradeForm.isActive(attacker) ? 1.2F : 1.0F);
             if (FormRide.current(attacker) != null) mult *= deck.multiplier(DexCard.Family.FORM_RIDE);
             if (KamenRide.current(attacker) == KamenRide.COMPLETE) mult *= RiderPowers.completeMultiplier(attacker);
             event.setAmount(event.getAmount() * mult);

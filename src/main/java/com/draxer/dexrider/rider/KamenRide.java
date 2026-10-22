@@ -33,10 +33,20 @@ public enum KamenRide {
     SPORE(DexCard.KAMEN_RIDE_SPORE, "rider_spore", true, 0xBCA8D6),
     MIRAGE(DexCard.KAMEN_RIDE_MIRAGE, "rider_mirage", true, 0xDCE4F0),
     PROTO(DexCard.KAMEN_RIDE_PROTO, "rider_proto", true, 0xFF8C1E),
+    KAIXA(DexCard.KAMEN_RIDE_KAIXA, "rider_kaixa", true, 0x385CBE),
     COMPLETE(null, "complete_form", true, 0x96101E);
 
     /** Orden de los nueve blasones del K-Touch (en anillo; Dex va al centro). */
     public static final KamenRide[] RING = {NINE, FORGE, PSYGA, CIPHER, WARDEN, ORGA, SPORE, MIRAGE, PROTO};
+    /** Segunda carta de Complete Form: Kaixa ocupa el hueco de Proto. */
+    public static final KamenRide[] RING_2 = {NINE, FORGE, PSYGA, CIPHER, WARDEN, ORGA, SPORE, MIRAGE, KAIXA};
+
+    /** Anillo de la carta de Complete Form que lleva insertada el K-Touch de este jugador. */
+    public static KamenRide[] ring(net.minecraft.world.entity.player.Player player) {
+        ItemStack driver = com.draxer.dexrider.item.DexDriverItem.findDriver(player);
+        Integer r = driver.isEmpty() ? null : driver.get(DexComponents.KTOUCH_RING.get());
+        return r != null && r == 1 ? RING_2 : RING;
+    }
 
     @Nullable public final DexCard card;
     public final String model;
@@ -107,6 +117,7 @@ public enum KamenRide {
         RiderPowers.clear(player);
         ArmedRide.removeWeapons(player);
         ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
+        chest.remove(DexComponents.UPGRADE.get());
         if (target == DEX) chest.remove(DexComponents.RIDER.get());
         else chest.set(DexComponents.RIDER.get(), target.id());
 

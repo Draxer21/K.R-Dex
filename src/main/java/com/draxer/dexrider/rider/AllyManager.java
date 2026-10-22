@@ -92,7 +92,7 @@ public final class AllyManager {
         for (ServerLevel level : owner.level().getServer().getAllLevels()) {
             for (Entity e : level.getAllEntities()) {
                 if (e instanceof RiderAllyEntity a && a.rider() == rider && owner.getUUID().equals(a.owner())
-                        && a.mode() != RiderAllyEntity.Mode.DOUBLE && a.isAlive()) return a;
+                        && a.mode() != RiderAllyEntity.Mode.DOUBLE && a.mode() != RiderAllyEntity.Mode.PROJECTION && a.isAlive()) return a;
             }
         }
         return null;
@@ -109,8 +109,14 @@ public final class AllyManager {
 
     /** Indice del anillo del K-Touch (0-8). */
     public static void summonByIndex(ServerPlayer player, int index) {
-        if (index < 0 || index >= KamenRide.RING.length) return;
-        toggle(player, KamenRide.RING[index]);
+        KamenRide[] ring = KamenRide.ring(player);
+        if (index < 0 || index >= ring.length) return;
+        // en Complete Form, los pads son los blasones: invocan a cada Rider (o a su proyeccion)
+        if (KamenRide.current(player) == KamenRide.COMPLETE) {
+            KTouch.toggleCrest(player, ring[index]);
+            return;
+        }
+        toggle(player, ring[index]);
     }
 
     public static void toggle(ServerPlayer player, KamenRide rider) {
@@ -246,7 +252,7 @@ public final class AllyManager {
         AllyBook book = book(player);
         long now = level.getGameTime();
         String dim = level.dimension().identifier().toString();
-        for (KamenRide rider : KamenRide.RING) {
+        for (KamenRide rider : DexEntities.NPC_RIDERS) {
             String id = rider.id();
             if (!book.home().containsKey(id) || !dim.equals(book.homeDim().get(id))) continue;
             if (book.isReturned(id) || book.activeUntil(id) > now || book.readyAt(id) > now || !isFriend(player, rider)) continue;
@@ -382,5 +388,23 @@ public final class AllyManager {
         var card = new net.minecraft.world.item.ItemStack(com.draxer.dexrider.registry.DexItems.card(com.draxer.dexrider.item.DexCard.VEHICLE_RIDE_SCARAB).get());
         if (!player.getInventory().add(card)) player.drop(card, false);
         player.sendSystemMessage(Component.translatable("message.dexrider.scarab_gift"));
+    }
+
+    /** Amigo de verdad (no proyeccion ni doble) de este jugador, cerca. */
+    @Nullable
+    public static RiderAllyEntity nearbyFriend(ServerPlayer owner, KamenRide rider, double range) {
+        if (!(owner.level() instanceof ServerLevel level)) return null;
+        for (RiderAllyEntity a : level.getEntitiesOfClass(RiderAllyEntity.class, owner.getBoundingBox().inflate(range))) {
+            if (a.rider() == rider && owner.getUUID().equals(a.owner()) && a.isAlive()
+                    && (a.mode() == RiderAllyEntity.Mode.WANDER || a.mode() == RiderAllyEntity.Mode.SUMMONED)) return a;
+        }
+        return null;
+    }
+
+    /** Proyeccion de un Rider (Complete Form): pelea como el original mientras sostengas su blason. */
+    public static void spawnProjection(ServerLevel level, ServerPlayer owner, KamenRide rider) {
+        Vec3 look = owner.getLookAngle().multiply(1, 0, 1).normalize();
+        Vec3 pos = owner.position().add(look.scale(2)).add(FX.yaw(look, 90).scale((owner.getRandom().nextDouble() - 0.5) * 4));
+        spawn(level, owner, rider, book(owner).gen(rider.id()), RiderAllyEntity.Mode.PROJECTION, pos, null);
     }
 }

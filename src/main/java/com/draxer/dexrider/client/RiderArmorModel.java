@@ -38,6 +38,7 @@ public class RiderArmorModel extends GeoModel<DexArmorItem> {
      *  Cipher si cambia con el reloj Accel o el arma Blaster). */
     public static String modelName(GeoRenderState state) {
         KamenRide k = rider(state);
+        if (k == KamenRide.DEX && Boolean.TRUE.equals(state.getGeckolibData(DexArmorRenderer.UPGRADE))) return "dex_upgrade";
         if (k == KamenRide.CIPHER) {
             String mode = state.getGeckolibData(DexArmorRenderer.CIPHER_MODE);
             if (mode != null && !mode.isEmpty()) return k.model + "_" + mode;

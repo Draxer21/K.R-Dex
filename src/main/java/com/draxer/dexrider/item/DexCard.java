@@ -21,6 +21,7 @@ public enum DexCard {
     KAMEN_RIDE_SPORE(Family.KAMEN_RIDE, 0),
     KAMEN_RIDE_MIRAGE(Family.KAMEN_RIDE, 0),
     KAMEN_RIDE_PROTO(Family.KAMEN_RIDE, 0),
+    KAMEN_RIDE_KAIXA(Family.KAMEN_RIDE, 0),       // la undecima: Tetsuya (abre la segunda carta de Complete Form)
     ATTACK_RIDE_SLASH(Family.ATTACK_RIDE, 0),
     // Attack Ride del fanfic: suben de nivel re-escaneando
     ATTACK_RIDE_OVERCLOCK(Family.ATTACK_RIDE, 3),     // ver a un enderman pelear, o a Cipher en Accel
@@ -53,6 +54,8 @@ public enum DexCard {
     FORM_RIDE_FROST(Family.FORM_RIDE, 2),          // un stray o un golem de nieve atacando
     FORM_RIDE_CINDER(Family.FORM_RIDE, 2),         // un blaze atacando
     FORM_RIDE_HALF(Family.FORM_RIDE, 2),           // con Frost y Cinder: ver fuego y hielo atacando casi a la vez
+    // Upgrade Form: la forma sin miedo, solo de Dex. Nace tras sentir las dos Emotion (Violent y Heroic)
+    UPGRADE_FORM(Family.FORM_RIDE, 0),
 
     // Vehicle Ride
     VEHICLE_RIDE_DEX_MACHINE(Family.VEHICLE_RIDE, 2), // alguien montado en un vehiculo en marcha

@@ -43,7 +43,7 @@ import java.util.UUID;
  */
 public class RiderAllyEntity extends RiderMob {
 
-    public enum Mode { WANDER, SUMMONED, DOUBLE }
+    public enum Mode { WANDER, SUMMONED, DOUBLE, PROJECTION }
 
     @Nullable private UUID owner;
     private int gen;
@@ -86,7 +86,7 @@ public class RiderAllyEntity extends RiderMob {
 
     @Override
     protected void idleChat(ServerLevel level) {
-        if (mode != Mode.DOUBLE) super.idleChat(level);
+        if (mode != Mode.DOUBLE && mode != Mode.PROJECTION) super.idleChat(level);
     }
     public void setHome(BlockPos home) { this.home = home; }
 
@@ -152,6 +152,18 @@ public class RiderAllyEntity extends RiderMob {
             com.draxer.dexrider.rider.RiderDialogue.force(level, this, rider, com.draxer.dexrider.rider.RiderDialogue.Line.SUIT);
         }
 
+        if (mode == Mode.PROJECTION) {
+            ServerPlayer o = ownerPlayer();
+            if (o == null || com.draxer.dexrider.rider.KamenRide.current(o) != com.draxer.dexrider.rider.KamenRide.COMPLETE
+                    || !com.draxer.dexrider.rider.KTouch.isHeld(o, rider) || o.level() != level) {
+                vanish(level);
+                return;
+            }
+            followOwner(level);
+            if (tickCount % 10 == 0) pickTarget(level);
+            if (tickCount % 5 == 0) FX.dust(level, rider.color, 0.7F, position().add(0, 1.0, 0), 2, 0.4);
+            return;
+        }
         if (mode == Mode.DOUBLE) {
             if (--lifeTicks <= 0) vanish(level);
             followOwner(level);
@@ -237,7 +249,7 @@ public class RiderAllyEntity extends RiderMob {
     public void knockOut() {
         setHealth(getMaxHealth());
         if (!(level() instanceof ServerLevel level)) return;
-        if (mode == Mode.DOUBLE) {
+        if (mode == Mode.DOUBLE || mode == Mode.PROJECTION) {
             vanish(level);
             return;
         }
@@ -258,7 +270,7 @@ public class RiderAllyEntity extends RiderMob {
 
     @Override
     public InteractionResult mobInteract(Player player, InteractionHand hand) {
-        if (!(player instanceof ServerPlayer sp) || owner == null || !owner.equals(player.getUUID()) || mode == Mode.DOUBLE) {
+        if (!(player instanceof ServerPlayer sp) || owner == null || !owner.equals(player.getUUID()) || mode == Mode.DOUBLE || mode == Mode.PROJECTION) {
             return super.mobInteract(player, hand);
         }
         if (sp.isShiftKeyDown()) {
@@ -277,7 +289,7 @@ public class RiderAllyEntity extends RiderMob {
         if (owner != null) out.putString("dex_owner", owner.toString());
         out.putInt("dex_gen", gen);
         out.putBoolean("dex_visitor", visitor);
-        out.putString("dex_mode", mode == Mode.DOUBLE ? Mode.WANDER.name() : mode.name());
+        out.putString("dex_mode", mode.name());
         if (home != null) out.putLong("dex_home", home.asLong());
     }
 

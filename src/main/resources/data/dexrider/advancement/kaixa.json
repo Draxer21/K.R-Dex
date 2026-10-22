@@ -1,0 +1,30 @@
+{
+  "parent": "dexrider:kamen_ride",
+  "display": {
+    "icon": {
+      "id": "dexrider:card_kamen_ride_kaixa"
+    },
+    "title": {
+      "translate": "advancements.dexrider.kaixa.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.kaixa.description"
+    },
+    "frame": "goal",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": "dexrider:card_kamen_ride_kaixa"
+          }
+        ]
+      }
+    }
+  }
+}

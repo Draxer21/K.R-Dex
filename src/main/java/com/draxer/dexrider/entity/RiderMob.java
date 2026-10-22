@@ -287,7 +287,7 @@ public abstract class RiderMob extends PathfinderMob implements GeoEntity {
 
     public static boolean hasWeapon(KamenRide rider) {
         return rider == KamenRide.CIPHER || rider == KamenRide.MIRAGE || rider == KamenRide.PROTO || rider == KamenRide.FORGE
-                || rider == KamenRide.WARDEN || rider == KamenRide.ORGA || rider == KamenRide.SPORE;
+                || rider == KamenRide.WARDEN || rider == KamenRide.ORGA || rider == KamenRide.SPORE || rider == KamenRide.KAIXA;
     }
 
     /** No dana a estos (al dueno, a otros aliados, a otros ecos...). */
@@ -453,6 +453,7 @@ public abstract class RiderMob extends PathfinderMob implements GeoEntity {
             case WARDEN -> FX.dust(level, 0xFF9628, 0.6F, position().add(0, 1.6, 0), 1, 0.3);
             case PSYGA -> FX.particle(level, ParticleTypes.CLOUD, position().add(0, 1.0, 0).subtract(getLookAngle().scale(0.5)), 1, 0.1, 0.01);
             case ORGA -> FX.dust(level, 0xF2C230, 0.7F, position().add(0, 1, 0), 1, 0.4);
+            case KAIXA -> FX.dust(level, 0x966EFF, 0.6F, position().add(0, 1, 0), 1, 0.4);
             case PROTO -> FX.particle(level, ParticleTypes.SMALL_FLAME, position().add(0, 1.0, 0).subtract(getLookAngle().scale(0.4)), 1, 0.1, 0.01);
             default -> { }
         }
@@ -473,6 +474,7 @@ public abstract class RiderMob extends PathfinderMob implements GeoEntity {
                 case SPORE -> living.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 40, 2));
                 case WARDEN -> living.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 30, 4));
                 case ORGA -> FX.push(living, position(), 1.4, 0.4);
+                case KAIXA -> { if (living.getHealth() < living.getMaxHealth() * 0.5F) living.hurtServer(level, damageSources().mobAttack(this), 3.0F * powerScale()); }
                 default -> { }
             }
         }

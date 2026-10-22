@@ -139,6 +139,12 @@ public final class RiderPowers {
                 effect(p, MobEffects.STRENGTH, 1);
                 effect(p, MobEffects.RESISTANCE, 1);
             }
+            case KAIXA -> {
+                effect(p, MobEffects.STRENGTH, 0);
+                effect(p, MobEffects.SPEED, 0);
+                effect(p, MobEffects.HASTE, 0);
+                effect(p, MobEffects.JUMP_BOOST, 0);
+            }
             case PROTO -> {
                 effect(p, MobEffects.HASTE, 1);
                 effect(p, MobEffects.JUMP_BOOST, 0);
@@ -184,6 +190,7 @@ public final class RiderPowers {
             case COMPLETE -> {
                 // La Complete Form agota: consume hambre rapido. Sin comida, se cae.
                 if (!p.isCreative()) p.causeFoodExhaustion(0.06F);
+                KTouch.tickHeld(level, p);
                 if (p.tickCount % 10 == 0) {
                     for (KamenRide k : KamenRide.RING) {
                         if (level.getRandom().nextInt(4) == 0) FX.dust(level, k.color, 0.9F, FX.center(p), 1, 0.7);
@@ -211,6 +218,7 @@ public final class RiderPowers {
             case ORGA -> shift ? orgaTones(level, p) : orgaBlow(level, p);
             case MIRAGE -> shift ? mirageDoubles(level, p) : mirageFlash(level, p);
             case PROTO -> shift ? protoHook(level, p) : protoThruster(level, p);
+            case KAIXA -> shift ? kaixaCut(level, p) : kaixaTwinShot(level, p);
             case COMPLETE -> cardCannon(level, p);
             default -> null;
         };
@@ -532,7 +540,7 @@ public final class RiderPowers {
     public static boolean hasFinisher(KamenRide kr) {
         return kr == KamenRide.NINE || kr == KamenRide.CIPHER || kr == KamenRide.SPORE
                 || kr == KamenRide.FORGE || kr == KamenRide.MIRAGE || kr == KamenRide.PROTO
-                || kr == KamenRide.WARDEN || kr == KamenRide.PSYGA || kr == KamenRide.ORGA;
+                || kr == KamenRide.WARDEN || kr == KamenRide.PSYGA || kr == KamenRide.ORGA || kr == KamenRide.KAIXA;
     }
 
     public static void finalAttack(ServerLevel level, ServerPlayer p, KamenRide kr) {
@@ -549,8 +557,73 @@ public final class RiderPowers {
             case WARDEN -> wardenSentence(level, p);
             case PSYGA -> psygaSkyfall(level, p);
             case ORGA -> orgaJudgement(level, p);
+            case KAIXA -> kaixaBreaker(level, p);
             default -> { }
         }
+    }
+
+    // ---------------------------------------------------------------- Kaixa (Tetsuya)
+
+    private static final int KAIXA_VIOLET = 0x966EFF;
+
+    /** Dos disparos de la espada-pistola, uno detras de otro, al primer objetivo en la linea. */
+    private static Used kaixaTwinShot(ServerLevel level, ServerPlayer p) {
+        for (int i = 0; i < 2; i++) {
+            Scheduler.later(p, 1 + i * 4, () -> {
+                Vec3 eye = p.getEyePosition(), dir = p.getLookAngle();
+                Vec3 end = FX.rayEnd(level, p, eye, dir, 28);
+                LivingEntity t = null;
+                for (LivingEntity e : FX.alongLine(level, p, eye, end, 0.7)) { t = e; break; }
+                if (t != null) { end = FX.center(t); FX.hit(level, p, t, 7.0F); }
+                FX.line(level, eye.add(dir.scale(0.8)), end, KAIXA_VIOLET, 0.9F, 0.35);
+                level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.FIREWORK_ROCKET_BLAST, SoundSource.PLAYERS, 0.8F, 1.6F);
+            });
+        }
+        return new Used("kaixa_twin_shot", 3);
+    }
+
+    /** Tajo de remate: avanza en linea recta cortando todo lo que atraviesa; mas dano a los que ya estan tocados. */
+    private static Used kaixaCut(ServerLevel level, ServerPlayer p) {
+        Vec3 dir = p.getLookAngle().multiply(1, 0, 1).normalize();
+        Vec3 from = p.position();
+        double free = FX.rayEnd(level, p, from.add(0, 0.3, 0), dir, 7).distanceTo(from.add(0, 0.3, 0)) - 0.6;
+        Vec3 to = from.add(dir.scale(Math.max(0, free)));
+        for (LivingEntity e : FX.alongLine(level, p, from.add(0, 1, 0), to.add(0, 1, 0), 0.9)) {
+            FX.hit(level, p, e, e.getHealth() < e.getMaxHealth() * 0.5F ? 12.0F : 7.0F);   // el que termina lo que otros dejaron
+            FX.push(e, from, 0.8, 0.3);
+        }
+        FX.line(level, from.add(0, 1, 0), to.add(0, 1, 0), KAIXA_VIOLET, 1.1F, 0.4);
+        if (level.noCollision(p, p.getBoundingBox().move(to.subtract(from)))) p.teleportTo(to.x, to.y, to.z);
+        level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1.2F, 1.2F);
+        return new Used("kaixa_cut", 5);
+    }
+
+    /** Final Attack Ride: Cobalt Breaker. Salta, fija al objetivo con seis disparos y cae con un tajo en cruz. */
+    private static void kaixaBreaker(ServerLevel level, ServerPlayer p) {
+        LivingEntity target = FX.findTarget(level, p, 24, 0.55);
+        p.setDeltaMovement(p.getDeltaMovement().x, 1.1, p.getDeltaMovement().z);
+        p.hurtMarked = true;
+        FX.ring(level, p, KAIXA_VIOLET, 1.2, 6);
+        if (target == null) return;
+        final LivingEntity t = target;
+        for (int i = 0; i < 6; i++) {
+            Scheduler.later(p, 6 + i * 2, () -> {
+                if (!t.isAlive()) return;
+                FX.line(level, p.getEyePosition(), FX.center(t), KAIXA_VIOLET, 0.8F, 0.4);
+                FX.hit(level, p, t, 3.0F);
+                t.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 40, 3));
+            });
+        }
+        Scheduler.later(p, 20, () -> {
+            if (!t.isAlive()) return;
+            Vec3 at = FX.center(t);
+            p.teleportTo(at.x, t.getY() + 0.2, at.z);
+            FX.hit(level, p, t, 22.0F);
+            FX.line(level, at.add(-1.5, 1.5, 0), at.add(1.5, -1.5, 0), KAIXA_VIOLET, 1.4F, 0.2);
+            FX.line(level, at.add(1.5, 1.5, 0), at.add(-1.5, -1.5, 0), 0x385CBE, 1.4F, 0.2);
+            level.sendParticles(ParticleTypes.EXPLOSION, at.x, at.y, at.z, 2, 0.4, 0.4, 0.4, 0);
+            level.playSound(null, at.x, at.y, at.z, SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 1.2F, 1.2F);
+        });
     }
 
     private static void risingSmash(ServerLevel level, ServerPlayer p) {

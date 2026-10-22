@@ -81,7 +81,7 @@ public class RideBookerMenu extends AbstractContainerMenu {
     public boolean insertMode() { return insertMode; }
 
     public static boolean isCard(ItemStack stack) {
-        return stack.getItem() instanceof RiderCardItem || stack.is(com.draxer.dexrider.registry.DexItems.COMPLETE_FORM_CARD.get());
+        return stack.getItem() instanceof RiderCardItem || stack.is(com.draxer.dexrider.registry.DexItems.COMPLETE_FORM_CARD_2.get()) || stack.is(com.draxer.dexrider.registry.DexItems.COMPLETE_FORM_CARD.get());
     }
 
     private class CardSlot extends Slot {

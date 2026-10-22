@@ -46,7 +46,8 @@ public class SummonScreen extends Screen {
     private static final Identifier LIGHTS = DexRider.id("textures/gui/ktouch_lights.png");
 
     private static final int W = 380, H = 220, PAD = 36, DEXPAD = 48, STEP = 42, EMB = 24, DEXEMB = 36;
-    private static final int PADS_W = 372, PADS_H = 48, EMB_W = 240, EMB_H = 108;
+    private KamenRide[] ring = KamenRide.RING;
+    private static final int PADS_W = 372, PADS_H = 48, EMB_W = 264, EMB_H = 108;
     // marcos en ktouch_pads.png: cinco de 36 (Riders) y cuatro de 48 (Dex) a partir de x = 180
     private static final int P_READY = 0, P_HOVER = 1, P_ACTIVE = 2, P_REST = 3, P_LOCKED = 4;
     private static final int D_READY = 0, D_HOVER = 1, D_ON = 2, D_LOCKED = 3;
@@ -85,11 +86,25 @@ public class SummonScreen extends Screen {
                 ? AllyBook.EMPTY : driver.get(DexComponents.ALLIES.get());
         long now = player == null ? 0 : player.level().getGameTime();
         activeCount = 0;
+        ring = player == null ? KamenRide.RING : KamenRide.ring(player);
+        boolean complete = player != null && KamenRide.current(player) == KamenRide.COMPLETE;
 
         for (int i = 0; i < 9; i++) {
             final int idx = i;
-            KamenRide k = KamenRide.RING[i];
+            KamenRide k = ring[i];
             boolean friend = k.implemented && k.card != null && deck.has(k.card);
+            if (complete) {   // en Complete Form los pads son blasones: cualquier Kamen Ride del mazo se puede invocar
+                state[i] = friend ? 1 : 0;
+                Component tip = Component.literal((i + 1) + " · ").append(k.displayName()).append(Component.literal(" — "))
+                        .append(Component.translatable("screen.dexrider.summon.crest"));
+                Button b = Button.builder(Component.empty(), btn -> {
+                    ClientPacketDistributor.sendToServer(new SummonAllyPayload(idx));
+                    onClose();
+                }).bounds(padX(i), padY(i), PAD, PAD).tooltip(Tooltip.create(tip)).build();
+                b.active = friend;
+                pads.add(addRenderableWidget(b));
+                continue;
+            }
             String id = k.id();
             if (!friend) state[i] = 0;
             else if (book.activeUntil(id) > now) { state[i] = 2; activeCount++; }
@@ -109,12 +124,13 @@ public class SummonScreen extends Screen {
         // Blason de Dex: Complete Form
         krCount = KTouch.kamenRideCount(deck);
         inComplete = player != null && KamenRide.current(player) == KamenRide.COMPLETE;
-        boolean hasKit = player != null && KTouch.has(player, DexItems.K_TOUCH.get()) && KTouch.has(player, DexItems.COMPLETE_FORM_CARD.get());
+        boolean hasKit = player != null && KTouch.has(player, DexItems.K_TOUCH.get()) && KTouch.hasActiveCard(player);
+        int miss = player == null ? 1 : KTouch.missing(player, deck);
         boolean asDex = player != null && Transformation.isTransformed(player) && KamenRide.current(player) == KamenRide.DEX;
-        dexReady = inComplete || (hasKit && asDex && krCount >= KTouch.COMPLETE_AT);
+        dexReady = inComplete || (hasKit && asDex && miss == 0);
         Component dexTip;
         if (inComplete) dexTip = Component.translatable("screen.dexrider.summon.dex.exit");
-        else if (krCount < KTouch.COMPLETE_AT) dexTip = Component.translatable("screen.dexrider.summon.dex.missing", KTouch.COMPLETE_AT - krCount);
+        else if (miss > 0) dexTip = Component.translatable("screen.dexrider.summon.dex.missing", miss);
         else if (!hasKit) dexTip = Component.translatable("message.dexrider.ktouch_need_card");
         else if (!asDex) dexTip = Component.translatable("message.dexrider.ktouch_need_dex");
         else dexTip = Component.translatable("screen.dexrider.summon.dex.enter");
@@ -158,7 +174,7 @@ public class SummonScreen extends Screen {
             };
             sprite(g, PADS, px, py, frame * PAD, 0, PAD, PAD, PADS_W, PADS_H);
             int row = state[i] == 3 ? 1 : state[i] == 0 ? 2 : 0;
-            sprite(g, EMBLEMS, px + 6, py + 6 - (hover ? 1 : 0), i * EMB, row * EMB, EMB, EMB, EMB_W, EMB_H);
+            sprite(g, EMBLEMS, px + 6, py + 6 - (hover ? 1 : 0), (ring[i] == KamenRide.KAIXA ? 10 : i) * EMB, row * EMB, EMB, EMB, EMB_W, EMB_H);
             if (state[i] == 3) {
                 Component s = Component.literal(restSeconds[i] + "s");
                 g.text(this.font, s, px + PAD - 3 - this.font.width(s), py + PAD - 11, 0xFFE8E8EE, true);

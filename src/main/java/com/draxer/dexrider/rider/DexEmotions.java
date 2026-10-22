@@ -73,7 +73,7 @@ public final class DexEmotions {
 
     private static boolean canAwaken(ServerLevel level, ServerPlayer p) {
         return DexConfig.emotions() && Transformation.isTransformed(p) && KamenRide.current(p) == KamenRide.DEX
-                && current(p) == null && !RiderKick.isKicking(p);
+                && current(p) == null && !UpgradeForm.isActive(p) && !RiderKick.isKicking(p);
     }
 
     // ------------------------------------------------------------------ disparadores
@@ -126,6 +126,7 @@ public final class DexEmotions {
         p.sendSystemMessage(Component.translatable("message.dexrider.emotion_" + emotion), true);
         effects(p, emotion);
         DexAdvancements.award(p, emotion + "_emotion");
+        UpgradeForm.onEmotion(p, emotion);
     }
 
     public static void tick(ServerLevel level, ServerPlayer p) {

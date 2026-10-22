@@ -1,0 +1,23 @@
+{
+  "parent": "dexrider:henshin",
+  "display": {
+    "icon": {
+      "id": "dexrider:card_upgrade_form"
+    },
+    "title": {
+      "translate": "advancements.dexrider.upgrade_form.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.upgrade_form.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

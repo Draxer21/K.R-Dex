@@ -80,7 +80,8 @@ public enum FormRide {
 
     public static int level(ServerPlayer player, FormRide form) {
         DriverDeck deck = DexDriverItem.getDeck(DexDriverItem.findDriver(player));
-        return Math.max(1, deck.level(form.card));
+        int lvl = Math.max(1, deck.level(form.card));
+        return UpgradeForm.isActive(player) ? Math.min(DriverDeck.MAX_LEVEL, lvl + 1) : lvl;   // la Upgrade amplifica
     }
 
     /** Usar una carta de Form Ride. */

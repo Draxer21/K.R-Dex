@@ -74,6 +74,7 @@ public final class RiderDialogue {
             case MIRAGE -> 0xB4C8FF;
             case SPORE -> 0xC8A8F0;
             case FORGE -> 0xE04858;
+            case KAIXA -> 0x7A9CFF;
             default -> rider.color;
         };
     }

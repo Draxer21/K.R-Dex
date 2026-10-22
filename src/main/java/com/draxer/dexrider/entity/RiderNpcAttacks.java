@@ -30,6 +30,7 @@ public final class RiderNpcAttacks {
             case WARDEN -> wardenStrike(level, self, target);
             case PSYGA -> psygaDive(level, self, target);
             case ORGA -> orgaSlam(level, self, target);
+            case KAIXA -> kaixaShots(level, self, target);
             default -> { }
         }
     }
@@ -268,6 +269,21 @@ public final class RiderNpcAttacks {
         for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, new AABB(c, c).inflate(r),
                 e -> e != self && e.isAlive() && !self.isFriendlyTo(e))) {
             hurt(level, self, e, dmg);
+        }
+    }
+
+    /** Kaixa (Tetsuya): dos disparos de la espada-pistola y, si el objetivo esta cerca, un tajo. */
+    private static void kaixaShots(ServerLevel level, RiderMob self, LivingEntity target) {
+        net.minecraft.world.phys.Vec3 from = self.getEyePosition(), to = FX.center(target);
+        FX.line(level, from, to, 0x966EFF, 0.9F, 0.4);
+        hurt(level, self, target, 5.0F);
+        FX.line(level, from.add(0, -0.2, 0), to, 0x385CBE, 0.9F, 0.4);
+        hurt(level, self, target, 4.0F);
+        level.playSound(null, self.getX(), self.getY(), self.getZ(), net.minecraft.sounds.SoundEvents.FIREWORK_ROCKET_BLAST,
+                net.minecraft.sounds.SoundSource.HOSTILE, 0.8F, 1.6F);
+        if (self.distanceTo(target) < 4) {
+            hurt(level, self, target, 6.0F);
+            FX.particle(level, net.minecraft.core.particles.ParticleTypes.SWEEP_ATTACK, to, 2, 0.3, 0);
         }
     }
 }

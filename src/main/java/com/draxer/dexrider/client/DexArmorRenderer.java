@@ -32,6 +32,7 @@ import net.minecraft.world.item.ItemStack;
  */
 public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderState> extends GeoArmorRenderer<DexArmorItem, R> {
 
+    public static final DataTicket<Boolean> UPGRADE = DataTicket.create("dexrider_upgrade", Boolean.class);
     public static final DataTicket<Integer> MAIN_COLOR = DataTicket.create("dexrider_main_color", Integer.class);
     public static final DataTicket<Integer> EYE_COLOR = DataTicket.create("dexrider_eye_color", Integer.class);
     public static final DataTicket<Integer> ACCENT_COLOR = DataTicket.create("dexrider_accent_color", Integer.class);
@@ -70,7 +71,7 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
     }
 
     private static boolean isDex(GeoRenderState state) {
-        return RiderArmorModel.rider(state) == KamenRide.DEX;
+        return RiderArmorModel.rider(state) == KamenRide.DEX && !Boolean.TRUE.equals(state.getGeckolibData(UPGRADE));
     }
 
     private static boolean isHalf(GeoRenderState state) {
@@ -99,6 +100,7 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
         renderState.addGeckolibData(RIDER, rider == null ? "dex" : rider);
         String cipherMode = chest.get(DexComponents.CIPHER_MODE.get());
         renderState.addGeckolibData(CIPHER_MODE, cipherMode == null ? "" : cipherMode);
+        renderState.addGeckolibData(UPGRADE, Boolean.TRUE.equals(chest.get(DexComponents.UPGRADE.get())));
         renderState.addGeckolibData(EYE_COLOR, emo != null ? emo[1] : suit.eyeColor());
         renderState.addGeckolibData(ACCENT_COLOR, emo != null ? emo[2] : suit.accentColor());
         renderState.addGeckolibData(HORNS, suit.horns().id());

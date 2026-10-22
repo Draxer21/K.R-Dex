@@ -219,10 +219,20 @@ public final class Transformation {
             return;
         }
         FormRide form = FormRide.current(player);
+        if (UpgradeForm.isActive(player)) {
+            // Upgrade Form: base mas alta, y la Form Ride encima amplificada
+            player.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 60, 2, false, false, true));
+            player.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 60, 1, false, false, true));
+            if (form == null) {
+                player.addEffect(new MobEffectInstance(MobEffects.SPEED, 60, 1, false, false, true));
+                player.addEffect(new MobEffectInstance(MobEffects.JUMP_BOOST, 60, 1, false, false, true));
+            }
+        }
         if (form != null) {
             form.applyEffects(player, FormRide.level(player, form));
             return;
         }
+        if (UpgradeForm.isActive(player)) return;
         for (Holder<MobEffect> effect : FORM_EFFECTS) {
             // Dex Form base: Fuerza II, Velocidad I, Salto I y Resistencia I; sin particulas, con icono
             player.addEffect(new MobEffectInstance(effect, 60, effect == MobEffects.STRENGTH ? 1 : 0, false, false, true));

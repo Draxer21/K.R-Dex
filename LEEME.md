@@ -100,6 +100,26 @@ Cada forma tiene **Nivel 1 a 3**: se sube re-escaneando su fuente (el doble de m
 
 Con una forma activa, el daño también se multiplica por el escalado de la familia Form Ride.
 
+### Kaixa, la undécima Kamen Ride
+**Tetsuya Kagami**, el hermano menor, aparece perdido en taigas y bosques de montaña. Vencerlo da **Kamen Ride: Kaixa**
+(grafito y cobalto, visor de dos lentes violeta, espada-pistola). Pasivas: Fuerza I, Velocidad I, Prisa I, Salto I.
+R = **Twin Shot** (dos disparos) · Shift+R = **Tajo de remate** (avanza cortando; pega más a los que ya están tocados) ·
+FAR = **Cobalt Breaker** (seis disparos que lo frenan y un tajo en cruz).
+Con el K-Touch ya forjado, la undécima Kamen Ride forja la **Carta de Complete Form II** (Kaixa ocupa el hueco de Proto).
+Clic derecho con una carta de Complete Form la inserta en el K-Touch: decide qué nueve blasones usa.
+
+### Complete Form: los blasones
+En Complete Form, los pads del K-Touch (B o el teclado numérico) son **blasones**: cada uno invoca a ese Rider.
+Si ese amigo está cerca de verdad, no sale una proyección: se potencia y pelea contigo con todo. Si no, sale su
+**proyección**, que pelea como el original. Pulsar otra vez el blasón lo libera. Cada blasón sostenido agota más rápido
+(las proyecciones cuestan el doble que los amigos presentes); si caes, todos caen.
+
+### Upgrade Form
+La forma sin miedo, solo de Dex. Nace cuando el Driver ya sintió **las dos Emotion** (Violent y Heroic): la carta aparece sola.
+Clic derecho (o desde el Booker) la activa y la desactiva. Fuerza III, Velocidad II, Salto II, Resistencia II, golpes ×1.2;
+las **Form Ride se apilan encima y cuentan un nivel más** (hasta Nv3). No se combina con las Emotion. Traje propio:
+casco rojo con espolones dorados, cruz X blanca sobre el torso negro, púas rojas en los hombros (`upgrade_kaixa_preview.png`).
+
 ### Dai-Shocker (enemigos y estructuras)
 - **Combatiente** (máscara de hueso, visor de una ranura; van en grupo), **Kaijin Mantis** (guadañas, salta y hace sangrar;
   junglas y pantanos), **Kaijin Rinoceronte** (blindado, embiste; sabanas y montes). Aparecen de noche como cualquier monstruo.
@@ -483,6 +503,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.25.0** — Kaixa (Tetsuya) como undécima Kamen Ride, con eco, amigo, poderes y diálogos, y la Carta de Complete Form II. Blasones de la Complete Form: invocan proyecciones o potencian al amigo presente. Upgrade Form (carta, traje propio y Form Ride amplificadas).
 - **0.24.0** — Dai-Shocker: combatientes, Kaijin Mantis y Rinoceronte, la Quimera (jefe) y emboscadas (`daishocker_preview.png`). Casa de la montaña de los Kagami (equipo Blaster en el sótano) y depósito de la Comisión. Vehicle Ride: Scarab, el escarabajo que se fusiona con la moto (`scarab_preview.png`). Logros nuevos.
 - **0.23.0** — Attack Ride del fanfic: Overclock, Gale, Razor Feather, Nitro Burst y Ground Wave, con niveles (`attack_rides_preview.png`). Cuaderno de Takumi (guía en el juego) y logros propios.
 - **0.22.1** — Violent y Heroic Emotion sin recarga.

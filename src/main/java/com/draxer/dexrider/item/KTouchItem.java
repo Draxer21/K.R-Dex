@@ -29,7 +29,7 @@ public class KTouchItem extends Item {
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         if (!(level instanceof ServerLevel serverLevel)) {
             if (Transformation.isTransformed(player) && KamenRide.current(player) == KamenRide.DEX
-                    && KTouch.has(player, DexItems.COMPLETE_FORM_CARD.get())) {
+                    && KTouch.hasActiveCard(player)) {
                 ClientHooks.openKTouchScreen();
             }
             return InteractionResult.SUCCESS;
@@ -41,7 +41,7 @@ public class KTouchItem extends Item {
             KTouch.exit(serverLevel, sp, false);
         } else if (KamenRide.current(sp) != KamenRide.DEX) {
             sp.sendSystemMessage(Component.translatable("message.dexrider.ktouch_need_dex"), true);
-        } else if (!KTouch.has(sp, DexItems.COMPLETE_FORM_CARD.get())) {
+        } else if (!KTouch.hasActiveCard(sp)) {
             sp.sendSystemMessage(Component.translatable("message.dexrider.ktouch_need_card"), true);
         }
         return InteractionResult.SUCCESS;

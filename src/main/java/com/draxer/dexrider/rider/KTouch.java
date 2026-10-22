@@ -64,6 +64,25 @@ public final class KTouch {
         if (count == COMPLETE_AT) {
             player.sendSystemMessage(Component.translatable("message.dexrider.ktouch_complete").withStyle(ChatFormatting.LIGHT_PURPLE));
         }
+        // la undecima Kamen Ride (Kaixa) forja una segunda carta: otro grupo de nueve
+        if (Boolean.TRUE.equals(driver.get(DexComponents.KTOUCH_FORGED.get())) && deck.has(DexCard.KAMEN_RIDE_KAIXA)
+                && !Boolean.TRUE.equals(driver.get(DexComponents.KTOUCH_CARD2.get()))) {
+            driver.set(DexComponents.KTOUCH_CARD2.get(), true);
+            give(player, new ItemStack(DexItems.COMPLETE_FORM_CARD_2.get()));
+            player.sendSystemMessage(Component.translatable("message.dexrider.ktouch_card2").withStyle(ChatFormatting.LIGHT_PURPLE));
+        }
+    }
+
+    /** Tiene la carta de Complete Form del anillo activo. */
+    public static boolean hasActiveCard(Player player) {
+        return has(player, KamenRide.ring(player) == KamenRide.RING_2 ? DexItems.COMPLETE_FORM_CARD_2.get() : DexItems.COMPLETE_FORM_CARD.get());
+    }
+
+    /** Faltan Kamen Ride del anillo activo (o la de Dex). */
+    public static int missing(Player player, DriverDeck deck) {
+        int n = deck.has(DexCard.KAMEN_RIDE_DEX) ? 0 : 1;
+        for (KamenRide k : KamenRide.ring(player)) if (k.card != null && !deck.has(k.card)) n++;
+        return n;
     }
 
     /** Para los mundos donde las cartas ya estaban antes de esta version. */
@@ -71,7 +90,9 @@ public final class KTouch {
         ItemStack driver = DexDriverItem.findDriver(player);
         if (driver.isEmpty()) return;
         DriverDeck deck = DexDriverItem.getDeck(driver);
-        if (kamenRideCount(deck) >= FORGE_AT && !Boolean.TRUE.equals(driver.get(DexComponents.KTOUCH_FORGED.get()))) {
+        if ((kamenRideCount(deck) >= FORGE_AT && !Boolean.TRUE.equals(driver.get(DexComponents.KTOUCH_FORGED.get())))
+                || (deck.has(DexCard.KAMEN_RIDE_KAIXA) && Boolean.TRUE.equals(driver.get(DexComponents.KTOUCH_FORGED.get()))
+                    && !Boolean.TRUE.equals(driver.get(DexComponents.KTOUCH_CARD2.get())))) {
             onKamenRideAdded(player, driver, deck);
         }
     }
@@ -90,18 +111,19 @@ public final class KTouch {
             player.sendSystemMessage(Component.translatable("message.dexrider.ktouch_need_dex"), true);
             return;
         }
-        if (!has(player, DexItems.K_TOUCH.get()) || !has(player, DexItems.COMPLETE_FORM_CARD.get())) return;
-        int count = kamenRideCount(DexDriverItem.getDeck(DexDriverItem.findDriver(player)));
-        if (count < COMPLETE_AT) {
-            player.sendSystemMessage(Component.translatable("message.dexrider.ktouch_incomplete", COMPLETE_AT - count), true);
+        if (!has(player, DexItems.K_TOUCH.get()) || !hasActiveCard(player)) return;
+        int miss = missing(player, DexDriverItem.getDeck(DexDriverItem.findDriver(player)));
+        if (miss > 0) {
+            player.sendSystemMessage(Component.translatable("message.dexrider.ktouch_incomplete", miss), true);
             return;
         }
         KamenRide.set(level, player, KamenRide.COMPLETE);
         DexAdvancements.award(player, "complete_form");
         // espectaculo: las nueve cartas giran alrededor y se clavan en la armadura
         Vec3 c = FX.center(player);
-        for (int i = 0; i < KamenRide.RING.length; i++) {
-            KamenRide k = KamenRide.RING[i];
+        KamenRide[] ring = KamenRide.ring(player);
+        for (int i = 0; i < ring.length; i++) {
+            KamenRide k = ring[i];
             double a = Math.toRadians(i * 40);
             Vec3 from = c.add(Math.cos(a) * 3, 1.2, Math.sin(a) * 3);
             Scheduler.later(player, 1 + i * 2, () -> {
@@ -118,6 +140,7 @@ public final class KTouch {
     /** Salir de la Complete Form (K-Touch otra vez, o agotamiento). */
     public static void exit(ServerLevel level, ServerPlayer player, boolean exhausted) {
         if (KamenRide.current(player) != KamenRide.COMPLETE) return;
+        releaseAll(level, player);
         KamenRide.set(level, player, KamenRide.DEX);
         if (exhausted) {
             player.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 200, 2));
@@ -128,5 +151,73 @@ public final class KTouch {
 
     private static void give(ServerPlayer player, ItemStack stack) {
         if (!player.getInventory().add(stack)) player.drop(stack, false);
+    }
+
+    // ------------------------------------------------------------------ blasones: invocar a los nueve
+
+    /**
+     * En Complete Form, pulsar un blason (pad del K-Touch con B o el teclado numerico) invoca a ese Rider.
+     * Como en el fanfic: si el amigo esta cerca de verdad, no sale una proyeccion; se transforma el mismo y pelea
+     * con todo. Si no, sale su proyeccion, que pelea como el original. Cada uno que sostienes agota mas rapido.
+     * Pulsar otra vez el mismo blason lo libera.
+     */
+    private static final java.util.Map<java.util.UUID, java.util.EnumSet<KamenRide>> HELD = new java.util.HashMap<>();
+
+    public static boolean isHeld(ServerPlayer player, KamenRide k) {
+        var set = HELD.get(player.getUUID());
+        return set != null && set.contains(k);
+    }
+
+    public static int heldCount(ServerPlayer player) {
+        var set = HELD.get(player.getUUID());
+        return set == null ? 0 : set.size();
+    }
+
+    public static void toggleCrest(ServerPlayer player, KamenRide k) {
+        if (!(player.level() instanceof ServerLevel level) || KamenRide.current(player) != KamenRide.COMPLETE) return;
+        var set = HELD.computeIfAbsent(player.getUUID(), u -> java.util.EnumSet.noneOf(KamenRide.class));
+        if (set.remove(k)) {
+            FX.ring(level, player, k.color, 1.0, 3);
+            player.sendSystemMessage(Component.translatable("message.dexrider.crest_release", k.displayName()), true);
+            return;
+        }
+        DriverDeck deck = DexDriverItem.getDeck(DexDriverItem.findDriver(player));
+        if (k.card == null || !deck.has(k.card)) return;
+        set.add(k);
+        DexSounds.play(level, player, DexSounds.CARD_INSERT, 1.0F, 1.3F);
+        level.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.BEACON_POWER_SELECT, SoundSource.PLAYERS, 1.0F, 1.5F);
+        var present = AllyManager.nearbyFriend(player, k, 32);
+        if (present != null) {
+            FX.line(level, FX.center(player), FX.center(present), k.color, 1.2F, 0.5);
+            FX.ring(level, present, k.color, 1.4, 6);
+            player.sendSystemMessage(Component.translatable("message.dexrider.crest_present", k.displayName()), true);
+        } else {
+            AllyManager.spawnProjection(level, player, k);
+            player.sendSystemMessage(Component.translatable("message.dexrider.crest_projection", k.displayName()), true);
+        }
+    }
+
+    /** Cada tick en Complete Form: los amigos presentes se potencian, y cada blason sostenido cuesta. */
+    public static void tickHeld(ServerLevel level, ServerPlayer player) {
+        var set = HELD.get(player.getUUID());
+        if (set == null || set.isEmpty()) return;
+        float cost = 0;
+        for (KamenRide k : set) {
+            var present = AllyManager.nearbyFriend(player, k, 48);
+            if (present != null) {
+                cost += 0.012F;
+                if (player.tickCount % 20 == 0) {
+                    present.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 40, 1, false, false));
+                    present.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 40, 1, false, false));
+                    present.addEffect(new MobEffectInstance(MobEffects.SPEED, 40, 0, false, false));
+                    FX.dust(level, k.color, 1.0F, FX.center(present), 4, 0.5);
+                }
+            } else cost += 0.025F;
+        }
+        if (!player.isCreative()) player.causeFoodExhaustion(cost);
+    }
+
+    public static void releaseAll(ServerLevel level, ServerPlayer player) {
+        HELD.remove(player.getUUID());
     }
 }

@@ -41,7 +41,7 @@ public final class DexEntities {
 
     /** Riders con eco y amigo (los que ya tienen armadura y poderes). */
     public static final KamenRide[] NPC_RIDERS = {KamenRide.NINE, KamenRide.CIPHER, KamenRide.SPORE,
-            KamenRide.FORGE, KamenRide.MIRAGE, KamenRide.PROTO, KamenRide.WARDEN, KamenRide.PSYGA, KamenRide.ORGA};
+            KamenRide.FORGE, KamenRide.MIRAGE, KamenRide.PROTO, KamenRide.WARDEN, KamenRide.PSYGA, KamenRide.ORGA, KamenRide.KAIXA};
 
     public static final java.util.Map<KamenRide, DeferredHolder<EntityType<?>, EntityType<RiderEchoEntity>>> ECHOES = new java.util.EnumMap<>(KamenRide.class);
     public static final java.util.Map<KamenRide, DeferredHolder<EntityType<?>, EntityType<RiderAllyEntity>>> ALLIES = new java.util.EnumMap<>(KamenRide.class);

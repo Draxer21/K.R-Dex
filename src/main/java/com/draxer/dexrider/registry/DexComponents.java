@@ -72,6 +72,30 @@ public final class DexComponents {
                     .persistent(Codec.STRING)
                     .networkSynchronized(ByteBufCodecs.STRING_UTF8));
 
+    /** Carta de Complete Form insertada en el K-Touch: 0 = la primera, 1 = la segunda (con Kaixa). En el Driver. */
+    public static final Supplier<DataComponentType<Integer>> KTOUCH_RING =
+            COMPONENTS.registerComponentType("ktouch_ring", builder -> builder
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.VAR_INT));
+
+    /** Ya se forjo la segunda carta de Complete Form. */
+    public static final Supplier<DataComponentType<Boolean>> KTOUCH_CARD2 =
+            COMPONENTS.registerComponentType("ktouch_card2", builder -> builder
+                    .persistent(Codec.BOOL)
+                    .networkSynchronized(ByteBufCodecs.BOOL));
+
+    /** Emotion que el Driver ya sintio (1 = Violent, 2 = Heroic). Con las dos nace la Upgrade Form. */
+    public static final Supplier<DataComponentType<Integer>> EMOTIONS_SEEN =
+            COMPONENTS.registerComponentType("emotions_seen", builder -> builder
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.VAR_INT));
+
+    /** Upgrade Form activa (en el peto, para que todos vean el traje). */
+    public static final Supplier<DataComponentType<Boolean>> UPGRADE =
+            COMPONENTS.registerComponentType("upgrade", builder -> builder
+                    .persistent(Codec.BOOL)
+                    .networkSynchronized(ByteBufCodecs.BOOL));
+
     /** El Driver ya forjo el K-Touch (para no darlo dos veces). */
     public static final Supplier<DataComponentType<Boolean>> KTOUCH_FORGED =
             COMPONENTS.registerComponentType("ktouch_forged", builder -> builder
