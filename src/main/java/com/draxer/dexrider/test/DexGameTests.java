@@ -71,7 +71,17 @@ public final class DexGameTests {
 
     /** Jugador simulado con el Dex Driver y las cartas pedidas en el mazo. */
     private static ServerPlayer player(GameTestHelper h, DexCard... cards) {
-        ServerPlayer p = h.makeMockServerPlayerInLevel();
+        ServerPlayer p;
+        try {
+            p = h.makeMockServerPlayerInLevel();
+        } catch (RuntimeException e) {
+            // Curios intenta sincronizar con un cliente que no existe (el jugador simulado no negocia canales):
+            // el jugador ya quedo creado en el mundo, lo recuperamos
+            var players = h.getLevel().players();
+            if (players.isEmpty()) throw e;
+            p = players.get(players.size() - 1);
+            log("setup", "jugador simulado sin sincronizacion de Curios (" + e.getMessage() + ")");
+        }
         BlockPos at = h.absolutePos(new BlockPos(8, 1, 8));
         p.teleportTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
         ItemStack driver = new ItemStack(DexItems.DEX_DRIVER.get());
@@ -94,7 +104,11 @@ public final class DexGameTests {
 
     /** Hace avanzar al jugador simulado (los jugadores simulados no los mueve la red). */
     private static void tickPlayer(GameTestHelper h, ServerPlayer p) {
-        h.onEachTick(() -> { if (p.isAlive()) p.doTick(); });
+        h.onEachTick(() -> {
+            if (!p.isAlive()) return;
+            try { p.doTick(); }
+            catch (UnsupportedOperationException e) { /* paquetes de otros mods a un cliente que no existe */ }
+        });
     }
 
     // ------------------------------------------------------------------ pruebas

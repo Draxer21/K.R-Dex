@@ -62,6 +62,7 @@ public record HudSyncPayload(boolean active, String card, int slot, int abilityL
     private static final java.util.Set<java.util.UUID> ACTIVE = new java.util.HashSet<>();
 
     public static void send(ServerLevel level, ServerPlayer p) {
+        if (p.connection == null || !p.connection.hasChannel(TYPE)) return;   // cliente sin el mod (o jugador simulado)
         ACTIVE.add(p.getUUID());
         long now = level.getGameTime();
         String card = "";
@@ -87,6 +88,6 @@ public record HudSyncPayload(boolean active, String card, int slot, int abilityL
     }
 
     public static void clear(ServerPlayer p) {
-        if (ACTIVE.remove(p.getUUID())) PacketDistributor.sendToPlayer(p, EMPTY);
+        if (ACTIVE.remove(p.getUUID()) && p.connection != null && p.connection.hasChannel(TYPE)) PacketDistributor.sendToPlayer(p, EMPTY);
     }
 }
