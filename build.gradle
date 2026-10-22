@@ -153,6 +153,7 @@ dependencies {
     compileOnly("com.zigythebird.playeranim:PlayerAnimationLibNeo:${pal_version}") { transitive = false }
     compileOnly("com.zigythebird.playeranim:PlayerAnimationLibCore:${pal_version}") { transitive = false }
     localRuntime("com.zigythebird.playeranim:PlayerAnimationLibNeo:${pal_version}") { transitive = false }
+    localRuntime("com.zigythebird.playeranim:PlayerAnimationLibCore:${pal_version}") { transitive = false }
 
     // Example optional mod dependency with JEI
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime

@@ -153,7 +153,28 @@ public final class ShotDirector {
             DexMachineEntity m = (DexMachineEntity) spawnStill(lvl, DexEntities.bike(BikeKind.DEX_MACHINE).get(), 0, 4.5);
             if (m != null) { m.setYRot(60); m.yBodyRot = 60; m.yHeadRot = 60; m.showScarab(); }
         }, -1.5, 2.2, 1.2, 0);
-        // 7: el HUD y la pantalla del K-Touch no se fotografian aqui (necesitan jugador transformado)
+        // 7: el propio jugador transformado, en tercera persona de frente, con las poses (si hay Player Animation Library)
+        s.add(new Step(t, () -> server(srv -> {
+            for (Entity e : SCENE) e.discard();
+            SCENE.clear();
+            cmd(srv, "kill @e[type=!minecraft:player]");
+            cmd(srv, "gamemode creative @a");
+            cmd(srv, String.format(java.util.Locale.ROOT, "tp @a %.2f %.2f %.2f 180 0", bx, by, bz + 3));
+            ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+            ItemStack driver = new ItemStack(DexItems.DEX_DRIVER.get());
+            driver.set(DexComponents.LOADED_CARD.get(), "kamen_ride_dex");
+            p.getInventory().add(driver);
+            com.draxer.dexrider.rider.Transformation.toggle(p);
+        })));
+        s.add(new Step(t + 4, () -> Minecraft.getInstance().options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_FRONT)));
+        s.add(new Step(t + 30, () -> server(srv -> com.draxer.dexrider.network.PosePayload.send(srv.getPlayerList().getPlayers().get(0), "henshin"))));
+        s.add(new Step(t + 36, () -> shoot("pose_henshin_a")));
+        s.add(new Step(t + 50, () -> shoot("pose_henshin_b")));
+        s.add(new Step(t + 70, () -> server(srv -> com.draxer.dexrider.network.PosePayload.send(srv.getPlayerList().getPlayers().get(0), "kick"))));
+        s.add(new Step(t + 78, () -> shoot("pose_kick")));
+        s.add(new Step(t + 95, () -> server(srv -> com.draxer.dexrider.network.PosePayload.send(srv.getPlayerList().getPlayers().get(0), "finisher"))));
+        s.add(new Step(t + 108, () -> shoot("pose_finisher")));
+        t += 120;
         s.add(new Step(t + 10, () -> {
             DexRider.LOGGER.info("SHOTS: terminado");
             Minecraft.getInstance().stop();

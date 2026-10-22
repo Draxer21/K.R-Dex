@@ -100,6 +100,47 @@ Cada forma tiene **Nivel 1 a 3**: se sube re-escaneando su fuente (el doble de m
 
 Con una forma activa, el daño también se multiplica por el escalado de la familia Form Ride.
 
+### Tonos de las cartas
+Cada carta suena distinto al activarse (una nota propia). **Orga y Kaixa** que peleen contra ti leen los tonos:
+- Si usas la **misma carta dos veces en 10 s**, la reconocen y **esquivan tu siguiente golpe**.
+- **Señuelo**: Shift + usar la carta del Booker (Alt izquierdo) la corta a medio sonar; quien lo lea queda expuesto
+  y tu siguiente golpe pega un 50 % más.
+- **Solapar**: dos cartas distintas en menos de 1 s mezclan los tonos y durante 5 s nadie te puede leer.
+
+### La correa y la sangre (Complete Form)
+Sostener a un **Kagami** presente (Cipher, Warden, Psyga, Orga, Kaixa) cuesta la mitad que a un amigo. Pero si un
+golpe te deja bajo el 30 % con un familiar presente, **la correa viaja por la sangre**:
+eco (8 s) → arrastre (los que sostienes dejan de seguirte; Fuerza II) → bucle (soltar un blasón falla la mitad de las veces)
+→ a los 45 s te consume y la Complete Form se rompe. Se corta **soltando a tiempo los blasones de la familia** (tu "no"),
+o si Takumi o Nagisa dicen su palabra de salida ("Tres", "Sótano"). Los amigos presentes son toma de tierra:
+con alguno, el contagio avanza a la mitad.
+
+### Complete Form Nv.2
+Entrar en la Complete Form **desde la Upgrade Form** sube la carta a Nv.2 para siempre: vuelve el blanco (cruz X,
+rayas), púas en los hombros y una capa rota en tiras que hace de reloj. Cada Kamen Ride suma +0,3 al multiplicador
+(en vez de +0,2) y agota un 25 % menos.
+
+### Driver prestado (multijugador)
+Sin transformarte, **clic derecho con el Dex Driver sobre otro jugador** para prestárselo. Se transforma con V sin carta,
+con una paleta propia (el Driver cambia con cada usuario). Pelear con él drena hambre y no escanea.
+La primera vez nace **Kamen Ride: Portador** en el mazo (úsala transformado como Dex para tomar su forma).
+**V sin Driver** revoca el préstamo al instante; el portador puede devolverlo con clic derecho.
+
+### Kaixa completo y más
+- **Armed Ride: Kaixa Gunblade** (se escanea viendo pelear a Kaixa): clic derecho, dos disparos; Shift, tajo de remate;
+  FAR = Cobalt Breaker. **Vehicle Ride: Cobalt Sidewinder**, moto con sidecar (R = ráfaga del cañón); te la deja al irse.
+  Tetsuya tiene forma civil.
+- **Cartas de los Kaijin**: Mantis Reap (salto y dos tajos que hacen sangrar), Rhino Charge (embestida que lanza),
+  Chimera Dive (sube con alas y cae aplastando). Se escanean viendo atacar a cada Kaijin.
+- **Armed Ride y Vehicle Ride suben de nivel** re-escaneando: armas +20 % por nivel, motos +12 % de velocidad y +25 % de embestida.
+- **Motos con más detalle**: discos de freno, radiador, aletas del cilindro, cadena, amortiguadores, matrícula, intermitentes.
+- **Laboratorio de Gunma** (taigas y bosques de montaña): ruinas de Dai-Shocker con el sótano que cedió, celdas vacías,
+  la Quimera de guardia y tres notas de los investigadores sobre la correa.
+
+### Poses del jugador (opcional)
+Si instalas **Player Animation Library** (NeoForge 26.1), Dex hace poses: henshin al transformarse, lanzar la carta,
+la Rider Kick, el Final Attack Ride y pulsar los blasones del K-Touch. Sin la librería, el mod funciona igual sin poses.
+
 ### Kaixa, la undécima Kamen Ride
 **Tetsuya Kagami**, el hermano menor, aparece perdido en taigas y bosques de montaña. Vencerlo da **Kamen Ride: Kaixa**
 (grafito y cobalto con líneas doradas que brillan, visor violeta en triángulo invertido, espada-pistola). Pasivas: Fuerza I, Velocidad I, Prisa I, Salto I.
@@ -503,6 +544,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.26.0** — Kaixa completo (gunblade, Cobalt Sidewinder, forma civil), cartas de los Kaijin, niveles de armas y motos, motos con más detalle, laboratorio de Gunma, Complete Form Nv.2, tonos de las cartas, la correa por la sangre, Driver prestado, poses (con Player Animation Library). 13 pruebas automáticas dentro del juego.
 - **0.25.4** — Pruebas automáticas dentro del juego (9 pruebas con jugador simulado: `runGameTestServer`) y fotos automáticas con gráficos (`runShots`), las dos en GitHub Actions. Arreglos encontrados por las pruebas: los amigos Rider encuentran a su dueño aunque no esté en la lista de jugadores, el HUD no se envía a clientes sin el mod, animación vacía de la armadura.
 - **0.25.3** — Kaixa: líneas doradas que brillan en el traje, el Driver y el arma; sus disparos también son dorados.
 - **0.25.2** — Violent Emotion con púas y cristal morado en la frente; Heroic Emotion con cristal blanco en la frente (`emotions_preview.png`).

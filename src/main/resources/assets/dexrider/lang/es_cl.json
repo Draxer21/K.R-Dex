@@ -1050,5 +1050,8 @@
   "message.dexrider.bearer_card": "Nace una Kamen Ride nueva en el mazo: la forma de %s.",
   "message.dexrider.bearer_form": "Tomas la forma de %s.",
   "message.dexrider.bearer_form_off": "Vuelves a tu forma.",
-  "item.dexrider.card_kamen_ride_bearer": "Carta: Kamen Ride - Portador"
+  "item.dexrider.card_kamen_ride_bearer": "Carta: Kamen Ride - Portador",
+  "guide.dexrider.page15": "§lTONOS§r\n\nCada carta suena distinto. Orga y Kaixa leen los tonos: no repitas la misma carta.\n\n§lShift+Alt§r: señuelo.\nDos cartas seguidas: tonos solapados.",
+  "guide.dexrider.page16": "§lEL DRIVER PRESTADO§r\n\nClic derecho con el Driver sobre un amigo: se lo prestas.\n\nV sin Driver: lo revocas.\n\nCada portador deja su forma en tu mazo.",
+  "guide.dexrider.page17": "§lSIN MIEDO§r\n\nUpgrade Form: nace cuando el Driver sintió las dos Emotion.\n\nEntra en la Complete Form desde ella y la carta sube a Nv.2."
 }

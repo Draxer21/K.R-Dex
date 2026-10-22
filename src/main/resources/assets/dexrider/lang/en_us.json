@@ -1050,5 +1050,8 @@
   "message.dexrider.bearer_card": "A new Kamen Ride is born in the deck: %s's form.",
   "message.dexrider.bearer_form": "You take %s's form.",
   "message.dexrider.bearer_form_off": "Back to your own form.",
-  "item.dexrider.card_kamen_ride_bearer": "Card: Kamen Ride - Bearer"
+  "item.dexrider.card_kamen_ride_bearer": "Card: Kamen Ride - Bearer",
+  "guide.dexrider.page15": "§lTONES§r\n\nEvery card sounds different. Orga and Kaixa read tones: don't repeat the same card.\n\n§lShift+Alt§r: decoy.\nTwo cards in a row: overlapping tones.",
+  "guide.dexrider.page16": "§lTHE LENT DRIVER§r\n\nRight-click a friend with the Driver: you lend it.\n\nV without the Driver: you revoke it.\n\nEach bearer leaves their form in your deck.",
+  "guide.dexrider.page17": "§lNO FEAR§r\n\nUpgrade Form: born when the Driver has felt both Emotions.\n\nEnter the Complete Form from it and the card rises to Lv.2."
 }
