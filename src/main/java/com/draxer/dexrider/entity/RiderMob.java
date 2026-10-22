@@ -276,7 +276,7 @@ public abstract class RiderMob extends PathfinderMob implements GeoEntity {
         return this.entityData.get(DATA_CIVILIAN);
     }
 
-    protected void setCivilian(boolean civilian) {
+    public void setCivilian(boolean civilian) {
         this.entityData.set(DATA_CIVILIAN, civilian);
     }
 
