@@ -71,17 +71,7 @@ public final class DexGameTests {
 
     /** Jugador simulado con el Dex Driver y las cartas pedidas en el mazo. */
     private static ServerPlayer player(GameTestHelper h, DexCard... cards) {
-        ServerPlayer p;
-        try {
-            p = h.makeMockServerPlayerInLevel();
-        } catch (RuntimeException e) {
-            // Curios intenta sincronizar con un cliente que no existe (el jugador simulado no negocia canales):
-            // el jugador ya quedo creado en el mundo, lo recuperamos
-            var players = h.getLevel().players();
-            if (players.isEmpty()) throw e;
-            p = players.get(players.size() - 1);
-            log("setup", "jugador simulado sin sincronizacion de Curios (" + e.getMessage() + ")");
-        }
+        ServerPlayer p = mockPlayer(h);
         BlockPos at = h.absolutePos(new BlockPos(8, 1, 8));
         p.teleportTo(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
         ItemStack driver = new ItemStack(DexItems.DEX_DRIVER.get());
@@ -89,6 +79,24 @@ public final class DexGameTests {
         for (DexCard c : cards) deck = deck.withCard(c);
         DexDriverItem.setDeck(driver, deck);
         p.getInventory().add(driver);
+        return p;
+    }
+
+    /**
+     * Jugador simulado armado a mano (como GameTestHelper.makeMockServerPlayerInLevel, pero sin pasar por la lista de
+     * jugadores: asi Curios no intenta sincronizar datos con un cliente que no existe).
+     */
+    private static ServerPlayer mockPlayer(GameTestHelper h) {
+        ServerLevel level = h.getLevel();
+        var server = level.getServer();
+        var cookie = net.minecraft.server.network.CommonListenerCookie.createInitial(
+                new com.mojang.authlib.GameProfile(java.util.UUID.randomUUID(), "dex-test"), false);
+        ServerPlayer p = new ServerPlayer(server, level, cookie.gameProfile(), cookie.clientInformation());
+        var connection = new net.minecraft.network.Connection(net.minecraft.network.protocol.PacketFlow.SERVERBOUND);
+        new io.netty.channel.embedded.EmbeddedChannel(connection);
+        p.connection = new net.minecraft.server.network.ServerGamePacketListenerImpl(server, connection, p, cookie);
+        p.setGameMode(net.minecraft.world.level.GameType.SURVIVAL);
+        level.addNewPlayer(p);
         return p;
     }
 
