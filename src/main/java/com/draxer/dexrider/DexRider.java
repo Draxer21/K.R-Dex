@@ -44,6 +44,7 @@ public class DexRider {
         modEventBus.addListener(DexEntities::registerSpawnPlacements);
 
         modEventBus.addListener(DexRider::registerPayloads);
+        modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.COMMON, com.draxer.dexrider.config.DexConfig.SPEC);
 
         NeoForge.EVENT_BUS.register(DexEvents.class);
     }
@@ -77,6 +78,10 @@ public class DexRider {
                 com.draxer.dexrider.network.OpenBookerPayload.TYPE,
                 com.draxer.dexrider.network.OpenBookerPayload.STREAM_CODEC,
                 com.draxer.dexrider.network.OpenBookerPayload::handleOnServer);
+        event.registrar("1").playToClient(
+                com.draxer.dexrider.network.HudSyncPayload.TYPE,
+                com.draxer.dexrider.network.HudSyncPayload.STREAM_CODEC,
+                com.draxer.dexrider.network.HudSyncPayload::handleOnClient);
     }
 
     public static Identifier id(String path) {

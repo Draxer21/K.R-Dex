@@ -71,6 +71,7 @@ public class RiderEchoEntity extends RiderMob implements Enemy {
                 if (e.getValue().get() == type && AllyManager.isFriend(sp, e.getKey())) return false;
             }
         }
+        if (reason == EntitySpawnReason.NATURAL && random.nextDouble() >= com.draxer.dexrider.config.DexConfig.echoSpawnChance()) return false;
         return level.getDifficulty() != Difficulty.PEACEFUL
                 && (reason == EntitySpawnReason.SPAWNER || Monster.isDarkEnoughToSpawn(level, pos, random))
                 && Mob.checkMobSpawnRules(type, level, reason, pos, random);

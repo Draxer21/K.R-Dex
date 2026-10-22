@@ -213,8 +213,15 @@ public class RideBookerMenu extends AbstractContainerMenu {
             default -> { return; }
         }
         driver.set(DexComponents.BOOKER_SEL.get(), sel);
-        DexSounds.play(level, player, DexSounds.CARD_INSERT, 0.35F, 1.7F);
         ItemStack chosen = items.get(sel);
+        // En Violent / Heroic Emotion la carta responde sola: elegirla ya la activa, sin insertarla
+        if (com.draxer.dexrider.rider.DexEmotions.current(player) != null && !chosen.isEmpty()
+                && chosen.getItem() instanceof RiderCardItem rc && (action == QUICK_PREV || action == QUICK_NEXT)) {
+            com.draxer.dexrider.rider.FX.ring(level, player, com.draxer.dexrider.rider.DexEmotions.colors(com.draxer.dexrider.rider.DexEmotions.current(player))[1], 0.9, 5);
+            rc.activate(level, player, chosen.copy(), InteractionHand.MAIN_HAND);
+            return;
+        }
+        DexSounds.play(level, player, DexSounds.CARD_INSERT, 0.35F, 1.7F);
         Component deckName = Component.translatable("booker.dexrider.deck." + DECK_KEYS[sel / PER_DECK]);
         player.sendSystemMessage(chosen.isEmpty()
                 ? Component.translatable("message.dexrider.booker_deck_empty", deckName)

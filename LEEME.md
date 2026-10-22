@@ -90,6 +90,24 @@ Cada forma tiene **Nivel 1 a 3**: se sube re-escaneando su fuente (el doble de m
 
 Con una forma activa, el daño también se multiplica por el escalado de la familia Form Ride.
 
+### Violent Emotion y Heroic Emotion (solo como Dex)
+El Driver responde a lo que siente quien lo lleva. Se despiertan solas:
+- **Violent Emotion**: al bajar del 30 % de vida o recibir de golpe el 40 % de tu vida en 3 s. 20 s con Fuerza III,
+  Velocidad II y golpes ×1.3; el traje se oscurece a carmesí y morado con un cristal violeta en el pecho.
+  Cobra su precio: medio corazón cada 2 s (nunca te deja por debajo de 2 corazones).
+- **Heroic Emotion**: cuando un amigo Rider tuyo o un aldeano cercano recibe un golpe de un monstruo. 20 s con
+  Regeneración II, Resistencia II, un 20 % menos de daño recibido y golpes ×1.15; traje azul y blanco con cristal blanco.
+- En las dos, las cartas del Ride Booker responden solas: elegir una con **Z / X** ya la activa, sin insertarla.
+- Después hay 90 s de recarga.
+
+### HUD del Rider
+Transformado, a la izquierda de la barra de objetos: la carta elegida del Ride Booker (con el color del mazo),
+la recarga de **R**, los segundos de Accel (parpadea al final) y la Emotion activa o su recarga.
+
+### Configuración
+`config/dexrider-common.toml`: probabilidad de aparición de los Riders perdidos, multiplicador de daño de los Riders
+del juego y de Dex, si los finales fallados rompen bloques, activar las Emotion y mostrar el HUD.
+
 ### Ride Booker: el estuche de cartas
 El Ride Booker guarda tus cartas. Vive en el **Dex Driver**, así que va contigo (en el inventario o en el cinturón).
 Pulsa **G** para abrirlo (configurable). Tiene **5 mazos** de 18 cartas, como en el fanfic: *Rescate, Multitudes,
@@ -435,6 +453,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.22.0** — Dex rehecho: bodysuit con musculatura, Driver en 3D (anillo, lente que sobresale, luces laterales y punto verde), Ride Booker en 3D con tapa, cartas asomando y broche, mandíbula, nuca y mejillas del casco en relieve, hombreras en capas y rodilleras (`dex_0_22_preview.png`). Violent Emotion y Heroic Emotion, HUD del Rider y archivo de configuración.
 - **0.21.2** — Armas en alta resolución: el triple de píxeles por bloque (12 en vez de 4) y acabado propio: bisel con luz y sombra en cada pieza, brillo metálico en diagonal y desgaste fino (`armas_preview.png`).
 - **0.21.1** — Armas rehechas en 3D con piezas que se afinan: hojas con filo, nervio y punta (Cipher Edge, Prism Edge en facetas, Titan Blades con guarda en cruz), punta de lanza con aletas (Forge Lance, del color de las mitades), alabarda con hoja de media luna, gancho y púa (Orga), Pegasus Bow con brazos curvos y cuerda, Dragon Rod con puntas en ambos extremos, Cipher Blaster con cañón, empuñadura inclinada y hoja inferior, Module Driver y bastón de Warden telescópico (`armas_preview.png`).
 - **0.21.0** — Driver propio para cada Rider (los de U.A. nacen de la energía de Yusuke y guardan un detalle magenta; los Kagami tienen el suyo), piedra en rombo y cinturón más ancho para Nine. Bodysuit con musculatura para todos, piezas 3D en los cascos, armas con más detalle y animaciones nuevas (pose de espera por Rider, guardia con arma, patada en el aire, retroceso) (`riders_0_21_preview.png`, `drivers_preview.png`).

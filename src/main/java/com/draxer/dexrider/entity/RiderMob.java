@@ -569,6 +569,7 @@ public abstract class RiderMob extends PathfinderMob implements GeoEntity {
 
     /** Rising que falla: el golpe abre un crater. Respeta mobGriefing; no rompe bloques muy duros (obsidiana, bedrock...). */
     private void breakBlocks(ServerLevel level, Vec3 at, int r) {
+        if (!com.draxer.dexrider.config.DexConfig.blockBreaking()) return;
         if (!net.neoforged.neoforge.event.EventHooks.canEntityGrief(level, this)) return;
         net.minecraft.core.BlockPos c = net.minecraft.core.BlockPos.containing(at);
         for (net.minecraft.core.BlockPos pos : net.minecraft.core.BlockPos.betweenClosed(c.offset(-r, -r, -r), c.offset(r, r, r))) {

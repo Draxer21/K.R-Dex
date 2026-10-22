@@ -49,6 +49,14 @@ public final class FormAbilities {
 
     private static final Map<UUID, Long> COOLDOWN_UNTIL = new HashMap<>();
     private static final Map<UUID, Long> SMOKE_UNTIL = new HashMap<>();
+    private static final Map<UUID, Long> COOLDOWN_TOTAL = new HashMap<>();
+
+    /** Para el HUD: {ticks que faltan, ticks totales} de la recarga de la tecla R. */
+    public static long[] cooldown(ServerPlayer p, long now) {
+        Long until = COOLDOWN_UNTIL.get(p.getUUID());
+        if (until == null || until <= now) return new long[]{0, 1};
+        return new long[]{until - now, Math.max(1, COOLDOWN_TOTAL.getOrDefault(p.getUUID(), until - now))};
+    }
 
     /** Lo que hace la tecla R. */
     public static void use(ServerPlayer player) {
@@ -66,6 +74,7 @@ public final class FormAbilities {
             RiderPowers.Used used = com.draxer.dexrider.vehicle.BikeAbilities.use(level, player, bike);
             if (used == null) return;
             COOLDOWN_UNTIL.put(player.getUUID(), now + used.cooldownSeconds() * 20L);
+            COOLDOWN_TOTAL.put(player.getUUID(), used.cooldownSeconds() * 20L);
             player.sendSystemMessage(Component.translatable("message.dexrider.ability_used",
                     Component.translatable("ability.dexrider." + used.name())), true);
             return;
@@ -76,6 +85,7 @@ public final class FormAbilities {
             RiderPowers.Used used = RiderPowers.ability(level, player, identity, player.isShiftKeyDown());
             if (used == null) return;
             COOLDOWN_UNTIL.put(player.getUUID(), now + used.cooldownSeconds() * 20L);
+            COOLDOWN_TOTAL.put(player.getUUID(), used.cooldownSeconds() * 20L);
             player.sendSystemMessage(Component.translatable("message.dexrider.ability_used",
                     Component.translatable("ability.dexrider." + used.name())), true);
             return;
@@ -94,6 +104,7 @@ public final class FormAbilities {
         int seconds = baseCooldown(form, tier);
         long ticks = Math.round(seconds * 20 * (1.0 - 0.2 * (lvl - 1)));
         COOLDOWN_UNTIL.put(player.getUUID(), now + ticks);
+        COOLDOWN_TOTAL.put(player.getUUID(), ticks);
         player.sendSystemMessage(Component.translatable("message.dexrider.ability_used",
                 Component.translatable("ability.dexrider." + name)), true);
     }

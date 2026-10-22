@@ -841,5 +841,9 @@
   "message.dexrider.blaster_on": "Blaster form: full combat",
   "message.dexrider.blaster_off": "Blaster form off",
   "message.dexrider.got_accel": "Takumi lent you the Accel. Right-click as Cipher: 10 s of absolute speed.",
-  "message.dexrider.got_blaster": "Genzo gave you the Blaster weapon. Hold it as Cipher for Blaster form."
+  "message.dexrider.got_blaster": "Genzo gave you the Blaster weapon. Hold it as Cipher for Blaster form.",
+  "message.dexrider.emotion_violent": "§5Violent Emotion§r: the Driver answers your rage. Careful, it eats at you!",
+  "message.dexrider.emotion_heroic": "§9Heroic Emotion§r: the Driver answers your will to protect.",
+  "message.dexrider.emotion_end": "The Emotion fades. The Driver needs to cool down.",
+  "hud.dexrider.no_card": "Booker: no card"
 }

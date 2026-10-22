@@ -37,6 +37,12 @@ public final class DexComponents {
                     .persistent(Codec.INT)
                     .networkSynchronized(ByteBufCodecs.VAR_INT));
 
+    /** Emotion activa de Dex: "violent" o "heroic" (en el peto, para que todos vean el traje). */
+    public static final Supplier<DataComponentType<String>> EMOTION =
+            COMPONENTS.registerComponentType("emotion", builder -> builder
+                    .persistent(Codec.STRING)
+                    .networkSynchronized(ByteBufCodecs.STRING_UTF8));
+
     /** Modo de Cipher activo: "accel" o "blaster" (en el peto, para que todos vean el modelo). */
     public static final Supplier<DataComponentType<String>> CIPHER_MODE =
             COMPONENTS.registerComponentType("cipher_mode", builder -> builder

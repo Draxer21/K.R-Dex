@@ -125,6 +125,7 @@ public final class Transformation {
     public static void detransform(ServerPlayer player, boolean withEffects) {
         removeSuitBody(player);
         CipherModes.clear(player);
+        DexEmotions.clear(player);
         RiderKick.cancel(player);
         Scheduler.cancel(player);
         ArmedRide.removeWeapons(player);

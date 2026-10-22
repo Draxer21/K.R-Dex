@@ -841,5 +841,9 @@
   "message.dexrider.blaster_on": "Forma Blaster: combate total",
   "message.dexrider.blaster_off": "Forma Blaster desactivada",
   "message.dexrider.got_accel": "Takumi te prestó el Accel. Clic derecho siendo Cipher: 10 s de velocidad absoluta.",
-  "message.dexrider.got_blaster": "Genzo te entregó el arma Blaster. Llévala en la mano siendo Cipher para la forma Blaster."
+  "message.dexrider.got_blaster": "Genzo te entregó el arma Blaster. Llévala en la mano siendo Cipher para la forma Blaster.",
+  "message.dexrider.emotion_violent": "§5Violent Emotion§r: el Driver responde a la rabia. ¡Cuidado, te consume!",
+  "message.dexrider.emotion_heroic": "§9Heroic Emotion§r: el Driver responde a tu deseo de proteger.",
+  "message.dexrider.emotion_end": "La Emotion se apaga. El Driver necesita calmarse.",
+  "hud.dexrider.no_card": "Booker: sin carta"
 }

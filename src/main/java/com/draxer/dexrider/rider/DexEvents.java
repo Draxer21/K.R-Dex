@@ -48,6 +48,8 @@ public final class DexEvents {
             }
             FormRide.tick(level, player);
             CipherModes.tick(level, player);
+            DexEmotions.tick(level, player);
+            if (player.tickCount % 5 == 0) com.draxer.dexrider.network.HudSyncPayload.send(level, player);
             KamenRide identity = KamenRide.current(player);
             if (identity != KamenRide.DEX) RiderPowers.tick(level, player, identity);
             if (player.tickCount % 200 == 0) KTouch.retroCheck(player);
@@ -55,6 +57,7 @@ public final class DexEvents {
         } else if (player.tickCount % 5 == 0) {
             FormRide.revokeFlight(player);
             Transformation.removeSuitBody(player);   // sin traje no hay vida extra
+            if (player.tickCount % 20 == 0) com.draxer.dexrider.network.HudSyncPayload.clear(player);
             // Set incompleto (creativo, comandos...): limpiar y devolver la armadura original.
             if (hasStrayDexArmor(player)) Transformation.detransform(player, false);
             // Las armas solo existen transformado.
@@ -83,6 +86,13 @@ public final class DexEvents {
             return;
         }
 
+        // Configuracion: dano de los Riders del juego
+        if (event.getSource().getEntity() instanceof com.draxer.dexrider.entity.RiderMob) {
+            event.setAmount(event.getAmount() * com.draxer.dexrider.config.DexConfig.npcDamage());
+        }
+        // Heroic Emotion: alguien a quien Dex protege recibe un golpe
+        DexEmotions.onProtectedHurt(level, victim, event.getSource());
+
         // Un Rider perdido atacado pide ayuda a los que esten cerca
         if (victim instanceof com.draxer.dexrider.entity.RiderEchoEntity lost && event.getSource().getEntity() instanceof LivingEntity src) {
             lost.callForHelp(level, src);
@@ -92,7 +102,7 @@ public final class DexEvents {
         if (victim instanceof ServerPlayer target && Transformation.isTransformed(target)) {
             FormRide form = FormRide.current(target);
             // El traje del Rider System absorbe parte de cada golpe
-            event.setAmount(event.getAmount() * Transformation.SUIT_DAMAGE_TAKEN);
+            event.setAmount(event.getAmount() * Transformation.SUIT_DAMAGE_TAKEN * DexEmotions.takenScale(target));
             // Orga leyendo los tonos: esquiva los golpes cuerpo a cuerpo
             if (KamenRide.current(target) == KamenRide.ORGA && RiderPowers.dodge(target, event.getSource())) {
                 event.setCanceled(true);
@@ -136,7 +146,8 @@ public final class DexEvents {
             ItemStack driver = DexDriverItem.findDriver(attacker);
             DriverDeck deck = DexDriverItem.getDeck(driver);
             DexCard.Family family = ArmedRide.hasWeapon(attacker) ? DexCard.Family.ARMED_RIDE : DexCard.Family.KAMEN_RIDE;
-            float mult = deck.multiplier(family) * Transformation.SUIT_DAMAGE_DEALT * CipherModes.damageScale(attacker);
+            float mult = deck.multiplier(family) * Transformation.SUIT_DAMAGE_DEALT * CipherModes.damageScale(attacker)
+                    * DexEmotions.damageScale(attacker) * com.draxer.dexrider.config.DexConfig.dexDamage();
             if (FormRide.current(attacker) != null) mult *= deck.multiplier(DexCard.Family.FORM_RIDE);
             if (KamenRide.current(attacker) == KamenRide.COMPLETE) mult *= RiderPowers.completeMultiplier(attacker);
             event.setAmount(event.getAmount() * mult);
@@ -149,6 +160,10 @@ public final class DexEvents {
     /** Efectos al golpear cuerpo a cuerpo con algunas armas. */
     @SubscribeEvent
     public static void onDamageDealt(LivingDamageEvent.Post event) {
+        // Violent Emotion: Dex al borde o recibiendo una paliza de golpe
+        if (event.getEntity() instanceof ServerPlayer hurtPlayer && hurtPlayer.level() instanceof ServerLevel hl) {
+            DexEmotions.onDexHurt(hl, hurtPlayer, event.getNewDamage());
+        }
         if (!(event.getSource().getEntity() instanceof ServerPlayer player)) return;
         if (event.getSource().getDirectEntity() != player) return;   // solo golpes directos
         if (!(player.level() instanceof ServerLevel level)) return;

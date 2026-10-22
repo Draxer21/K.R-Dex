@@ -44,6 +44,12 @@ public final class CipherModes {
 
     private static final Map<UUID, Long> ACCEL_UNTIL = new HashMap<>();
 
+    /** Para el HUD: ticks de Accel que quedan (0 = apagado). */
+    public static long accelLeft(ServerPlayer p, long now) {
+        Long u = ACCEL_UNTIL.get(p.getUUID());
+        return u == null ? 0 : Math.max(0, u - now);
+    }
+
     public static String mode(LivingEntity e) {
         return e.getItemBySlot(EquipmentSlot.CHEST).get(DexComponents.CIPHER_MODE.get());
     }

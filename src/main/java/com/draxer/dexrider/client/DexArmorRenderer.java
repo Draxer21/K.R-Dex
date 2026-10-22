@@ -91,14 +91,16 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
         String formId = chest.get(DexComponents.FORM.get());
         FormRide form = formId == null ? null : FormRide.byId(formId);
 
-        renderState.addGeckolibData(MAIN_COLOR, form != null ? form.suitColor() : suit.mainColor());
+        String emotion = chest.get(DexComponents.EMOTION.get());
+        int[] emo = com.draxer.dexrider.rider.DexEmotions.colors(emotion);
+        renderState.addGeckolibData(MAIN_COLOR, emo != null ? emo[0] : form != null ? form.suitColor() : suit.mainColor());
         renderState.addGeckolibData(HALF, form == FormRide.HALF);
         String rider = chest.get(DexComponents.RIDER.get());
         renderState.addGeckolibData(RIDER, rider == null ? "dex" : rider);
         String cipherMode = chest.get(DexComponents.CIPHER_MODE.get());
         renderState.addGeckolibData(CIPHER_MODE, cipherMode == null ? "" : cipherMode);
-        renderState.addGeckolibData(EYE_COLOR, suit.eyeColor());
-        renderState.addGeckolibData(ACCENT_COLOR, suit.accentColor());
+        renderState.addGeckolibData(EYE_COLOR, emo != null ? emo[1] : suit.eyeColor());
+        renderState.addGeckolibData(ACCENT_COLOR, emo != null ? emo[2] : suit.accentColor());
         renderState.addGeckolibData(HORNS, suit.horns().id());
         renderState.addGeckolibData(EYE_STRIPES, suit.eyeStripes());
         renderState.addGeckolibData(SHOW_BOOKER, suit.showBooker());
