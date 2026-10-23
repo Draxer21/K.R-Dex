@@ -58,6 +58,7 @@ public class SummonScreen extends Screen {
     private final long[] restSeconds = new long[9];
     private int x0, y0, activeCount, krCount;
     private boolean dexReady, inComplete;
+    private Identifier cardIn;
 
     public SummonScreen() {
         super(Component.translatable("screen.dexrider.summon"));
@@ -128,6 +129,8 @@ public class SummonScreen extends Screen {
         int miss = player == null ? 1 : KTouch.missing(player, deck);
         boolean asDex = player != null && Transformation.isTransformed(player) && KamenRide.current(player) == KamenRide.DEX;
         dexReady = inComplete || (hasKit && asDex && miss == 0);
+        cardIn = player == null || !KTouch.hasActiveCard(player) ? null
+                : DexRider.id(ring == KamenRide.RING_2 ? "textures/item/complete_form_card_2.png" : "textures/item/complete_form_card.png");
         Component dexTip;
         if (inComplete) dexTip = Component.translatable("screen.dexrider.summon.dex.exit");
         else if (miss > 0) dexTip = Component.translatable("screen.dexrider.summon.dex.missing", miss);
@@ -152,6 +155,8 @@ public class SummonScreen extends Screen {
     @Override
     public void extractRenderState(GuiGraphicsExtractor g, int mouseX, int mouseY, float partialTick) {
         super.extractRenderState(g, mouseX, mouseY, partialTick);   // botones (quedan debajo del dibujo del aparato)
+        // la carta de Complete Form, en vertical, entrando por la muesca lateral (el aparato tapa la parte metida)
+        if (cardIn != null) sprite(g, cardIn, x0 - 20, y0 + H / 2 - 16, 0, 0, 32, 32, 32, 32);
         sprite(g, BODY, x0, y0, 0, 0, W, H, W, H);
         int sy0 = sy0(), sx1 = sx1();
 
