@@ -200,7 +200,7 @@
   "message.dexrider.ally_down": "%s is exhausted and withdraws to rest",
   "message.dexrider.ally_new_home": "%s will live here now",
   "screen.dexrider.summon": "RIDER FRIENDS",
-  "screen.dexrider.summon.hint": "Touch a crest to summon · Dex's crest opens Complete Form",
+  "screen.dexrider.summon.hint": "Touch a crest to summon · Dex opens Complete Form · Numpad 1-9 / 0 in combat",
   "ability.dexrider.forge_cannon": "Forge Cannon",
   "ability.dexrider.forge_wall": "Creation Wall",
   "ability.dexrider.mirage_flash": "Flash",
@@ -1122,5 +1122,6 @@
   "hud.dexrider.you_hit_left": "You: %s❤ · ≈%s more hits",
   "hud.dexrider.it_hits": "It: %s❤",
   "hud.dexrider.it_hits_survive": "It: %s❤ · you last ≈%s",
-  "guide.dexrider.page21": "§lTHE DRIVER'S READ§r\n\nTransformed, after trading blows, the Driver reads your target: its life, your hit, its hit, and roughly how many hits are left on each side."
+  "guide.dexrider.page21": "§lTHE DRIVER'S READ§r\n\nTransformed, after trading blows, the Driver reads your target: its life, your hit, its hit, and roughly how many hits are left on each side.",
+  "key.dexrider.ktouch_dex": "K-Touch: Dex crest (Complete Form)"
 }

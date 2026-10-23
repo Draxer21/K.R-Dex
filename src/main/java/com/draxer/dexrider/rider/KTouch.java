@@ -111,7 +111,10 @@ public final class KTouch {
             player.sendSystemMessage(Component.translatable("message.dexrider.ktouch_need_dex"), true);
             return;
         }
-        if (!has(player, DexItems.K_TOUCH.get()) || !hasActiveCard(player)) return;
+        if (!has(player, DexItems.K_TOUCH.get()) || !hasActiveCard(player)) {
+            player.sendSystemMessage(Component.translatable("message.dexrider.ktouch_need_card"), true);
+            return;
+        }
         int miss = missing(player, DexDriverItem.getDeck(DexDriverItem.findDriver(player)));
         if (miss > 0) {
             player.sendSystemMessage(Component.translatable("message.dexrider.ktouch_incomplete", miss), true);

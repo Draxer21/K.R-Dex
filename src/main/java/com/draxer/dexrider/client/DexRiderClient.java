@@ -66,6 +66,9 @@ public class DexRiderClient {
             .mapToObj(i -> Lazy.of(() -> new KeyMapping("key.dexrider.summon_" + (i + 1),
                     InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_KP_1 + i, CATEGORY)))
             .toList();
+    /** Teclado numerico 0: el blason de Dex del K-Touch (entrar o salir de la Complete Form). */
+    public static final Lazy<KeyMapping> KTOUCH_DEX_KEY = Lazy.of(() -> new KeyMapping(
+            "key.dexrider.ktouch_dex", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_KP_0, CATEGORY));
 
     @SubscribeEvent
     static void registerKeys(RegisterKeyMappingsEvent event) {
@@ -78,6 +81,7 @@ public class DexRiderClient {
         event.register(BOOKER_NEXT_KEY.get());
         event.register(BOOKER_USE_KEY.get());
         for (Lazy<KeyMapping> k : SUMMON_SLOTS) event.register(k.get());
+        event.register(KTOUCH_DEX_KEY.get());
     }
 
     /** Renderer de la Dex Machine (mismo patron que el ejemplo oficial de GeckoLib). */
@@ -151,6 +155,11 @@ public class DexRiderClient {
                 if (Minecraft.getInstance().player != null) {
                     ClientPacketDistributor.sendToServer(new com.draxer.dexrider.network.SummonAllyPayload(i));
                 }
+            }
+        }
+        while (KTOUCH_DEX_KEY.get().consumeClick()) {
+            if (Minecraft.getInstance().player != null && Minecraft.getInstance().screen == null) {
+                ClientPacketDistributor.sendToServer(com.draxer.dexrider.network.CompleteFormPayload.INSTANCE);
             }
         }
         while (ABILITY_KEY.get().consumeClick()) {

@@ -200,7 +200,7 @@
   "message.dexrider.ally_down": "%s cae agotado y se retira a descansar",
   "message.dexrider.ally_new_home": "%s se queda a vivir aquí",
   "screen.dexrider.summon": "AMIGOS RIDER",
-  "screen.dexrider.summon.hint": "Toca un blasón para invocar · el de Dex abre la Complete Form",
+  "screen.dexrider.summon.hint": "Toca un blasón para invocar · Dex abre la Complete Form · en pelea: numérico 1-9 / 0",
   "ability.dexrider.forge_cannon": "Forge Cannon",
   "ability.dexrider.forge_wall": "Muro de creación",
   "ability.dexrider.mirage_flash": "Destello",
@@ -1122,5 +1122,6 @@
   "hud.dexrider.you_hit_left": "Tú: %s❤ · faltan ≈%s",
   "hud.dexrider.it_hits": "Él: %s❤",
   "hud.dexrider.it_hits_survive": "Él: %s❤ · aguantas ≈%s",
-  "guide.dexrider.page21": "§lLA LECTURA DEL DRIVER§r\n\nTransformado, tras intercambiar golpes, el Driver lee a tu objetivo: su vida, tu golpe, su golpe y cuántos golpes faltan de cada lado."
+  "guide.dexrider.page21": "§lLA LECTURA DEL DRIVER§r\n\nTransformado, tras intercambiar golpes, el Driver lee a tu objetivo: su vida, tu golpe, su golpe y cuántos golpes faltan de cada lado.",
+  "key.dexrider.ktouch_dex": "K-Touch: blasón de Dex (Complete Form)"
 }

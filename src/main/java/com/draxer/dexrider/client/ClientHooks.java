@@ -26,8 +26,4 @@ public final class ClientHooks {
         Minecraft.getInstance().setScreen(new net.minecraft.client.gui.screens.inventory.BookViewScreen(
                 new net.minecraft.client.gui.screens.inventory.BookViewScreen.BookAccess(pages)));
     }
-
-    public static void openKTouchScreen() {
-        Minecraft.getInstance().setScreen(new KTouchScreen());
-    }
 }

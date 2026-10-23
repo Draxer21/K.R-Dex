@@ -374,7 +374,7 @@ Para probarlos: `/summon dexrider:echo_nine` (o `echo_cipher`, `echo_spore`, `ec
 ### Amigos Rider
 - **Hacen su vida**: viven alrededor de su casa (donde los venciste), la patrullan, pelean contra los monstruos
   que se acerquen y se curan con el tiempo. Aparecen cuando pasas cerca de su casa. Charlan entre ellos.
-- **Invocarlos**: tecla **B** (pantalla con forma de K-Touch: tocas el blasón del Rider; el de Dex abre la Complete Form) o **teclado numérico 1-9** (en orden de lectura)
+- **Invocarlos**: tecla **B** (pantalla con forma de K-Touch: tocas el blasón del Rider; el de Dex abre la Complete Form) o **teclado numérico 1-9** (en orden de lectura, sin abrir nada: sirve en plena pelea). El **0 del numérico** es el blasón de Dex: entra o sale de la Complete Form. Clic derecho con el K-Touch abre la misma pantalla
   (mismo orden: 1 arriba y en sentido horario). Clic derecho sobre tu amigo también lo llama o lo despide.
 - Invocado, viene a tu lado y **pelea contigo como Rider** contra lo que te ataca o lo que atacas.
   Dura **90 s**, luego vuelve a casa y descansa **2 min**. Máximo **tres** a la vez.
@@ -587,6 +587,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.28.1** — El K-Touch abre la pantalla nueva con forma de aparato (la misma de la tecla B); icono del K-Touch y cartas de Complete Form con la silueta y la disposición del aparato (3x3 blasones + Dex al lado). Teclado numérico 0 = blasón de Dex (entrar/salir de la Complete Form), además de 1-9 para los blasones.
 - **0.28.0** — La Lectura del Driver: tras intercambiar golpes, panel con la vida del objetivo, tu golpe, su golpe y los golpes que faltan de cada lado. 17 pruebas automáticas.
 - **0.27.1** — El Dex Driver y sus tres cartas básicas (Kamen Ride: Dex, Slash y Final Attack Ride) se consiguen en supervivencia: cofre del taller de la casa de la montaña.
 - **0.27.0** — Arco de la Señal: Rastreador, base subterránea, el Arquitecto (jefe de 3 fases que se adapta y lanza la Señal) y la carta Severance. Parada y contraataque con Shift. Combos entre Riders y entre jugadores. 16 pruebas automáticas.

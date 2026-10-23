@@ -16,8 +16,8 @@ import net.minecraft.world.level.Level;
 
 /**
  * K-Touch. Lo forja el Driver al reunir nueve Kamen Ride.
- * Clic derecho transformado como Dex (con la carta de Complete Form en el inventario): pantalla de los diez pads.
- * Clic derecho en Complete Form: vuelves a Dex.
+ * Clic derecho transformado: la pantalla del aparato (nueve blasones para invocar amigos y el de Dex, que abre o
+ * cierra la Complete Form). La misma pantalla que la tecla B. Teclado numerico: 1-9 blasones, 0 el de Dex.
  */
 public class KTouchItem extends Item {
 
@@ -28,21 +28,12 @@ public class KTouchItem extends Item {
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         if (!(level instanceof ServerLevel serverLevel)) {
-            if (Transformation.isTransformed(player) && KamenRide.current(player) == KamenRide.DEX
-                    && KTouch.hasActiveCard(player)) {
-                ClientHooks.openKTouchScreen();
-            }
+            if (Transformation.isTransformed(player)) ClientHooks.openSummonScreen();
             return InteractionResult.SUCCESS;
         }
         if (!(player instanceof ServerPlayer sp)) return InteractionResult.SUCCESS;
         if (!Transformation.isTransformed(sp)) {
             sp.sendSystemMessage(Component.translatable("message.dexrider.need_transform"), true);
-        } else if (KamenRide.current(sp) == KamenRide.COMPLETE) {
-            KTouch.exit(serverLevel, sp, false);
-        } else if (KamenRide.current(sp) != KamenRide.DEX) {
-            sp.sendSystemMessage(Component.translatable("message.dexrider.ktouch_need_dex"), true);
-        } else if (!KTouch.hasActiveCard(sp)) {
-            sp.sendSystemMessage(Component.translatable("message.dexrider.ktouch_need_card"), true);
         }
         return InteractionResult.SUCCESS;
     }
