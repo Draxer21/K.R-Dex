@@ -158,9 +158,9 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
             Float o = state.getGeckolibData(SKY_OPEN), tm = state.getGeckolibData(SKY_TIME);
             float open = o == null ? 0 : o, time = tm == null ? 0 : tm;
             float fold = 1F - open;
-            float flap = (float) Math.sin(time * 0.55F) * 0.5F * open;                 // aleteo en el aire
+            float flap = (float) Math.sin(time * 0.55F) * 0.38F * open;                // aleteo en el aire
             float breathe = (float) Math.sin(time * 0.08F) * 0.04F * fold;             // respiracion plegadas
-            float y = fold * 1.15F + flap, z = fold * 0.55F + breathe;
+            float y = fold * 1.42F + flap, z = fold * 0.75F + breathe;
             snapshots.get("skyWingR").ifPresent(s -> s.setRotation(0, -y, -z));
             snapshots.get("skyWingL").ifPresent(s -> s.setRotation(0, y, z));
             float sc = sky == 1 ? 0.85F : sky == 2 ? 1.0F : 1.15F;

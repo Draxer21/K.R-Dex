@@ -77,7 +77,7 @@ Cada forma tiene **Nivel 1 a 3**: se sube re-escaneando su fuente (el doble de m
 | Speed | azul | Velocidad III→V, prisa, salto | — |
 | Gas | violeta grisáceo | los proyectiles lo atraviesan, sin daño de caída, cae lento, algo más rápido; **si está en llamas gana Fuerza** | las explosiones le hacen la mitad pero lo lanzan el doble |
 | Terra | marrón | resistencia I→III, minería rápida, golpes que levantan | Nv.1 algo lento |
-| Sky | negro violáceo | **vuela** en la oscuridad (Nv.1), con poca luz (Nv.2), siempre (Nv.3); visión nocturna | forma nocturna |
+| Sky | negro violáceo, **alas de membrana** | **vuela** en la oscuridad (Nv.1), con poca luz (Nv.2), siempre (Nv.3); visión nocturna. Las alas se pliegan en el suelo y aletean al volar; crecen con el nivel y en Nv.3 dejan estela | forma nocturna |
 | Frost | celeste | congela el agua al caminar, golpes que congelan y ralentizan, inmune al frío | el fuego le hace ×1,5 |
 | Cinder | naranja | inmune al fuego y a la lava, golpes que queman | **el agua y la lluvia** lo debilitan (Debilidad + Lentitud) |
 | Half-Cold Half-Hot | mitad blanco hielo / mitad rojo fuego | inmune al fuego y al frío, congela el agua, golpes que queman **y** ralentizan | — |
@@ -587,6 +587,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.30.0** — Form Ride Sky con alas de membrana (diseño propio): plegadas a la espalda en el suelo, se abren y aletean al volar; más grandes con el nivel y en Nv.3 dejan estela.
 - **0.29.0** — Cartas en alta resolución (128x128): marco dorado biselado, nombre de la familia arriba, arte ampliado sobre un degradado y el nombre de la carta abajo. Las de Complete Form con los blasones de verdad y borde de código de barras; icono del K-Touch a partir de la carcasa del aparato; la carta se ve más grande en la muesca (`cartas_hd_preview.png`).
 - **0.28.3** — Cartas de Complete Form con rayas tipo código de barras por el borde del marco.
 - **0.28.2** — Cartas de Complete Form en vertical, como se insertan por la muesca lateral: 3x3 blasones arriba, separador y tres botones abajo (Dex al centro). En la pantalla del K-Touch la carta se ve metida en la muesca.
