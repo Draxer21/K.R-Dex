@@ -1,0 +1,9 @@
+{
+  "type": "minecraft:function",
+  "function": "dexrider:combat_read",
+  "environment": "dexrider:default",
+  "structure": "dexrider:test_platform",
+  "max_ticks": 120,
+  "setup_ticks": 0,
+  "required": true
+}

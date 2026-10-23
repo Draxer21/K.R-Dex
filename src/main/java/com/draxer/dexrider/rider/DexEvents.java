@@ -53,6 +53,7 @@ public final class DexEvents {
             LentDriver.tick(player);
             DexEmotions.tick(level, player);
             if (player.tickCount % 5 == 0) com.draxer.dexrider.network.HudSyncPayload.send(level, player);
+            if (player.tickCount % 5 == 2) CombatRead.sync(level, player);
             KamenRide identity = KamenRide.current(player);
             if (identity != KamenRide.DEX) RiderPowers.tick(level, player, identity);
             if (player.tickCount % 200 == 0) KTouch.retroCheck(player);
@@ -61,6 +62,7 @@ public final class DexEvents {
             FormRide.revokeFlight(player);
             Transformation.removeSuitBody(player);   // sin traje no hay vida extra
             if (player.tickCount % 20 == 0) com.draxer.dexrider.network.HudSyncPayload.clear(player);
+            if (player.tickCount % 20 == 0) CombatRead.clear(player);
             // Set incompleto (creativo, comandos...): limpiar y devolver la armadura original.
             if (hasStrayDexArmor(player)) Transformation.detransform(player, false);
             // Las armas solo existen transformado.
@@ -171,6 +173,18 @@ public final class DexEvents {
         Scanner.onDamage(level, victim, event.getSource());
     }
 
+    /** Lectura del Driver: vida antes del golpe... */
+    @SubscribeEvent
+    public static void onDamagePre(LivingDamageEvent.Pre event) {
+        if (!event.getEntity().level().isClientSide()) CombatRead.before(event.getEntity());
+    }
+
+    /** ...y despues: cuanto hizo de verdad cada golpe. */
+    @SubscribeEvent
+    public static void onDamagePost(LivingDamageEvent.Post event) {
+        if (!event.getEntity().level().isClientSide()) CombatRead.after(event.getEntity(), event.getSource().getEntity());
+    }
+
     /** Efectos al golpear cuerpo a cuerpo con algunas armas. */
     @SubscribeEvent
     public static void onDamageDealt(LivingDamageEvent.Post event) {
@@ -273,6 +287,7 @@ public final class DexEvents {
             AllyManager.cancelReunion(player);
             Guard.forget(player.getUUID());
             Combos.forget(player.getUUID());
+            CombatRead.forget(player.getUUID());
         }
     }
 

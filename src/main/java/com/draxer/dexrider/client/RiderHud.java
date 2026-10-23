@@ -32,6 +32,7 @@ public final class RiderHud {
     @SubscribeEvent
     static void register(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.HOTBAR, DexRider.id("rider_hud"), RiderHud::draw);
+        event.registerAbove(VanillaGuiLayers.HOTBAR, DexRider.id("target_read"), RiderHud::drawTarget);
     }
 
     private static void draw(GuiGraphicsExtractor g, DeltaTracker delta) {
@@ -94,6 +95,56 @@ public final class RiderHud {
             g.text(font, Component.literal("E"), x + 5, ty, 0xFF666670, true);
             bar(g, x + 14, ty + 2, w - 18, 1.0F - s.emotionCooldown() / 1800.0F, 0xFF55555F);
         }
+    }
+
+    /**
+     * Lectura del Driver, a la derecha de la barra de objetos: nombre y vida del objetivo, tu golpe (y cuantos faltan)
+     * y su golpe (y cuantos aguantas). Valores en corazones.
+     */
+    private static void drawTarget(GuiGraphicsExtractor g, DeltaTracker delta) {
+        Minecraft mc = Minecraft.getInstance();
+        var s = com.draxer.dexrider.network.TargetSyncPayload.last;
+        if (mc.player == null || mc.level == null || !s.active() || !DexConfig.hud() || !DexConfig.targetRead() || mc.options.hideGui) return;
+        if (System.currentTimeMillis() - com.draxer.dexrider.network.TargetSyncPayload.receivedAt > 3000) return;
+        var entity = mc.level.getEntity(s.entityId());
+        Font font = mc.font;
+        int sw = mc.getWindow().getGuiScaledWidth(), sh = mc.getWindow().getGuiScaledHeight();
+        int w = 136;
+        int rows = 2 + (s.dealt() > 0 ? 1 : 0) + (s.taken() > 0 ? 1 : 0);
+        int h = 6 + rows * 11;
+        int x = sw / 2 + 91 + 8, y = sh - h - 2;
+        if (x + w > sw - 2) { x = sw - w - 2; y = sh - 22 - h - 14; }
+        g.fill(x, y, x + w, y + h, 0xB0101018);
+        g.fill(x + w - 2, y, x + w, y + h, 0xFFD4202C);
+        g.fill(x, y, x + w, y + 1, 0x60FFFFFF);
+        int ty = y + 4;
+        Component name = entity != null ? entity.getDisplayName() : Component.translatable("hud.dexrider.target");
+        g.text(font, Component.literal(clip(font, name.getString(), w - 10)), x + 4, ty, 0xFFFFFFFF, true);
+        ty += 11;
+        float t = s.maxHp() > 0 ? s.hp() / s.maxHp() : 0;
+        int col = t > 0.5F ? 0xFF3FD27A : t > 0.25F ? 0xFFF2C230 : 0xFFE8343C;
+        bar(g, x + 4, ty + 2, w - 52, t, col);
+        g.text(font, Component.literal(hearts(s.hp()) + "/" + hearts(s.maxHp()) + "\u2764"), x + w - 46, ty, 0xFFFFFFFF, true);
+        ty += 11;
+        if (s.dealt() > 0) {
+            Component line = s.hits() > 0
+                    ? Component.translatable("hud.dexrider.you_hit_left", hearts(s.dealt()), s.hits())
+                    : Component.translatable("hud.dexrider.you_hit", hearts(s.dealt()));
+            g.text(font, Component.literal(clip(font, line.getString(), w - 8)), x + 4, ty, 0xFF9FE8FF, true);
+            ty += 11;
+        }
+        if (s.taken() > 0) {
+            Component line = s.survive() > 0
+                    ? Component.translatable("hud.dexrider.it_hits_survive", hearts(s.taken()), s.survive())
+                    : Component.translatable("hud.dexrider.it_hits", hearts(s.taken()));
+            g.text(font, Component.literal(clip(font, line.getString(), w - 8)), x + 4, ty, s.survive() > 0 && s.survive() <= 2 ? 0xFFFF6A6A : 0xFFFFC8A0, true);
+        }
+    }
+
+    /** Puntos de vida a corazones, con medio corazon de precision ("3.5"). */
+    private static String hearts(float hp) {
+        float h = Math.round(hp) / 2.0F;
+        return h == Math.floor(h) ? String.valueOf((int) h) : String.format(java.util.Locale.ROOT, "%.1f", h);
     }
 
     private static void bar(GuiGraphicsExtractor g, int x, int y, int w, float t, int color) {

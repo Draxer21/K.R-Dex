@@ -118,6 +118,14 @@ que se encienden con un botón.
 5. Al caer deja la carta **Attack Ride: Severance** (cortar la correa): corta tu correa y tu Violent Emotion, limpia efectos
    negativos de ti y de tus amigos, y deja sin órdenes a los enemigos cercanos. El Núcleo se apaga para siempre.
 
+### La Lectura del Driver
+Transformado, cuando intercambias golpes con algo, el Driver lo lee y aparece un panel a la **derecha de la barra de objetos**:
+- **Nombre y vida** del objetivo (barra verde → amarilla → roja, y los corazones que le quedan).
+- **Tú**: cuánto le hace tu último golpe y **cuántos golpes faltan** para tumbarlo (media de tus tres últimos golpes).
+- **Él**: cuánto te hace su golpe y **cuántos aguantas** tú (en rojo si son dos o menos).
+El daño se mide de verdad, con armaduras, encantamientos, Form Ride, Emotion y la adaptación del Arquitecto incluidas.
+Se apaga tras 10 s sin golpes, o si el objetivo cae o se aleja. Se puede desactivar en la configuración (`dex.targetRead`).
+
 ### Parada y contraataque
 - **Parada**: pulsa **Shift** justo antes de que te llegue un golpe de frente (en la Upgrade Form tienes un poco más de margen).
   El golpe se anula, el atacante queda aturdido y tu siguiente golpe en 2 s es un **contraataque** (+60 %).
@@ -579,6 +587,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.28.0** — La Lectura del Driver: tras intercambiar golpes, panel con la vida del objetivo, tu golpe, su golpe y los golpes que faltan de cada lado. 17 pruebas automáticas.
 - **0.27.1** — El Dex Driver y sus tres cartas básicas (Kamen Ride: Dex, Slash y Final Attack Ride) se consiguen en supervivencia: cofre del taller de la casa de la montaña.
 - **0.27.0** — Arco de la Señal: Rastreador, base subterránea, el Arquitecto (jefe de 3 fases que se adapta y lanza la Señal) y la carta Severance. Parada y contraataque con Shift. Combos entre Riders y entre jugadores. 16 pruebas automáticas.
 - **0.26.0** — Kaixa completo (gunblade, Cobalt Sidewinder, forma civil), cartas de los Kaijin, niveles de armas y motos, motos con más detalle, laboratorio de Gunma, Complete Form Nv.2, tonos de las cartas, la correa por la sangre, Driver prestado, poses (con Player Animation Library). 13 pruebas automáticas dentro del juego.

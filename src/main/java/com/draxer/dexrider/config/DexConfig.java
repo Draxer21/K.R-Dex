@@ -17,6 +17,7 @@ public final class DexConfig {
     public static final ModConfigSpec.BooleanValue EMOTIONS;
     public static final ModConfigSpec.BooleanValue HUD;
     public static final ModConfigSpec.BooleanValue AMBUSH;
+    public static final ModConfigSpec.BooleanValue TARGET_READ;
 
     static {
         ModConfigSpec.Builder b = new ModConfigSpec.Builder();
@@ -37,6 +38,8 @@ public final class DexConfig {
                 .define("emotions", true);
         HUD = b.comment("Muestra el HUD del Rider (carta elegida, recargas, Accel, Emotion).")
                 .define("hud", true);
+        TARGET_READ = b.comment("Lectura del Driver: tras intercambiar golpes, muestra la vida del objetivo, tu golpe, su golpe y los golpes que faltan.")
+                .define("targetRead", true);
         b.pop();
         SPEC = b.build();
     }
@@ -56,4 +59,5 @@ public final class DexConfig {
     public static boolean emotions() { return bool(EMOTIONS, true); }
     public static boolean hud() { return bool(HUD, true); }
     public static boolean ambush() { return bool(AMBUSH, true); }
+    public static boolean targetRead() { return bool(TARGET_READ, true); }
 }

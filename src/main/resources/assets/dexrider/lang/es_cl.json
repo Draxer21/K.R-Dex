@@ -1116,5 +1116,11 @@
   "advancements.dexrider.combo.description": "Remata en combo con otro Rider",
   "guide.dexrider.page18": "§lLA SEÑAL§r\n\nLas notas de Gunma esconden un Rastreador. Apunta a la base del Arquitecto.\n\nAl fondo, el Núcleo de la Señal. Tócalo solo cuando estés listo.",
   "guide.dexrider.page19": "§lGUARDIA§r\n\nShift justo antes de un golpe de frente: parada y contraataque (+60 %).\n\nShift mantenido: bloqueas la mitad.\n\nFinal Attack con Riders cerca: combo.",
-  "guide.dexrider.page20": "§lDONDE EMPIEZA TODO§r\n\nLos Kagami guardan un Dex Driver de repuesto en la casa de la montaña, en el taller del sótano, con sus tres primeras cartas.\n\nBúscala en las montañas."
+  "guide.dexrider.page20": "§lDONDE EMPIEZA TODO§r\n\nLos Kagami guardan un Dex Driver de repuesto en la casa de la montaña, en el taller del sótano, con sus tres primeras cartas.\n\nBúscala en las montañas.",
+  "hud.dexrider.target": "Objetivo",
+  "hud.dexrider.you_hit": "Tú: %s❤",
+  "hud.dexrider.you_hit_left": "Tú: %s❤ · faltan ≈%s",
+  "hud.dexrider.it_hits": "Él: %s❤",
+  "hud.dexrider.it_hits_survive": "Él: %s❤ · aguantas ≈%s",
+  "guide.dexrider.page21": "§lLA LECTURA DEL DRIVER§r\n\nTransformado, tras intercambiar golpes, el Driver lee a tu objetivo: su vida, tu golpe, su golpe y cuántos golpes faltan de cada lado."
 }

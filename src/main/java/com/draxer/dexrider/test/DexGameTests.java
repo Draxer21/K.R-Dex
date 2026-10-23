@@ -62,6 +62,7 @@ public final class DexGameTests {
         FUNCTIONS.register("guard", () -> DexGameTests::guard);
         FUNCTIONS.register("combos", () -> DexGameTests::combos);
         FUNCTIONS.register("architect", () -> DexGameTests::architect);
+        FUNCTIONS.register("combat_read", () -> DexGameTests::combatRead);
     }
 
     // ------------------------------------------------------------------ utilidades
@@ -524,6 +525,35 @@ public final class DexGameTests {
             if (!card) fail(h, t, "no solto la carta Severance");
             if (!level.getBlockState(corePos).getValue(com.draxer.dexrider.block.SignalCoreBlock.SPENT)) fail(h, t, "el Nucleo no se apago");
             log(t, "ok: Nucleo, fases, adaptacion, la Senal cortada con un no, carta y Nucleo apagado");
+            h.succeed();
+        });
+    }
+
+    static void combatRead(GameTestHelper h) {
+        String t = "combat_read";
+        ServerPlayer p = player(h, DexCard.KAMEN_RIDE_DEX);
+        transform(h, t, p);
+        faceEast(p);
+        tickPlayer(h, p);
+        try { net.minecraft.world.entity.player.Player.class.getMethod("setClientLoaded", boolean.class).invoke(p, true); }
+        catch (ReflectiveOperationException ignored) { }
+        ServerLevel level = h.getLevel();
+        var zombie = h.spawn(net.minecraft.world.entity.EntityType.ZOMBIE, new BlockPos(10, 1, 8));
+        zombie.setNoAi(true);
+        h.runAfterDelay(70, () -> {
+            zombie.invulnerableTime = 0;
+            zombie.hurtServer(level, p.damageSources().playerAttack(p), 4.0F);
+            zombie.invulnerableTime = 0;
+            zombie.hurtServer(level, p.damageSources().playerAttack(p), 4.0F);
+            var tr = com.draxer.dexrider.rider.CombatRead.track(p);
+            if (tr == null || !zombie.getUUID().equals(tr.target)) { fail(h, t, "el Driver no leyo al objetivo"); return; }
+            if (tr.lastDealt <= 0 || tr.avgDealt() <= 0) { fail(h, t, "no midio tu golpe"); return; }
+            int hits = com.draxer.dexrider.rider.CombatRead.hitsLeft(zombie.getHealth(), tr.avgDealt());
+            if (hits <= 0) { fail(h, t, "no estimo los golpes que faltan"); return; }
+            p.invulnerableTime = 0;
+            p.hurtServer(level, level.damageSources().mobAttack(zombie), 6.0F);
+            if (tr.lastTaken() <= 0) { fail(h, t, "no midio el golpe del enemigo"); return; }
+            log(t, "ok: tu golpe " + tr.lastDealt + ", faltan " + hits + ", su golpe " + tr.lastTaken());
             h.succeed();
         });
     }
