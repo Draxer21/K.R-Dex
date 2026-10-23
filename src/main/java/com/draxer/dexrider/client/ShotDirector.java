@@ -183,12 +183,16 @@ public final class ShotDirector {
         s.add(new Step(t + 95, () -> server(srv -> com.draxer.dexrider.network.PosePayload.send(srv.getPlayerList().getPlayers().get(0), "finisher"))));
         s.add(new Step(t + 108, () -> shoot("pose_finisher")));
         // 8: la Lectura del Driver (primera persona, frente a un golem que ya intercambio golpes contigo)
-        s.add(new Step(t + 112, () -> Minecraft.getInstance().options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON)));
+        s.add(new Step(t + 112, () -> {
+            Minecraft.getInstance().options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON);
+            Minecraft.getInstance().options.hideGui = false;   // esta foto es del HUD
+        }));
         s.add(new Step(t + 114, () -> server(srv -> {
             ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
             ServerLevel lvl = srv.overworld();
             Entity golem = spawnStill(lvl, EntityType.IRON_GOLEM, 0, 6.5);
             cmd(srv, String.format(java.util.Locale.ROOT, "tp @a %.2f %.2f %.2f 0 10", bx, by, bz + 2.5));
+            cmd(srv, String.format(java.util.Locale.ROOT, "fill %d %d %d %d %d %d air", (int) Math.floor(bx) - 4, (int) by, (int) Math.floor(bz), (int) Math.floor(bx) + 4, (int) by + 1, (int) Math.floor(bz) + 8));
             if (golem instanceof net.minecraft.world.entity.LivingEntity le) {
                 le.setInvulnerable(false);
                 for (int i = 0; i < 3; i++) { le.invulnerableTime = 0; le.hurtServer(lvl, p.damageSources().playerAttack(p), 9.0F); }
