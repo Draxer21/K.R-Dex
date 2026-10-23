@@ -160,7 +160,7 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
             float fold = 1F - open;
             float flap = (float) Math.sin(time * 0.55F) * 0.38F * open;                // aleteo en el aire
             float breathe = (float) Math.sin(time * 0.08F) * 0.04F * fold;             // respiracion plegadas
-            float y = fold * 1.42F + flap, z = fold * 0.75F + breathe;
+            float y = fold * 0.3F + flap, z = fold * 1.25F + breathe;   // plegadas: colgando pegadas a la espalda
             snapshots.get("skyWingR").ifPresent(s -> s.setRotation(0, -y, -z));
             snapshots.get("skyWingL").ifPresent(s -> s.setRotation(0, y, z));
             float sc = sky == 1 ? 0.85F : sky == 2 ? 1.0F : 1.15F;
