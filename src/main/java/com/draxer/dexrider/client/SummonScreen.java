@@ -156,7 +156,7 @@ public class SummonScreen extends Screen {
     public void extractRenderState(GuiGraphicsExtractor g, int mouseX, int mouseY, float partialTick) {
         super.extractRenderState(g, mouseX, mouseY, partialTick);   // botones (quedan debajo del dibujo del aparato)
         // la carta de Complete Form, en vertical, entrando por la muesca lateral (el aparato tapa la parte metida)
-        if (cardIn != null) sprite(g, cardIn, x0 - 20, y0 + H / 2 - 16, 0, 0, 32, 32, 32, 32);
+        if (cardIn != null) sprite(g, cardIn, x0 - 30, y0 + H / 2 - 24, 0, 0, 48, 48, 48, 48);
         sprite(g, BODY, x0, y0, 0, 0, W, H, W, H);
         int sy0 = sy0(), sx1 = sx1();
 
