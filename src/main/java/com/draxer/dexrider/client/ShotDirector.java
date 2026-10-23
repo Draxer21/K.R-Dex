@@ -149,7 +149,7 @@ public final class ShotDirector {
         }, 1.0, 1.4, 0.2, 0);
         // 5b: alas de Sky (plegadas en el suelo; abiertas en el aire, de espaldas y de lado)
         t = scene(s, t + 2, "sky_alas", lvl -> {
-            float[][] cfg = {{-2.6F, 0F, 0F}, {0F, 0F, 1.2F}, {2.8F, 90F, 1.2F}};
+            float[][] cfg = {{-3.6F, 180F, 0F}, {-1.2F, 0F, 0F}, {1.2F, 0F, 1.2F}, {3.6F, 90F, 1.2F}};
             for (float[] c : cfg) {
                 ArmorStand a = stand(lvl, c[0], null, null, false);
                 if (a == null) continue;
