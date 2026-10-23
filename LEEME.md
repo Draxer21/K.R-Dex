@@ -443,6 +443,11 @@ Si cambias algo estando transformado, se ve al instante. Las **Form Ride mantien
 mientras están activas; tus colores de ojos y acentos se conservan. `personalizacion_preview.png` muestra ejemplos.
 El Driver (cinturón) no se tiñe: siempre conserva su diseño.
 
+### Cómo empezar en supervivencia
+El **Dex Driver** de repuesto de los Kagami está en la **casa de la montaña** (biomas de montaña), en el cofre del
+taller del sótano, junto con sus tres primeras cartas: **Kamen Ride: Dex**, **Attack Ride: Slash** y
+**Final Attack Ride: Dex**. La Guía del Rider System (se fabrica) lo recuerda en su última página.
+
 ### Escaneo (cómo conseguir cartas en supervivencia)
 Transformado y con el Driver encima, el Driver registra lo que **ve en uso real** a 20 bloques o
 menos (con línea de visión y mirando hacia ahí). Lo que te hacen a ti no cuenta.
@@ -574,6 +579,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.27.1** — El Dex Driver y sus tres cartas básicas (Kamen Ride: Dex, Slash y Final Attack Ride) se consiguen en supervivencia: cofre del taller de la casa de la montaña.
 - **0.27.0** — Arco de la Señal: Rastreador, base subterránea, el Arquitecto (jefe de 3 fases que se adapta y lanza la Señal) y la carta Severance. Parada y contraataque con Shift. Combos entre Riders y entre jugadores. 16 pruebas automáticas.
 - **0.26.0** — Kaixa completo (gunblade, Cobalt Sidewinder, forma civil), cartas de los Kaijin, niveles de armas y motos, motos con más detalle, laboratorio de Gunma, Complete Form Nv.2, tonos de las cartas, la correa por la sangre, Driver prestado, poses (con Player Animation Library). 13 pruebas automáticas dentro del juego.
 - **0.25.4** — Pruebas automáticas dentro del juego (9 pruebas con jugador simulado: `runGameTestServer`) y fotos automáticas con gráficos (`runShots`), las dos en GitHub Actions. Arreglos encontrados por las pruebas: los amigos Rider encuentran a su dueño aunque no esté en la lista de jugadores, el HUD no se envía a clientes sin el mod, animación vacía de la armadura.

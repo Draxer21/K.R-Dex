@@ -6,6 +6,42 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "name": "dexrider:dex_driver"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "dexrider:card_final_attack_ride_dex"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "dexrider:card_attack_ride_slash"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "dexrider:card_kamen_ride_dex"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
           "name": "dexrider:cipher_blaster",
           "weight": 1
         }
