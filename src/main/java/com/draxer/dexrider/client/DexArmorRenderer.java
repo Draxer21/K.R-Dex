@@ -44,6 +44,11 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
     public static final DataTicket<Boolean> HALF = DataTicket.create("dexrider_half", Boolean.class);
     public static final DataTicket<String> CIPHER_MODE = DataTicket.create("dexrider_cipher_mode", String.class);
     public static final DataTicket<Boolean> SHOW_BOOKER = DataTicket.create("dexrider_show_booker", Boolean.class);
+    /** Alas de Sky: nivel (0 = sin alas), cuanto estan abiertas (0-1) y el tiempo para el aleteo. */
+    public static final DataTicket<Integer> SKY = DataTicket.create("dexrider_sky", Integer.class);
+    public static final DataTicket<Float> SKY_OPEN = DataTicket.create("dexrider_sky_open", Float.class);
+    public static final DataTicket<Float> SKY_TIME = DataTicket.create("dexrider_sky_time", Float.class);
+    private static final java.util.Map<Integer, Float> SKY_OPENNESS = new java.util.HashMap<>();
 
     private static final Identifier MAIN = DexRider.id("textures/item/armor/dex_armor_main.png");
     private static final Identifier MAIN_RIGHT = DexRider.id("textures/item/armor/dex_armor_main_right.png");
@@ -110,6 +115,23 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
         renderState.addGeckolibData(HORNS, suit.horns().id());
         renderState.addGeckolibData(EYE_STRIPES, suit.eyeStripes());
         renderState.addGeckolibData(SHOW_BOOKER, suit.showBooker());
+        // alas de Sky: plegadas en el suelo, se abren en el aire (suavizado por entidad)
+        var entity = relatedObject.entity();
+        int sky = 0;
+        float open = 0;
+        if (form == FormRide.SKY) {
+            Integer lv = chest.get(DexComponents.FORM_LEVEL.get());
+            sky = lv == null ? 1 : Math.max(1, Math.min(3, lv));
+            boolean airborne = !entity.onGround() && !entity.isInWater()
+                    || (entity instanceof net.minecraft.world.entity.player.Player pl && pl.getAbilities().flying);
+            float prev = SKY_OPENNESS.getOrDefault(entity.getId(), 0F);
+            open = prev + ((airborne ? 1F : 0F) - prev) * 0.15F;
+            if (SKY_OPENNESS.size() > 256) SKY_OPENNESS.clear();
+            SKY_OPENNESS.put(entity.getId(), open);
+        }
+        renderState.addGeckolibData(SKY, sky);
+        renderState.addGeckolibData(SKY_OPEN, open);
+        renderState.addGeckolibData(SKY_TIME, entity.tickCount + partialTick);
     }
 
     /** Oculta las variantes de piezas que el jugador no eligio. */
@@ -129,6 +151,21 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
         boolean violent = "violent".equals(emo), any = emo != null && !emo.isEmpty();
         hide(snapshots, "emotionCrystal", !any);
         for (String b : new String[]{"spikesHead", "spikesBody", "spikesRArm", "spikesLArm"}) hide(snapshots, b, !violent);
+        // Alas de Sky
+        int sky = intData(state, SKY, 0);
+        hide(snapshots, "skyWings", sky == 0);
+        if (sky > 0) {
+            Float o = state.getGeckolibData(SKY_OPEN), tm = state.getGeckolibData(SKY_TIME);
+            float open = o == null ? 0 : o, time = tm == null ? 0 : tm;
+            float fold = 1F - open;
+            float flap = (float) Math.sin(time * 0.55F) * 0.5F * open;                 // aleteo en el aire
+            float breathe = (float) Math.sin(time * 0.08F) * 0.04F * fold;             // respiracion plegadas
+            float y = fold * 1.15F + flap, z = fold * 0.55F + breathe;
+            snapshots.get("skyWingR").ifPresent(s -> s.setRotation(0, y, -z));
+            snapshots.get("skyWingL").ifPresent(s -> s.setRotation(0, -y, z));
+            float sc = sky == 1 ? 0.85F : sky == 2 ? 1.0F : 1.15F;
+            snapshots.get("skyWings").ifPresent(s -> s.setScale(sc, sc, sc));
+        }
     }
 
     private static void hide(BoneSnapshots snapshots, String bone, boolean hidden) {

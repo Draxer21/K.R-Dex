@@ -101,6 +101,7 @@ public enum FormRide {
             player.sendSystemMessage(Component.translatable("message.dexrider.form_base"), true);
         } else {
             chest.set(DexComponents.FORM.get(), form.id());
+            chest.set(DexComponents.FORM_LEVEL.get(), level(player, form));
             DexSounds.play(level, player, DexSounds.HENSHIN, 1.0F, 1.15F);
             DexSounds.play(level, player, DexSounds.VOICE_KAMEN_RIDE, 1.0F, 1.0F);
             player.sendSystemMessage(Component.translatable("message.dexrider.form_ride",
@@ -113,6 +114,7 @@ public enum FormRide {
     /** Quita los efectos propios de la forma activa (antes de cambiar de forma o al destransformarse). */
     public static void clearForm(ServerPlayer player) {
         player.getItemBySlot(EquipmentSlot.CHEST).remove(DexComponents.FORM.get());
+        player.getItemBySlot(EquipmentSlot.CHEST).remove(DexComponents.FORM_LEVEL.get());
         for (Holder<MobEffect> e : ALL_FORM_EFFECTS) player.removeEffect(e);
         revokeFlight(player);
         FormAbilities.clear(player);
@@ -196,6 +198,15 @@ public enum FormRide {
                     else revokeFlight(p);
                 }
                 if (p.tickCount % 4 == 0) FX.particle(level, ParticleTypes.SQUID_INK, p.position().add(0, 1, 0), 2, 0.4, 0.01);
+                // Nv.3: las puntas de las alas dejan estela al volar
+                if (lvl >= 3 && p.getAbilities().flying && p.tickCount % 2 == 0) {
+                    net.minecraft.world.phys.Vec3 right = net.minecraft.world.phys.Vec3.directionFromRotation(0, p.yBodyRot + 90);
+                    net.minecraft.world.phys.Vec3 back = net.minecraft.world.phys.Vec3.directionFromRotation(0, p.yBodyRot).scale(-0.4);
+                    for (int s = -1; s <= 1; s += 2) {
+                        net.minecraft.world.phys.Vec3 tip = p.position().add(right.scale(s * 1.9)).add(back).add(0, 1.0, 0);
+                        FX.dust(level, 0xCEAAFF, 0.9F, tip, 1, 0.05);
+                    }
+                }
             }
             case FROST -> {
                 if (p.onGround()) freezeWater(level, p, 1 + lvl);

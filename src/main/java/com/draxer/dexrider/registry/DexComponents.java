@@ -91,6 +91,11 @@ public final class DexComponents {
                     .networkSynchronized(ByteBufCodecs.VAR_INT));
 
     /** La carta de Complete Form ya subio a Nv.2 (en el Driver). */
+    /** Nivel de la Form Ride activa (en el peto, para que el cliente lo vea: tamano de las alas de Sky). */
+    public static final Supplier<DataComponentType<Integer>> FORM_LEVEL =
+            COMPONENTS.registerComponentType("form_level", builder -> builder
+                    .persistent(Codec.INT)
+                    .networkSynchronized(ByteBufCodecs.VAR_INT));
     public static final Supplier<DataComponentType<Integer>> COMPLETE_LEVEL =
             COMPONENTS.registerComponentType("complete_level", builder -> builder
                     .persistent(Codec.INT)

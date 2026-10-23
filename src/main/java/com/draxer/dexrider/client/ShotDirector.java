@@ -147,6 +147,18 @@ public final class ShotDirector {
             ArmorStand b = stand(lvl, 3.4, null, "complete", false);
             if (b != null) { b.getItemBySlot(EquipmentSlot.CHEST).set(DexComponents.COMPLETE_LV2.get(), true); b.setYRot(0); b.yBodyRot = 0; }
         }, 1.0, 1.4, 0.2, 0);
+        // 5b: alas de Sky (plegadas en el suelo; abiertas en el aire, de espaldas y de lado)
+        t = scene(s, t + 2, "sky_alas", lvl -> {
+            float[][] cfg = {{-2.6F, 0F, 0F}, {0F, 0F, 1.2F}, {2.8F, 90F, 1.2F}};
+            for (float[] c : cfg) {
+                ArmorStand a = stand(lvl, c[0], null, null, false);
+                if (a == null) continue;
+                a.getItemBySlot(EquipmentSlot.CHEST).set(DexComponents.FORM.get(), "sky");
+                a.getItemBySlot(EquipmentSlot.CHEST).set(DexComponents.FORM_LEVEL.get(), 3);
+                a.setYRot(c[1]); a.yBodyRot = c[1]; a.yHeadRot = c[1];
+                if (c[2] > 0) { a.setNoGravity(true); a.setPos(a.getX(), a.getY() + c[2], a.getZ()); }
+            }
+        }, 0, 1.8, 0.3, 0);
         // 6: motos (la Dex Machine con el escarabajo fusionado)
         t = scene(s, t + 2, "motos", lvl -> {
             int i = 0;
