@@ -587,6 +587,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.28.3** — Cartas de Complete Form con rayas tipo código de barras por el borde del marco.
 - **0.28.2** — Cartas de Complete Form en vertical, como se insertan por la muesca lateral: 3x3 blasones arriba, separador y tres botones abajo (Dex al centro). En la pantalla del K-Touch la carta se ve metida en la muesca.
 - **0.28.1** — El K-Touch abre la pantalla nueva con forma de aparato (la misma de la tecla B); icono del K-Touch y cartas de Complete Form con la silueta y la disposición del aparato (3x3 blasones + Dex al lado). Teclado numérico 0 = blasón de Dex (entrar/salir de la Complete Form), además de 1-9 para los blasones.
 - **0.28.0** — La Lectura del Driver: tras intercambiar golpes, panel con la vida del objetivo, tu golpe, su golpe y los golpes que faltan de cada lado. 17 pruebas automáticas.
