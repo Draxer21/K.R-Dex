@@ -88,7 +88,7 @@ public final class ShotDirector {
         List<Step> s = new ArrayList<>();
         int t = 20;
         s.add(new Step(t, () -> {
-            Minecraft.getInstance().gui.hud.isHidden = true;
+            hudHidden(true);
             server(srv -> {
                 cmd(srv, "time set noon"); cmd(srv, "weather clear");
                 cmd(srv, "gamemode spectator @a");
@@ -197,7 +197,7 @@ public final class ShotDirector {
         // 8: la Lectura del Driver (primera persona, frente a un golem que ya intercambio golpes contigo)
         s.add(new Step(t + 112, () -> {
             Minecraft.getInstance().options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON);
-            Minecraft.getInstance().gui.hud.isHidden = false;   // esta foto es del HUD
+            hudHidden(false);   // esta foto es del HUD
         }));
         s.add(new Step(t + 114, () -> server(srv -> {
             ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
@@ -276,5 +276,16 @@ public final class ShotDirector {
         a.setItemSlot(EquipmentSlot.LEGS, new ItemStack(DexItems.DEX_LEGGINGS.get()));
         a.setItemSlot(EquipmentSlot.FEET, new ItemStack(DexItems.DEX_BOOTS.get()));
         return a;
+    }
+
+    /** 26.2: el "ocultar interfaz" vive en Hud y es privado; para las fotos se cambia por reflexion. */
+    private static void hudHidden(boolean hidden) {
+        try {
+            var f = net.minecraft.client.gui.Hud.class.getDeclaredField("isHidden");
+            f.setAccessible(true);
+            f.setBoolean(Minecraft.getInstance().gui.hud, hidden);
+        } catch (ReflectiveOperationException | RuntimeException e) {
+            DexRider.LOGGER.warn("SHOTS: no se pudo cambiar la interfaz: {}", e.toString());
+        }
     }
 }
