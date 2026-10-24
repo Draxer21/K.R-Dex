@@ -24,7 +24,7 @@
             "condition": "minecraft:entity_properties",
             "entity": "this",
             "predicate": {
-              "type": "dexrider:kaijin_soldier"
+              "minecraft:entity_type": "dexrider:kaijin_soldier"
             }
           }
         ]

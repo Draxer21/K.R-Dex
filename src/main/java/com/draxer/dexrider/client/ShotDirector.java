@@ -61,6 +61,10 @@ public final class ShotDirector {
             if (boot == 300 || boot == 900) shoot("debug_" + boot);
         }
         // si el juego se quedo en el menu principal, abrimos el mundo a mano
+        // 26.2: el aviso de carga de mods (p. ej. Curios con logoFile) bloquea: "Continuar al menu principal"
+        if (mc.gui.screen() != null && mc.gui.screen().getClass().getSimpleName().equals("LoadingErrorScreen")) {
+            mc.gui.setScreen(new net.minecraft.client.gui.screens.TitleScreen());
+        }
         if (!triedOpen && boot > 400 && mc.player == null && mc.gui.screen() instanceof net.minecraft.client.gui.screens.TitleScreen) {
             triedOpen = true;
             DexRider.LOGGER.info("SHOTS: abro el mundo dextest desde el menu");
