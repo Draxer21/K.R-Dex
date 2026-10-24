@@ -3,6 +3,11 @@
 Dex Driver, cartas, transformación, armas Armed Ride con sus Final Attack Ride
 y escaneo de cartas como en el fanfic.
 
+
+> **Versión para Minecraft 26.2**: la rama `mc-26.2` del repositorio compila el mismo mod para 26.2
+> (NeoForge 26.2.0.88, GeckoLib 5.5.6, Curios 16.0.0+26.2, Player Animation Library 1.2.8+mc.26.2).
+> El jar se llama `dexrider-<versión>+26.2.jar`. La rama `main` sigue siendo para 26.1.2.
+
 ## Cómo abrirlo y probarlo
 
 1. Necesitas **JDK 25** (26.1 lo exige). En IntelliJ: *File → Project Structure → SDK → 25*.
@@ -587,6 +592,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.30.0+26.2** — Primera versión para Minecraft 26.2 (rama `mc-26.2`): mismas funciones, adaptada a los cambios de 26.2 (tipos de entidad, pantallas, predicados de logros).
 - **0.30.0** — Form Ride Sky con alas de membrana (diseño propio): plegadas a la espalda en el suelo, se abren y aletean al volar; más grandes con el nivel y en Nv.3 dejan estela.
 - **0.29.0** — Cartas en alta resolución (128x128): marco dorado biselado, nombre de la familia arriba, arte ampliado sobre un degradado y el nombre de la carta abajo. Las de Complete Form con los blasones de verdad y borde de código de barras; icono del K-Touch a partir de la carcasa del aparato; la carta se ve más grande en la muesca (`cartas_hd_preview.png`).
 - **0.28.3** — Cartas de Complete Form con rayas tipo código de barras por el borde del marco.
