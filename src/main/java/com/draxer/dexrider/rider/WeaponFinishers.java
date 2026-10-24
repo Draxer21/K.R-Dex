@@ -97,7 +97,7 @@ public final class WeaponFinishers {
             int n = 0;
             for (LivingEntity t : targets) {
                 if (n++ >= 8) break;
-                LightningBolt bolt = EntityType.LIGHTNING_BOLT.create(level, EntitySpawnReason.TRIGGERED);
+                LightningBolt bolt = net.minecraft.world.entity.EntityTypes.LIGHTNING_BOLT.create(level, EntitySpawnReason.TRIGGERED);
                 if (bolt != null) {
                     bolt.setVisualOnly(true);
                     bolt.setPos(t.getX(), t.getY(), t.getZ());

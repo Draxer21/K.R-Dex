@@ -128,7 +128,7 @@ public class DexRiderClient {
             }
         }
         while (BOOKER_KEY.get().consumeClick()) {
-            if (Minecraft.getInstance().player != null && Minecraft.getInstance().screen == null) {
+            if (Minecraft.getInstance().player != null && Minecraft.getInstance().gui.screen() == null) {
                 ClientPacketDistributor.sendToServer(com.draxer.dexrider.network.OpenBookerPayload.INSTANCE);
             }
         }
@@ -146,7 +146,7 @@ public class DexRiderClient {
                     com.draxer.dexrider.menu.RideBookerMenu.QUICK_USE));
         }
         while (SUMMON_KEY.get().consumeClick()) {
-            if (Minecraft.getInstance().player != null && Minecraft.getInstance().screen == null) {
+            if (Minecraft.getInstance().player != null && Minecraft.getInstance().gui.screen() == null) {
                 ClientHooks.openSummonScreen();
             }
         }
@@ -158,7 +158,7 @@ public class DexRiderClient {
             }
         }
         while (KTOUCH_DEX_KEY.get().consumeClick()) {
-            if (Minecraft.getInstance().player != null && Minecraft.getInstance().screen == null) {
+            if (Minecraft.getInstance().player != null && Minecraft.getInstance().gui.screen() == null) {
                 ClientPacketDistributor.sendToServer(com.draxer.dexrider.network.CompleteFormPayload.INSTANCE);
             }
         }

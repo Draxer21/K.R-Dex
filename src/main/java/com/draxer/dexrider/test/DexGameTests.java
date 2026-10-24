@@ -292,8 +292,8 @@ public final class DexGameTests {
         if (!DexEmotions.VIOLENT.equals(DexEmotions.current(p))) fail(h, t, "no desperto la Violent Emotion");
         DexEmotions.clear(p);
         // Heroic: un aldeano golpeado por un monstruo cerca
-        var villager = h.spawn(net.minecraft.world.entity.EntityType.VILLAGER, new BlockPos(10, 1, 8));
-        var zombie = h.spawn(net.minecraft.world.entity.EntityType.ZOMBIE, new BlockPos(12, 1, 8));
+        var villager = h.spawn(net.minecraft.world.entity.net.minecraft.world.entity.EntityTypes.VILLAGER, new BlockPos(10, 1, 8));
+        var zombie = h.spawn(net.minecraft.world.entity.net.minecraft.world.entity.EntityTypes.ZOMBIE, new BlockPos(12, 1, 8));
         DexEmotions.onProtectedHurt(level, villager, level.damageSources().mobAttack(zombie));
         if (!DexEmotions.HEROIC.equals(DexEmotions.current(p))) fail(h, t, "no desperto la Heroic Emotion");
         DexEmotions.clear(p);
@@ -410,7 +410,7 @@ public final class DexGameTests {
         try { net.minecraft.world.entity.player.Player.class.getMethod("setClientLoaded", boolean.class).invoke(p, true); }
         catch (ReflectiveOperationException ignored) { /* en otras versiones se carga solo al pasar el tiempo */ }
         ServerLevel level = h.getLevel();
-        var zombie = h.spawn(net.minecraft.world.entity.EntityType.ZOMBIE, new BlockPos(10, 1, 8));
+        var zombie = h.spawn(net.minecraft.world.entity.net.minecraft.world.entity.EntityTypes.ZOMBIE, new BlockPos(10, 1, 8));
         zombie.setNoAi(true);
         h.runAfterDelay(70, () -> {
             faceEast(p);
@@ -458,7 +458,7 @@ public final class DexGameTests {
         ServerLevel level = h.getLevel();
         com.draxer.dexrider.rider.AllyManager.befriend(level, p, KamenRide.KAIXA, h.absolutePos(new BlockPos(7, 1, 10)));
         for (var a : level.getEntitiesOfClass(com.draxer.dexrider.entity.RiderAllyEntity.class, p.getBoundingBox().inflate(16))) a.setCivilian(false);
-        var golem = h.spawn(net.minecraft.world.entity.EntityType.IRON_GOLEM, new BlockPos(12, 1, 8));
+        var golem = h.spawn(net.minecraft.world.entity.net.minecraft.world.entity.EntityTypes.IRON_GOLEM, new BlockPos(12, 1, 8));
         golem.setNoAi(true);
         golem.setLastHurtByMob(p);
         float hp0 = golem.getHealth();
@@ -471,7 +471,7 @@ public final class DexGameTests {
         tickPlayer(h, p2);
         h.runAfterDelay(30, () -> {
             if (golem.isAlive() && golem.getHealth() >= hp0) fail(h, t, "el golpe combinado no hizo dano");
-            var golem2 = h.spawn(net.minecraft.world.entity.EntityType.IRON_GOLEM, new BlockPos(12, 1, 8));
+            var golem2 = h.spawn(net.minecraft.world.entity.net.minecraft.world.entity.EntityTypes.IRON_GOLEM, new BlockPos(12, 1, 8));
             golem2.setNoAi(true);
             golem2.setLastHurtByMob(p);
             faceEast(p); faceEast(p2);
@@ -538,7 +538,7 @@ public final class DexGameTests {
         try { net.minecraft.world.entity.player.Player.class.getMethod("setClientLoaded", boolean.class).invoke(p, true); }
         catch (ReflectiveOperationException ignored) { }
         ServerLevel level = h.getLevel();
-        var zombie = h.spawn(net.minecraft.world.entity.EntityType.ZOMBIE, new BlockPos(10, 1, 8));
+        var zombie = h.spawn(net.minecraft.world.entity.net.minecraft.world.entity.EntityTypes.ZOMBIE, new BlockPos(10, 1, 8));
         zombie.setNoAi(true);
         h.runAfterDelay(70, () -> {
             zombie.invulnerableTime = 0;

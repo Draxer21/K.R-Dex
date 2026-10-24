@@ -11,11 +11,11 @@ public final class ClientHooks {
 
     public static void openSuitScreen(ItemStack driver) {
         SuitConfig config = driver.get(DexComponents.SUIT.get());
-        Minecraft.getInstance().setScreen(new SuitScreen(config));
+        Minecraft.getInstance().gui.setScreen(new SuitScreen(config));
     }
 
     public static void openSummonScreen() {
-        Minecraft.getInstance().setScreen(new SummonScreen());
+        Minecraft.getInstance().gui.setScreen(new SummonScreen());
     }
 
     public static void openGuide() {
@@ -23,7 +23,7 @@ public final class ClientHooks {
         for (int i = 1; i <= com.draxer.dexrider.item.RiderGuideItem.PAGES; i++) {
             pages.add(net.minecraft.network.chat.Component.translatable("guide.dexrider.page" + i));
         }
-        Minecraft.getInstance().setScreen(new net.minecraft.client.gui.screens.inventory.BookViewScreen(
+        Minecraft.getInstance().gui.setScreen(new net.minecraft.client.gui.screens.inventory.BookViewScreen(
                 new net.minecraft.client.gui.screens.inventory.BookViewScreen.BookAccess(pages)));
     }
 }

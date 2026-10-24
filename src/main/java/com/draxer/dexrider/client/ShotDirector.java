@@ -57,11 +57,11 @@ public final class ShotDirector {
         boot++;
         if (boot % 100 == 0 && tick < 0) {
             DexRider.LOGGER.info("SHOTS: tick {} pantalla={} jugador={}", boot,
-                    mc.screen == null ? "ninguna" : mc.screen.getClass().getName(), mc.player != null);
+                    mc.gui.screen() == null ? "ninguna" : mc.gui.screen().getClass().getName(), mc.player != null);
             if (boot == 300 || boot == 900) shoot("debug_" + boot);
         }
         // si el juego se quedo en el menu principal, abrimos el mundo a mano
-        if (!triedOpen && boot > 400 && mc.player == null && mc.screen instanceof net.minecraft.client.gui.screens.TitleScreen) {
+        if (!triedOpen && boot > 400 && mc.player == null && mc.gui.screen() instanceof net.minecraft.client.gui.screens.TitleScreen) {
             triedOpen = true;
             DexRider.LOGGER.info("SHOTS: abro el mundo dextest desde el menu");
             mc.createWorldOpenFlows().openWorld("dextest", () -> DexRider.LOGGER.error("SHOTS: no se pudo abrir el mundo"));
@@ -88,7 +88,7 @@ public final class ShotDirector {
         List<Step> s = new ArrayList<>();
         int t = 20;
         s.add(new Step(t, () -> {
-            Minecraft.getInstance().options.hideGui = true;
+            Minecraft.getInstance().gui.hud.isHidden = true;
             server(srv -> {
                 cmd(srv, "time set noon"); cmd(srv, "weather clear");
                 cmd(srv, "gamemode spectator @a");
@@ -197,12 +197,12 @@ public final class ShotDirector {
         // 8: la Lectura del Driver (primera persona, frente a un golem que ya intercambio golpes contigo)
         s.add(new Step(t + 112, () -> {
             Minecraft.getInstance().options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON);
-            Minecraft.getInstance().options.hideGui = false;   // esta foto es del HUD
+            Minecraft.getInstance().gui.hud.isHidden = false;   // esta foto es del HUD
         }));
         s.add(new Step(t + 114, () -> server(srv -> {
             ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
             ServerLevel lvl = srv.overworld();
-            Entity golem = spawnStill(lvl, EntityType.IRON_GOLEM, 0, 6.5);
+            Entity golem = spawnStill(lvl, net.minecraft.world.entity.EntityTypes.IRON_GOLEM, 0, 6.5);
             cmd(srv, String.format(java.util.Locale.ROOT, "tp @a %.2f %.2f %.2f 0 10", bx, by, bz + 2.5));
             cmd(srv, String.format(java.util.Locale.ROOT, "fill %d %d %d %d %d %d air", (int) Math.floor(bx) - 4, (int) by, (int) Math.floor(bz), (int) Math.floor(bx) + 4, (int) by + 1, (int) Math.floor(bz) + 8));
             if (golem instanceof net.minecraft.world.entity.LivingEntity le) {
@@ -239,7 +239,7 @@ public final class ShotDirector {
 
     private static void shoot(String name) {
         Minecraft mc = Minecraft.getInstance();
-        Screenshot.grab(mc.gameDirectory, "dex_" + name + ".png", mc.getMainRenderTarget(), 1,
+        Screenshot.grab(mc.gameDirectory, "dex_" + name + ".png", mc.gameRenderer.mainRenderTarget(), 1,
                 c -> DexRider.LOGGER.info("SHOTS: {} -> {}", name, c.getString()));
     }
 
@@ -265,7 +265,7 @@ public final class ShotDirector {
     }
 
     private static ArmorStand stand(ServerLevel level, double dx, String emotion, String rider, boolean upgrade) {
-        ArmorStand a = (ArmorStand) spawnStill(level, EntityType.ARMOR_STAND, dx, 4.5);
+        ArmorStand a = (ArmorStand) spawnStill(level, net.minecraft.world.entity.EntityTypes.ARMOR_STAND, dx, 4.5);
         if (a == null) return null;
         ItemStack chest = new ItemStack(DexItems.DEX_CHESTPLATE.get());
         if (emotion != null) chest.set(DexComponents.EMOTION.get(), emotion);

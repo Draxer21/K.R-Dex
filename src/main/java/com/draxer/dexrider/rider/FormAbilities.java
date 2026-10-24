@@ -166,8 +166,8 @@ public final class FormAbilities {
             }
         }
         if (placed == 0) return false;
-        sound(level, base.getCenter(), SoundEvents.GLASS_PLACE, 1.5F, 0.6F);
-        FX.particle(level, ParticleTypes.SNOWFLAKE, base.getCenter().add(0, 1, 0), 40, 1.5, 0.05);
+        sound(level, net.minecraft.world.phys.Vec3.atCenterOf(base), SoundEvents.GLASS_PLACE, 1.5F, 0.6F);
+        FX.particle(level, ParticleTypes.SNOWFLAKE, net.minecraft.world.phys.Vec3.atCenterOf(base).add(0, 1, 0), 40, 1.5, 0.05);
         return true;
     }
 
@@ -207,7 +207,7 @@ public final class FormAbilities {
                     for (int h = 0; h < height; h++) {
                         TempBlocks.place(level, column.above(h), Blocks.PACKED_ICE.defaultBlockState(), 100);
                     }
-                    FX.particle(level, ParticleTypes.SNOWFLAKE, column.getCenter().add(0, 1, 0), 4, 0.3, 0.05);
+                    FX.particle(level, ParticleTypes.SNOWFLAKE, net.minecraft.world.phys.Vec3.atCenterOf(column).add(0, 1, 0), 4, 0.3, 0.05);
                 });
             }
         }
@@ -337,7 +337,7 @@ public final class FormAbilities {
         target.setDeltaMovement(target.getDeltaMovement().x, 1.0 + 0.2 * lvl, target.getDeltaMovement().z);
         target.hurtMarked = true;
         BlockState stone = Blocks.STONE.defaultBlockState();
-        FX.particle(level, new BlockParticleOption(ParticleTypes.BLOCK, stone), column.getCenter(), 30, 0.6, 0.1);
+        FX.particle(level, new BlockParticleOption(ParticleTypes.BLOCK, stone), net.minecraft.world.phys.Vec3.atCenterOf(column), 30, 0.6, 0.1);
         // el pilar sube cuando el objetivo ya salio disparado (asi no queda atrapado dentro)
         Scheduler.later(p, 3, () -> {
             for (int h = 0; h < 2 + lvl; h++) TempBlocks.place(level, column.above(h), stone, 100);
@@ -359,7 +359,7 @@ public final class FormAbilities {
             if (TempBlocks.place(level, top, step, 200)) placed++;
         }
         if (placed == 0) return false;
-        FX.particle(level, new BlockParticleOption(ParticleTypes.BLOCK, fill), start.getCenter(), 30, 1.0, 0.1);
+        FX.particle(level, new BlockParticleOption(ParticleTypes.BLOCK, fill), net.minecraft.world.phys.Vec3.atCenterOf(start), 30, 1.0, 0.1);
         sound(level, p.position(), SoundEvents.STONE_PLACE, 1.5F, 0.7F);
         return true;
     }

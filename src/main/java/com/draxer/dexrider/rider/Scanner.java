@@ -94,8 +94,8 @@ public final class Scanner {
         if (source.is(DamageTypes.LIGHTNING_BOLT)) return DexCard.ARMED_RIDE_SHOCK_BATON;
         if (source.is(DamageTypes.SONIC_BOOM)) return DexCard.ATTACK_RIDE_GROUND_WAVE;
         if (source.is(DamageTypeTags.IS_EXPLOSION) && !(attacker instanceof net.minecraft.world.entity.player.Player)
-                && (attacker == null || attacker.getType() == EntityType.CREEPER || attacker.getType() == EntityType.TNT
-                    || source.getDirectEntity() != null && source.getDirectEntity().getType() == EntityType.TNT)) {
+                && (attacker == null || attacker.getType() == net.minecraft.world.entity.EntityTypes.CREEPER || attacker.getType() == net.minecraft.world.entity.EntityTypes.TNT
+                    || source.getDirectEntity() != null && source.getDirectEntity().getType() == net.minecraft.world.entity.EntityTypes.TNT)) {
             return DexCard.ATTACK_RIDE_NITRO_BURST;
         }
         if (attacker == null) return null;
@@ -105,8 +105,8 @@ public final class Scanner {
             return riderWeaponCard(rider.rider());
         }
         EntityType<?> type = attacker.getType();
-        if (type == EntityType.GHAST) return DexCard.FORM_RIDE_GAS;
-        if (type == EntityType.BREEZE) return DexCard.ATTACK_RIDE_GALE;
+        if (type == net.minecraft.world.entity.EntityTypes.GHAST) return DexCard.FORM_RIDE_GAS;
+        if (type == net.minecraft.world.entity.EntityTypes.BREEZE) return DexCard.ATTACK_RIDE_GALE;
         if (attacker instanceof com.draxer.dexrider.entity.KaijinEntity k) {
             return switch (k.kind()) {
                 case MANTIS -> DexCard.ATTACK_RIDE_MANTIS_REAP;
@@ -115,12 +115,12 @@ public final class Scanner {
                 default -> null;
             };
         }
-        if (type == EntityType.VEX) return DexCard.ATTACK_RIDE_RAZOR_FEATHER;
-        if (type == EntityType.ENDERMAN) return DexCard.ATTACK_RIDE_OVERCLOCK;
-        if (type == EntityType.BLAZE) return DexCard.FORM_RIDE_CINDER;
-        if (type == EntityType.STRAY || type == EntityType.SNOW_GOLEM) return DexCard.FORM_RIDE_FROST;
-        if (type == EntityType.GUARDIAN || type == EntityType.ELDER_GUARDIAN) return DexCard.ARMED_RIDE_VOLT_CHAIN;
-        if (type == EntityType.IRON_GOLEM || type == EntityType.RAVAGER || type == EntityType.WARDEN) {
+        if (type == net.minecraft.world.entity.EntityTypes.VEX) return DexCard.ATTACK_RIDE_RAZOR_FEATHER;
+        if (type == net.minecraft.world.entity.EntityTypes.ENDERMAN) return DexCard.ATTACK_RIDE_OVERCLOCK;
+        if (type == net.minecraft.world.entity.EntityTypes.BLAZE) return DexCard.FORM_RIDE_CINDER;
+        if (type == net.minecraft.world.entity.EntityTypes.STRAY || type == net.minecraft.world.entity.EntityTypes.SNOW_GOLEM) return DexCard.FORM_RIDE_FROST;
+        if (type == net.minecraft.world.entity.EntityTypes.GUARDIAN || type == net.minecraft.world.entity.EntityTypes.ELDER_GUARDIAN) return DexCard.ARMED_RIDE_VOLT_CHAIN;
+        if (type == net.minecraft.world.entity.EntityTypes.IRON_GOLEM || type == net.minecraft.world.entity.EntityTypes.RAVAGER || type == net.minecraft.world.entity.EntityTypes.WARDEN) {
             return source.is(DamageTypeTags.IS_PROJECTILE) ? null : DexCard.ARMED_RIDE_POWER_KNUCKLE;
         }
         if (attacker instanceof LivingEntity living) {
@@ -165,8 +165,8 @@ public final class Scanner {
         double speed = e.getDeltaMovement().horizontalDistance();
 
         // Speed: caballo, burro, mula o camello galopando con jinete
-        if ((type == EntityType.HORSE || type == EntityType.DONKEY || type == EntityType.MULE
-                || type == EntityType.CAMEL || type == EntityType.SKELETON_HORSE || type == EntityType.ZOMBIE_HORSE)
+        if ((type == net.minecraft.world.entity.EntityTypes.HORSE || type == net.minecraft.world.entity.EntityTypes.DONKEY || type == net.minecraft.world.entity.EntityTypes.MULE
+                || type == net.minecraft.world.entity.EntityTypes.CAMEL || type == net.minecraft.world.entity.EntityTypes.SKELETON_HORSE || type == net.minecraft.world.entity.EntityTypes.ZOMBIE_HORSE)
                 && e.isVehicle() && speed > 0.25) {
             return DexCard.FORM_RIDE_SPEED;
         }
@@ -177,7 +177,7 @@ public final class Scanner {
             return DexCard.ATTACK_RIDE_OVERCLOCK;
         }
         // Sky: phantom en picada sobre un objetivo
-        if (type == EntityType.PHANTOM && e instanceof Mob mob && mob.getTarget() != null) return DexCard.FORM_RIDE_SKY;
+        if (type == net.minecraft.world.entity.EntityTypes.PHANTOM && e instanceof Mob mob && mob.getTarget() != null) return DexCard.FORM_RIDE_SKY;
         // Vehicle: alguien montado en un vehiculo en marcha (bote, vagoneta, strider, caballo...)
         Entity vehicle = e.getVehicle();
         if (vehicle != null && vehicle.getDeltaMovement().horizontalDistance() > 0.2) return DexCard.VEHICLE_RIDE_DEX_MACHINE;

@@ -468,8 +468,8 @@ public final class RiderPowers {
             }
         }
         if (placed == 0) return null;
-        FX.dust(level, 0x78BEFF, 1.4F, base.getCenter().add(0, 1, 0), 40, 1.5);
-        sound(level, base.getCenter(), SoundEvents.ANVIL_PLACE, 0.8F, 1.2F);
+        FX.dust(level, 0x78BEFF, 1.4F, net.minecraft.world.phys.Vec3.atCenterOf(base).add(0, 1, 0), 40, 1.5);
+        sound(level, net.minecraft.world.phys.Vec3.atCenterOf(base), SoundEvents.ANVIL_PLACE, 0.8F, 1.2F);
         return new Used("forge_wall", 10);
     }
 
@@ -714,7 +714,7 @@ public final class RiderPowers {
                 TempBlocks.place(level, b, stem, 120);
                 TempBlocks.place(level, b.above(), stem, 120);
                 TempBlocks.place(level, b.above(2), isRed ? red : brown, 120);
-                FX.particle(level, ParticleTypes.SPORE_BLOSSOM_AIR, b.above(2).getCenter(), 10, 0.5, 0.02);
+                FX.particle(level, ParticleTypes.SPORE_BLOSSOM_AIR, net.minecraft.world.phys.Vec3.atCenterOf(b.above(2)), 10, 0.5, 0.02);
             });
         }
         Scheduler.later(p, 14, () -> {
@@ -724,8 +724,8 @@ public final class RiderPowers {
                 e.addEffect(new MobEffectInstance(MobEffects.WEAKNESS, 160, 1));
                 e.addEffect(new MobEffectInstance(MobEffects.POISON, 100, 0));
             }
-            FX.particle(level, ParticleTypes.SPORE_BLOSSOM_AIR, c.getCenter().add(0, 1, 0), 200, 5.0, 0.05);
-            FX.particle(level, ParticleTypes.EXPLOSION, c.getCenter().add(0, 1, 0), 3, 2.0, 0);
+            FX.particle(level, ParticleTypes.SPORE_BLOSSOM_AIR, net.minecraft.world.phys.Vec3.atCenterOf(c).add(0, 1, 0), 200, 5.0, 0.05);
+            FX.particle(level, ParticleTypes.EXPLOSION, net.minecraft.world.phys.Vec3.atCenterOf(c).add(0, 1, 0), 3, 2.0, 0);
             DexSounds.play(level, p, DexSounds.FAR_IMPACT, 1.5F, 1.2F);
         });
     }
