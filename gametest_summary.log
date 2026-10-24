@@ -1,0 +1,105 @@
+2:Calculating task graph as no cached configuration is available for tasks: runGameTestServer
+10:> Task :prepareGameTestServerRun
+15:> Task :runGameTestServer
+22149:[03:26:01] [main/INFO] [minecraft/GameTestMainUtil]: Running GameTestMain with cwd '/home/runner/work/K.R-Dex/K.R-Dex/run', universe path 'gametestserver'
+22280:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: Started game test server
+22283:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: 17 tests are now running at position -13275141, -59, 5860660!
+22284:[03:26:07] [Server thread/INFO] [minecraft/GameTestRunner]: Running test environment 'minecraft:default' batch 0 (1 tests)...
+22285:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22286:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22287:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22288:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22289:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22290:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22291:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22292:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22293:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22294:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22295:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22296:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22297:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22298:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22299:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22300:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22301:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22302:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22303:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22304:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22305:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22306:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22307:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22308:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22309:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22310:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22311:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22312:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22313:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22314:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22315:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22316:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22317:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22318:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22319:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22320:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22321:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22322:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22323:[03:26:07] [Server thread/INFO] [minecraft/GameTestServer]: [                 ]
+22324:[03:26:08] [Server thread/INFO] [minecraft/GameTestRunner]: Running test environment 'dexrider:default' batch 0 (16 tests)...
+22346:[03:26:08] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [correa] ok: la correa viaja por la sangre y se corta diciendo no a tiempo
+22352:[03:26:08] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [emotions_upgrade] ok: Violent, Heroic y Upgrade Form
+22359:[03:26:08] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [lent_driver] ok: prestar, transformarse, nacer la carta y revocar
+22360:[03:26:08] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [structures] mountain_house ok, tamano Vec3i{x=13, y=14, z=12}
+22361:[03:26:09] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [structures] commission_depot ok, tamano Vec3i{x=19, y=9, z=13}
+22362:[03:26:09] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [structures] gunma_lab ok, tamano Vec3i{x=21, y=14, z=21}
+22363:[03:26:09] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [structures] signal_base ok, tamano Vec3i{x=33, y=40, z=33}
+22365:[03:26:09] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [form_rides] speed ok
+22367:[03:26:09] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [kamen_rides] nine ok
+22369:[03:26:09] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [tones] ok: leer, esquivar y senuelo
+22371:[03:26:09] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [transform_cycle] ok (vida transformado 30.0)
+22372:[03:26:09] [Server thread/INFO] [minecraft/GameTestServer]: [+_____+_+___+_+++]
+22373:[03:26:09] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [form_rides] gas ok
+22375:[03:26:09] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [combos] ok: combo con Kaixa (golem 100.0 -> 26.599998) y combo entre jugadores
+22376:[03:26:09] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [kamen_rides] forge ok
+22377:[03:26:09] [Server thread/INFO] [minecraft/GameTestServer]: [+___+_+_+___+_+++]
+22378:[03:26:09] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [complete_form] ok: Complete Form con 2 proyecciones
+22379:[03:26:09] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [form_rides] terra ok
+22380:[03:26:09] [Server thread/INFO] [minecraft/GameTestServer]: [+___+_+_+___+_+++]
+22382:[03:26:09] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [kamen_rides] psyga ok
+22394:[03:26:10] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [combat_read] ok: tu golpe 5.658, faltan 2, su golpe 0.7199993
+22396:[03:26:10] [Server thread/INFO] [minecraft/GameTestServer]: [+__++++_+___+_+++]
+22397:[03:26:10] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [form_rides] sky ok
+22398:[03:26:10] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [all_cards] ok, 45 cartas activadas sin errores
+22399:[03:26:10] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [architect] ok: Nucleo, fases, adaptacion, la Senal cortada con un no, carta y Nucleo apagado
+22400:[03:26:10] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [guard] ok: parada anula, contraataque listo, bloqueo 0.7199993 -> 0.3600006
+22402:[03:26:10] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [kamen_rides] cipher ok
+22403:[03:26:10] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++_+_+_+_+++]
+22404:[03:26:10] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [npc_riders] ok, 10 Riders perdidos vivos tras 100 ticks
+22405:[03:26:10] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [form_rides] frost ok
+22406:[03:26:10] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++_+_+_+++++]
+22407:[03:26:10] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [kamen_rides] warden ok
+22408:[03:26:10] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [form_rides] cinder ok
+22409:[03:26:10] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++_+_+_+++++]
+22410:[03:26:10] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [form_rides] half ok
+22411:[03:26:10] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [kamen_rides] orga ok
+22412:[03:26:10] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++_+_+_+++++]
+22413:[03:26:10] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [daishocker] ok, Kaijin atacando 160 ticks sin errores; vida del jugador 0.0
+22414:[03:26:10] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++_+_+++++]
+22415:[03:26:10] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [kamen_rides] spore ok
+22416:[03:26:10] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++_+_+++++]
+22417:[03:26:10] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [kamen_rides] mirage ok
+22418:[03:26:10] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++++_+++++]
+22419:[03:26:10] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++++_+++++]
+22420:[03:26:10] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [kamen_rides] proto ok
+22421:[03:26:10] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++++_+++++]
+22422:[03:26:10] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [kamen_rides] kaixa ok
+22423:[03:26:10] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++++_+++++]
+22424:[03:26:10] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++++_+++++]
+22425:[03:26:10] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++++_+++++]
+22426:[03:26:10] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++++_+++++]
+22427:[03:26:10] [Server thread/INFO] [co.dr.de.DexRider/]: DEXTEST [kamen_rides] ok, 10 identidades
+22428:[03:26:10] [Server thread/INFO] [minecraft/GameTestServer]: [+++++++++++++++++]
+22429:[03:26:10] [Server thread/INFO] [minecraft/GameTestServer]: ========= 17 GAME TESTS COMPLETE IN 3.129 s ======================
+22430:[03:26:10] [Server thread/INFO] [minecraft/GameTestServer]: All 17 required tests passed :)
+22431:[03:26:10] [Server thread/INFO] [minecraft/GameTestServer]: ====================================================
+22444:[03:26:11] [Server thread/INFO] [minecraft/GameTestServer]: Game test server shutting down
+22458:exit code 0
