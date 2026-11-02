@@ -22,4 +22,16 @@ public final class DexAdvancements {
             DexRider.LOGGER.debug("No se pudo otorgar el logro {}", name, e);
         }
     }
+
+    /** Si el jugador ya tiene el logro (los logros sobreviven a la muerte y al cambio de dimension). */
+    public static boolean has(ServerPlayer player, String name) {
+        try {
+            MinecraftServer server = player.level().getServer();
+            if (server == null) return false;
+            AdvancementHolder holder = server.getAdvancements().get(DexRider.id(name));
+            return holder != null && player.getAdvancements().getOrStartProgress(holder).isDone();
+        } catch (RuntimeException e) {
+            return false;
+        }
+    }
 }

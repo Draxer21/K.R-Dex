@@ -277,6 +277,12 @@ public final class DexEvents {
         }
     }
 
+    /** Primera vez en el mundo: la carta de Genzo y la brujula de los Kagami. */
+    @SubscribeEvent
+    public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player) Starter.onLogin(player);
+    }
+
     @SubscribeEvent
     public static void onLogout(PlayerEvent.PlayerLoggedOutEvent event) {
         if (event.getEntity() instanceof ServerPlayer player) {

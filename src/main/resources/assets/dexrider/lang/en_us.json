@@ -1116,12 +1116,21 @@
   "advancements.dexrider.combo.description": "Land a combined Final Attack with another Rider",
   "guide.dexrider.page18": "§lTHE SIGNAL§r\n\nGunma's notes hide a Tracker. It points to the Architect's base.\n\nAt the bottom, the Signal Core. Touch it only when you're ready.",
   "guide.dexrider.page19": "§lGUARD§r\n\nShift right before a frontal hit: parry and counter (+60%).\n\nHold Shift: block half.\n\nFinal Attack with Riders nearby: combo.",
-  "guide.dexrider.page20": "§lWHERE IT ALL STARTS§r\n\nThe Kagami keep a spare Dex Driver in the mountain house, in the basement workshop, with its first three cards.\n\nLook for it in the mountains.",
+  "guide.dexrider.page20": "§lWHERE IT ALL STARTS§r\n\nThe Kagami keep a spare Dex Driver in the mountain house, in the basement workshop, with its first three cards.\n\nThe Kagami Compass points to it (compass + red dye + gold ingot).",
   "hud.dexrider.target": "Target",
   "hud.dexrider.you_hit": "You: %s❤",
   "hud.dexrider.you_hit_left": "You: %s❤ · ≈%s more hits",
   "hud.dexrider.it_hits": "It: %s❤",
   "hud.dexrider.it_hits_survive": "It: %s❤ · you last ≈%s",
   "guide.dexrider.page21": "§lTHE DRIVER'S READ§r\n\nTransformed, after trading blows, the Driver reads your target: its life, your hit, its hit, and roughly how many hits are left on each side.",
-  "key.dexrider.ktouch_dex": "K-Touch: Dex crest (Complete Form)"
+  "key.dexrider.ktouch_dex": "K-Touch: Dex crest (Complete Form)",
+  "item.dexrider.kagami_compass": "Kagami Compass",
+  "message.dexrider.kagami_static": "The needle spins. The mountain house isn't in this world.",
+  "message.dexrider.kagami_here": "The mountain house is right here. The workshop is in the basement.",
+  "message.dexrider.kagami_found": "Mountain house: %s blocks to the %s",
+  "message.dexrider.starter_title": "A letter with no stamp, in an old man's hand:",
+  "message.dexrider.starter_1": "\"The mountain house is open. It always was.\"",
+  "message.dexrider.starter_2": "\"There's a spare Driver in the basement workshop. The first three cards are with it.\"",
+  "message.dexrider.starter_3": "\"The compass knows the way. — G.K.\"",
+  "message.dexrider.starter_hint": "Right-click the Kagami Compass: it points to the mountain house (mountain biomes)."
 }

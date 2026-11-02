@@ -1,0 +1,129 @@
+{
+  "model": {
+    "type": "minecraft:range_dispatch",
+    "property": "minecraft:compass",
+    "target": "lodestone",
+    "scale": 16.0,
+    "entries": [
+      {
+        "threshold": 0.0,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/kagami_compass_00"
+        }
+      },
+      {
+        "threshold": 0.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/kagami_compass_01"
+        }
+      },
+      {
+        "threshold": 1.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/kagami_compass_02"
+        }
+      },
+      {
+        "threshold": 2.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/kagami_compass_03"
+        }
+      },
+      {
+        "threshold": 3.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/kagami_compass_04"
+        }
+      },
+      {
+        "threshold": 4.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/kagami_compass_05"
+        }
+      },
+      {
+        "threshold": 5.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/kagami_compass_06"
+        }
+      },
+      {
+        "threshold": 6.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/kagami_compass_07"
+        }
+      },
+      {
+        "threshold": 7.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/kagami_compass_08"
+        }
+      },
+      {
+        "threshold": 8.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/kagami_compass_09"
+        }
+      },
+      {
+        "threshold": 9.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/kagami_compass_10"
+        }
+      },
+      {
+        "threshold": 10.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/kagami_compass_11"
+        }
+      },
+      {
+        "threshold": 11.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/kagami_compass_12"
+        }
+      },
+      {
+        "threshold": 12.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/kagami_compass_13"
+        }
+      },
+      {
+        "threshold": 13.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/kagami_compass_14"
+        }
+      },
+      {
+        "threshold": 14.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/kagami_compass_15"
+        }
+      },
+      {
+        "threshold": 15.5,
+        "model": {
+          "type": "minecraft:model",
+          "model": "dexrider:item/kagami_compass_00"
+        }
+      }
+    ]
+  }
+}

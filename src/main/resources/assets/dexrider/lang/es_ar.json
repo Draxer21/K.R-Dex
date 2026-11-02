@@ -1116,12 +1116,21 @@
   "advancements.dexrider.combo.description": "Remata en combo con otro Rider",
   "guide.dexrider.page18": "§lLA SEÑAL§r\n\nLas notas de Gunma esconden un Rastreador. Apunta a la base del Arquitecto.\n\nAl fondo, el Núcleo de la Señal. Tócalo solo cuando estés listo.",
   "guide.dexrider.page19": "§lGUARDIA§r\n\nShift justo antes de un golpe de frente: parada y contraataque (+60 %).\n\nShift mantenido: bloqueas la mitad.\n\nFinal Attack con Riders cerca: combo.",
-  "guide.dexrider.page20": "§lDONDE EMPIEZA TODO§r\n\nLos Kagami guardan un Dex Driver de repuesto en la casa de la montaña, en el taller del sótano, con sus tres primeras cartas.\n\nBúscala en las montañas.",
+  "guide.dexrider.page20": "§lDONDE EMPIEZA TODO§r\n\nLos Kagami guardan un Dex Driver de repuesto en la casa de la montaña, en el taller del sótano, con sus tres primeras cartas.\n\nLa Brújula de los Kagami apunta a ella (brújula + tinte rojo + lingote de oro).",
   "hud.dexrider.target": "Objetivo",
   "hud.dexrider.you_hit": "Tú: %s❤",
   "hud.dexrider.you_hit_left": "Tú: %s❤ · faltan ≈%s",
   "hud.dexrider.it_hits": "Él: %s❤",
   "hud.dexrider.it_hits_survive": "Él: %s❤ · aguantas ≈%s",
   "guide.dexrider.page21": "§lLA LECTURA DEL DRIVER§r\n\nTransformado, tras intercambiar golpes, el Driver lee a tu objetivo: su vida, tu golpe, su golpe y cuántos golpes faltan de cada lado.",
-  "key.dexrider.ktouch_dex": "K-Touch: blasón de Dex (Complete Form)"
+  "key.dexrider.ktouch_dex": "K-Touch: blasón de Dex (Complete Form)",
+  "item.dexrider.kagami_compass": "Brújula de los Kagami",
+  "message.dexrider.kagami_static": "La aguja gira sin parar. En este mundo no está la casa de la montaña.",
+  "message.dexrider.kagami_here": "La casa de la montaña está aquí. El taller está en el sótano.",
+  "message.dexrider.kagami_found": "Casa de la montaña: a %s bloques al %s",
+  "message.dexrider.starter_title": "Una carta sin sello, con letra de anciano:",
+  "message.dexrider.starter_1": "«La casa de la montaña está abierta. Siempre lo estuvo.»",
+  "message.dexrider.starter_2": "«En el taller del sótano hay un Driver de repuesto. Las tres primeras cartas están con él.»",
+  "message.dexrider.starter_3": "«La brújula conoce el camino. — G. K.»",
+  "message.dexrider.starter_hint": "Clic derecho con la Brújula de los Kagami: apunta a la casa de la montaña (biomas de montaña)."
 }
