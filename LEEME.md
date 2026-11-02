@@ -457,9 +457,11 @@ mientras están activas; tus colores de ojos y acentos se conservan. `personaliz
 El Driver (cinturón) no se tiñe: siempre conserva su diseño.
 
 ### Cómo empezar en supervivencia
-El **Dex Driver** de repuesto de los Kagami está en la **casa de la montaña** (biomas de montaña), en el cofre del
-taller del sótano, junto con sus tres primeras cartas: **Kamen Ride: Dex**, **Attack Ride: Slash** y
-**Final Attack Ride: Dex**. La Guía del Rider System (se fabrica) lo recuerda en su última página.
+La primera vez que entras a un mundo recibes **una carta de Genzo** (en el chat), la **Guía del Rider System** y la
+**Brújula de los Kagami**: clic derecho y la aguja apunta a la **casa de la montaña** más cercana (biomas de montaña)
+y te dice a cuántos bloques y en qué dirección está. Ahí, en el cofre del taller del sótano, está el **Dex Driver** de
+repuesto con sus tres primeras cartas: **Kamen Ride: Dex**, **Attack Ride: Slash** y **Final Attack Ride: Dex**.
+Si pierdes la brújula: brújula + tinte rojo + lingote de oro.
 
 ### Escaneo (cómo conseguir cartas en supervivencia)
 Transformado y con el Driver encima, el Driver registra lo que **ve en uso real** a 20 bloques o
@@ -592,6 +594,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.31.0** — Al entrar por primera vez a un mundo: carta de Genzo, Guía y Brújula de los Kagami, que apunta a la casa de la montaña (donde está el Dex Driver). Receta de la brújula. 18 pruebas automáticas.
 - **0.30.0+26.2** — Primera versión para Minecraft 26.2 (rama `mc-26.2`): mismas funciones, adaptada a los cambios de 26.2 (tipos de entidad, pantallas, predicados de logros).
 - **0.30.0** — Form Ride Sky con alas de membrana (diseño propio): plegadas a la espalda en el suelo, se abren y aletean al volar; más grandes con el nivel y en Nv.3 dejan estela.
 - **0.29.0** — Cartas en alta resolución (128x128): marco dorado biselado, nombre de la familia arriba, arte ampliado sobre un degradado y el nombre de la carta abajo. Las de Complete Form con los blasones de verdad y borde de código de barras; icono del K-Touch a partir de la carcasa del aparato; la carta se ve más grande en la muesca (`cartas_hd_preview.png`).

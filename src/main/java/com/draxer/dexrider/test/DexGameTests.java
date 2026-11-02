@@ -63,6 +63,7 @@ public final class DexGameTests {
         FUNCTIONS.register("combos", () -> DexGameTests::combos);
         FUNCTIONS.register("architect", () -> DexGameTests::architect);
         FUNCTIONS.register("combat_read", () -> DexGameTests::combatRead);
+        FUNCTIONS.register("starter", () -> DexGameTests::starter);
     }
 
     // ------------------------------------------------------------------ utilidades
@@ -556,5 +557,15 @@ public final class DexGameTests {
             log(t, "ok: tu golpe " + tr.lastDealt + ", faltan " + hits + ", su golpe " + tr.lastTaken());
             h.succeed();
         });
+    }
+
+    static void starter(GameTestHelper h) {
+        String t = "starter";
+        ServerPlayer p = mockPlayer(h);
+        if (!com.draxer.dexrider.rider.Starter.onLogin(p)) { fail(h, t, "la primera vez no entrego nada"); return; }
+        if (!p.getInventory().contains(new ItemStack(DexItems.KAGAMI_COMPASS.get()))) { fail(h, t, "no recibio la brujula de los Kagami"); return; }
+        if (com.draxer.dexrider.rider.Starter.onLogin(p)) { fail(h, t, "la segunda vez volvio a entregar"); return; }
+        log(t, "ok: carta de Genzo y brujula la primera vez, nada la segunda");
+        h.succeed();
     }
 }

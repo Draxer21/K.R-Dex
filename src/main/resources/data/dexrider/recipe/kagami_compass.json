@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    "minecraft:compass",
+    "minecraft:red_dye",
+    "minecraft:gold_ingot"
+  ],
+  "result": {
+    "id": "dexrider:kagami_compass",
+    "count": 1
+  }
+}

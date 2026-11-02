@@ -112,6 +112,10 @@ public final class DexItems {
     // ---------- Arco de la Senal (Dai-Shocker que no es la casa de la montania) ----------
     public static final DeferredItem<com.draxer.dexrider.item.SignalTrackerItem> SIGNAL_TRACKER = ITEMS.registerItem("signal_tracker",
             props -> new com.draxer.dexrider.item.SignalTrackerItem(props.stacksTo(1).rarity(Rarity.RARE)));
+    /** Brujula de los Kagami: apunta a la casa de la montania (donde esta el Dex Driver de repuesto). */
+    public static final DeferredItem<com.draxer.dexrider.item.SignalTrackerItem> KAGAMI_COMPASS = ITEMS.registerItem("kagami_compass",
+            props -> new com.draxer.dexrider.item.SignalTrackerItem(props.stacksTo(1).rarity(Rarity.UNCOMMON),
+                    com.draxer.dexrider.item.SignalTrackerItem.MOUNTAIN_HOUSE, "kagami"));
     public static final DeferredItem<net.minecraft.world.item.BlockItem> SIGNAL_CORE = ITEMS.registerItem("signal_core",
             props -> new net.minecraft.world.item.BlockItem(DexBlocks.SIGNAL_CORE.get(), props.useBlockDescriptionPrefix().rarity(Rarity.EPIC)));
 
@@ -199,6 +203,7 @@ public final class DexItems {
                         }
                         output.accept(K_TOUCH.get());
                         output.accept(COMPLETE_FORM_CARD.get());
+                        output.accept(KAGAMI_COMPASS.get());
                         output.accept(SIGNAL_TRACKER.get());
                         output.accept(SIGNAL_CORE.get());
                         output.accept(COMPLETE_FORM_CARD_2.get());

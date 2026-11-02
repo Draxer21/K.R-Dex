@@ -28,9 +28,21 @@ import java.util.Optional;
  */
 public class SignalTrackerItem extends Item {
     public static final TagKey<Structure> TARGET = TagKey.create(Registries.STRUCTURE, DexRider.id("signal_base"));
+    /** La brujula de los Kagami apunta a la casa de la montania. */
+    public static final TagKey<Structure> MOUNTAIN_HOUSE = TagKey.create(Registries.STRUCTURE, DexRider.id("mountain_house"));
+
+    private final TagKey<Structure> target;
+    private final String messages;
 
     public SignalTrackerItem(Properties props) {
+        this(props, TARGET, "tracker");
+    }
+
+    /** Busca la estructura mas cercana de {@code target}; los mensajes son message.dexrider.{messages}_static/_here/_found. */
+    public SignalTrackerItem(Properties props, TagKey<Structure> target, String messages) {
         super(props);
+        this.target = target;
+        this.messages = messages;
     }
 
     @Override
@@ -39,12 +51,12 @@ public class SignalTrackerItem extends Item {
         if (!(level instanceof ServerLevel server) || !(player instanceof net.minecraft.server.level.ServerPlayer sp)) return InteractionResult.SUCCESS;
         player.getCooldowns().addCooldown(stack, 60);
         if (server.dimension() != Level.OVERWORLD) {
-            sp.sendSystemMessage(Component.translatable("message.dexrider.tracker_static").withStyle(ChatFormatting.GRAY), true);
+            sp.sendSystemMessage(Component.translatable("message.dexrider." + messages + "_static").withStyle(ChatFormatting.GRAY), true);
             return InteractionResult.SUCCESS;
         }
-        BlockPos found = server.findNearestMapStructure(TARGET, player.blockPosition(), 100, false);
+        BlockPos found = server.findNearestMapStructure(target, player.blockPosition(), 100, false);
         if (found == null) {
-            sp.sendSystemMessage(Component.translatable("message.dexrider.tracker_static").withStyle(ChatFormatting.GRAY), true);
+            sp.sendSystemMessage(Component.translatable("message.dexrider." + messages + "_static").withStyle(ChatFormatting.GRAY), true);
             return InteractionResult.SUCCESS;
         }
         stack.set(DataComponents.LODESTONE_TRACKER, new LodestoneTracker(Optional.of(GlobalPos.of(server.dimension(), found)), false));
@@ -54,8 +66,8 @@ public class SignalTrackerItem extends Item {
                 : Math.abs(dz) > Math.abs(dx) * 2 ? (dz > 0 ? "south" : "north")
                 : (dz > 0 ? "south" : "north") + (dx > 0 ? "east" : "west");
         sp.sendSystemMessage(dist < 40
-                ? Component.translatable("message.dexrider.tracker_here").withStyle(ChatFormatting.RED)
-                : Component.translatable("message.dexrider.tracker_found", dist, Component.translatable("direction.dexrider." + dir))
+                ? Component.translatable("message.dexrider." + messages + "_here").withStyle(ChatFormatting.RED)
+                : Component.translatable("message.dexrider." + messages + "_found", dist, Component.translatable("direction.dexrider." + dir))
                         .withStyle(ChatFormatting.DARK_RED), true);
         server.playSound(null, player.getX(), player.getY(), player.getZ(), SoundEvents.AMETHYST_BLOCK_RESONATE, SoundSource.PLAYERS, 1.0F, 0.6F);
         return InteractionResult.SUCCESS;
