@@ -1,0 +1,15 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_driver": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": { "items": [ { "items": "dexrider:dex_driver" } ] }
+    },
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": { "recipe": "dexrider:card_armed_ride_ride_booker" }
+    }
+  },
+  "requirements": [ [ "has_driver", "has_the_recipe" ] ],
+  "rewards": { "recipes": [ "dexrider:card_armed_ride_ride_booker" ] }
+}

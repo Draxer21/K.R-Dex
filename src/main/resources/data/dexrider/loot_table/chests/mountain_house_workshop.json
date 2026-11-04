@@ -42,6 +42,15 @@
       "entries": [
         {
           "type": "minecraft:item",
+          "name": "dexrider:card_armed_ride_ride_booker"
+        }
+      ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
           "name": "dexrider:cipher_blaster",
           "weight": 1
         }
