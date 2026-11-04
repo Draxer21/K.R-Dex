@@ -469,8 +469,18 @@ El Driver (cinturón) no se tiñe: siempre conserva su diseño.
 La primera vez que entras a un mundo recibes **una carta de Genzo** (en el chat), la **Guía del Rider System** y la
 **Brújula de los Kagami**: clic derecho y la aguja apunta a la **casa de la montaña** más cercana (biomas de montaña)
 y te dice a cuántos bloques y en qué dirección está. Ahí, en el cofre del taller del sótano, está el **Dex Driver** de
-repuesto con sus tres primeras cartas: **Kamen Ride: Dex**, **Attack Ride: Slash** y **Final Attack Ride: Dex**.
+repuesto con sus primeras cartas: **Kamen Ride: Dex**, **Attack Ride: Slash**, **Final Attack Ride: Dex** y
+**Armed Ride: Ride Booker** (el arma espada / pistola).
 Si pierdes la brújula: brújula + tinte rojo + lingote de oro.
+
+El **estuche de cartas** del Ride Booker no es un objeto aparte: va dentro del Dex Driver y se abre con **G**.
+La carta **Armed Ride: Ride Booker** (el arma) también se fabrica, una vez que tienes el Driver:
+
+```
+ . tinte negro .
+ hierro  libro  hierro
+ . redstone .
+```
 
 ### Escaneo (cómo conseguir cartas en supervivencia)
 Transformado y con el Driver encima, el Driver registra lo que **ve en uso real** a 20 bloques o
@@ -603,6 +613,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.32.1** — Receta de la carta *Armed Ride: Ride Booker* (tinte negro, libro, 2 lingotes de hierro, redstone; se desbloquea al tener el Driver) y la carta aparece en el cofre del taller de la casa de la montaña.
 - **0.32.0** — Ride Booker más grande (5 mazos × 27) y guardado automático de cartas nuevas, botón *Guardar todo*, rueda de cartas (C) y Alt + rueda del ratón para pasar de carta. 19 pruebas automáticas.
 - **0.31.0** — Al entrar por primera vez a un mundo: carta de Genzo, Guía y Brújula de los Kagami, que apunta a la casa de la montaña (donde está el Dex Driver). Receta de la brújula. 18 pruebas automáticas.
 - **0.30.0+26.2** — Primera versión para Minecraft 26.2 (rama `mc-26.2`): mismas funciones, adaptada a los cambios de 26.2 (tipos de entidad, pantallas, predicados de logros).

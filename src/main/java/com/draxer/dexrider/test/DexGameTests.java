@@ -588,7 +588,9 @@ public final class DexGameTests {
         com.draxer.dexrider.menu.Booker.give(p, c);
         if (p.getInventory().contains(new ItemStack(cItem))) { fail(h, t, "la carta entregada fue al inventario y no al Booker"); return; }
         if (!com.draxer.dexrider.menu.Booker.load(driver).get(1).is(cItem)) { fail(h, t, "la carta entregada no esta en el Booker"); return; }
-        log(t, "ok: Booker viejo remapeado, guardado automatico sin repetidas");
+        var recipe = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.RECIPE, DexRider.id("card_armed_ride_ride_booker"));
+        if (h.getLevel().getServer().getRecipeManager().byKey(recipe).isEmpty()) { fail(h, t, "falta la receta de la carta Armed Ride: Ride Booker"); return; }
+        log(t, "ok: Booker viejo remapeado, guardado automatico sin repetidas, receta del arma");
         h.succeed();
     }
 }
