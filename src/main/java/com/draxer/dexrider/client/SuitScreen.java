@@ -304,6 +304,7 @@ public class SuitScreen extends Screen {
         if (mc.level == null) return null;
         if (stand == null || stand.level() != mc.level) {
             stand = new ArmorStand(mc.level, 0, 0, 0);
+            stand.setId(-0x5D3);   // no esta en el mundo: en 26.2 toda entidad necesita un id para dibujarse
             stand.setInvisible(true);
             stand.setNoBasePlate(true);
             stand.setShowArms(true);
