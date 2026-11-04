@@ -13,6 +13,8 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.EquipmentSlot;
 
 import java.util.function.Function;
+import java.util.function.Predicate;
+import java.util.function.ToIntBiFunction;
 import java.util.function.ToIntFunction;
 
 /**
@@ -21,6 +23,7 @@ import java.util.function.ToIntFunction;
  *
  * Si la funcion de textura devuelve null, la capa no se dibuja.
  * fullBright = true: se dibuja a plena luz, para que los ojos se vean encendidos de noche.
+ * El color puede depender del segmento (casco, pecho, brazos, piernas, botas): asi se tine cada zona por separado.
  */
 public class TintLayer<R extends HumanoidRenderState & GeoRenderState>
         extends GeoRenderLayer<DexArmorItem, GeoArmorRenderer.RenderData, R> {
@@ -29,11 +32,16 @@ public class TintLayer<R extends HumanoidRenderState & GeoRenderState>
 
     private final GeoArmorRenderer<DexArmorItem, R> armorRenderer;
     private final Function<R, Identifier> texture;
-    private final ToIntFunction<R> color;
-    private final boolean fullBright;
+    private final ToIntBiFunction<R, GeoArmorRenderer.ArmorSegment> color;
+    private final Predicate<R> fullBright;
 
     public TintLayer(GeoArmorRenderer<DexArmorItem, R> renderer, Function<R, Identifier> texture,
                      ToIntFunction<R> color, boolean fullBright) {
+        this(renderer, texture, (state, segment) -> color.applyAsInt(state), state -> fullBright);
+    }
+
+    public TintLayer(GeoArmorRenderer<DexArmorItem, R> renderer, Function<R, Identifier> texture,
+                     ToIntBiFunction<R, GeoArmorRenderer.ArmorSegment> color, Predicate<R> fullBright) {
         super(renderer);
         this.armorRenderer = renderer;
         this.texture = texture;
@@ -57,8 +65,7 @@ public class TintLayer<R extends HumanoidRenderState & GeoRenderState>
         final Identifier texture = getTextureResource(renderState);
         if (texture == null) return;   // capa desactivada en este momento
         final RenderType renderType = RenderTypes.armorCutoutNoCull(texture);
-        final int argb = 0xFF000000 | (this.color.applyAsInt(renderState) & 0xFFFFFF);
-        final int light = this.fullBright ? FULL_BRIGHT : renderPassInfo.packedLight();
+        final int light = this.fullBright.test(renderState) ? FULL_BRIGHT : renderPassInfo.packedLight();
         final int overlay = renderPassInfo.packedOverlay();
 
         renderTasks.order(1).submitCustomGeometry(renderPassInfo.poseStack(), renderType, (pose, vertexConsumer) -> {
@@ -66,6 +73,7 @@ public class TintLayer<R extends HumanoidRenderState & GeoRenderState>
             renderPassInfo.poseStack().last().set(pose);
             renderPassInfo.renderPosed(() -> {
                 for (GeoArmorRenderer.ArmorSegment segment : this.armorRenderer.getSegmentsForSlot(renderState, slot)) {
+                    final int argb = 0xFF000000 | (this.color.applyAsInt(renderState, segment) & 0xFFFFFF);
                     renderPassInfo.model().getBone(this.armorRenderer.getBoneNameForSegment(renderState, segment))
                             .ifPresent(bone -> bone.positionAndRender(renderPassInfo, vertexConsumer, light, overlay, argb));
                 }

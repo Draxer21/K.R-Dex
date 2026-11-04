@@ -2,7 +2,7 @@ package com.draxer.dexrider.network;
 
 import com.draxer.dexrider.DexRider;
 import com.draxer.dexrider.item.DexDriverItem;
-import com.draxer.dexrider.item.SuitConfig;
+import com.draxer.dexrider.item.SuitSlots;
 import com.draxer.dexrider.registry.DexComponents;
 import com.draxer.dexrider.registry.DexItems;
 import com.draxer.dexrider.registry.DexSounds;
@@ -17,13 +17,13 @@ import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.network.handling.IPayloadContext;
 
 /** Cliente -> servidor: "guarda esta personalizacion del traje". */
-public record SuitPayload(SuitConfig config) implements CustomPacketPayload {
+public record SuitPayload(SuitSlots slots) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<SuitPayload> TYPE =
             new CustomPacketPayload.Type<>(DexRider.id("suit"));
 
     public static final StreamCodec<ByteBuf, SuitPayload> STREAM_CODEC =
-            SuitConfig.STREAM_CODEC.map(SuitPayload::new, SuitPayload::config);
+            SuitSlots.STREAM_CODEC.map(SuitPayload::new, SuitPayload::slots);
 
     @Override
     public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
@@ -34,11 +34,12 @@ public record SuitPayload(SuitConfig config) implements CustomPacketPayload {
         if (!(context.player() instanceof ServerPlayer player)) return;
         ItemStack driver = DexDriverItem.findDriver(player);
         if (driver.isEmpty()) return;
-        driver.set(DexComponents.SUIT.get(), payload.config());
+        driver.set(DexComponents.SUIT_SLOTS.get(), payload.slots().normalized());
+        driver.remove(DexComponents.SUIT.get());
 
         // Si esta transformado, el cambio se ve al instante (el peto lleva la copia que leen los demas)
         ItemStack chest = player.getItemBySlot(EquipmentSlot.CHEST);
-        if (chest.is(DexItems.DEX_CHESTPLATE.get())) chest.set(DexComponents.SUIT.get(), payload.config());
+        if (chest.is(DexItems.DEX_CHESTPLATE.get())) com.draxer.dexrider.rider.Suits.dressOwn(chest, driver);
 
         if (player.level() instanceof ServerLevel level) DexSounds.play(level, player, DexSounds.MODE_SWITCH, 0.8F, 1.1F);
         player.sendSystemMessage(Component.translatable("message.dexrider.suit_saved"), true);

@@ -65,6 +65,7 @@ public final class DexGameTests {
         FUNCTIONS.register("combat_read", () -> DexGameTests::combatRead);
         FUNCTIONS.register("starter", () -> DexGameTests::starter);
         FUNCTIONS.register("booker", () -> DexGameTests::booker);
+        FUNCTIONS.register("suit_editor", () -> DexGameTests::suitEditor);
     }
 
     // ------------------------------------------------------------------ utilidades
@@ -591,6 +592,41 @@ public final class DexGameTests {
         var recipe = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.RECIPE, DexRider.id("card_armed_ride_ride_booker"));
         if (h.getLevel().getServer().getRecipeManager().byKey(recipe).isEmpty()) { fail(h, t, "falta la receta de la carta Armed Ride: Ride Booker"); return; }
         log(t, "ok: Booker viejo remapeado, guardado automatico sin repetidas, receta del arma");
+        h.succeed();
+    }
+
+    static void suitEditor(GameTestHelper h) {
+        String t = "suit_editor";
+        ServerPlayer p = player(h);
+        ItemStack driver = DexDriverItem.findDriver(p);
+        // 1) el traje de antes de 0.33 pasa a la primera ranura
+        driver.set(com.draxer.dexrider.registry.DexComponents.SUIT.get(), com.draxer.dexrider.item.SuitConfig.DEFAULT.withMain(0x1E69EB));
+        var slots = com.draxer.dexrider.item.SuitSlots.of(driver);
+        var base = com.draxer.dexrider.item.SuitLooks.resolve(slots.current(), "base");
+        if (base.color("chest") != 0x1E69EB) { fail(h, t, "no migro el traje antiguo"); return; }
+        // 2) herencia por estado
+        var look = com.draxer.dexrider.item.SuitLook.EMPTY.withColor("accent", 0x00FF00).withPart("scarf", "long").withPart("bogus", "x");
+        var prof = com.draxer.dexrider.item.SuitProfile.DEFAULT.withLook("base", look)
+                .withLook("violent", com.draxer.dexrider.item.SuitLook.EMPTY.withPart("spikes_head", "off"));
+        var violent = com.draxer.dexrider.item.SuitLooks.resolve(prof, "violent");
+        if (!violent.on("spikes_body") || violent.on("spikes_head") || !violent.on("crystal")) { fail(h, t, "la Violent no combino sus piezas con las tuyas"); return; }
+        if (!"long".equals(violent.part("scarf"))) { fail(h, t, "la Violent no heredo la bufanda de la base"); return; }
+        var sky = com.draxer.dexrider.item.SuitLooks.resolve(prof, "form_sky");
+        if (sky.color("helmet") != com.draxer.dexrider.rider.FormRide.SKY.suitColor() || sky.color("accent") != 0x00FF00) { fail(h, t, "la Form Ride no tomo su color y tus acentos"); return; }
+        var upg = com.draxer.dexrider.item.SuitLooks.resolve(prof, "upgrade");
+        if (upg.color("accent") == 0x00FF00) { fail(h, t, "la Upgrade hereda colores que no debe"); return; }
+        // 3) codigo para compartir (ida y vuelta; lo invalido se descarta)
+        var named = prof.withName("Prueba");
+        var back = com.draxer.dexrider.item.SuitProfile.fromCode(named.toCode());
+        if (back == null || !back.equals(named.sanitized())) { fail(h, t, "el codigo no devolvio el mismo diseno"); return; }
+        if (back.look("base").parts().containsKey("bogus")) { fail(h, t, "el codigo dejo pasar una pieza invalida"); return; }
+        if (com.draxer.dexrider.item.SuitProfile.fromCode("DEX1-basura!!") != null) { fail(h, t, "acepto un codigo roto"); return; }
+        // 4) guardar y ponerselo
+        driver.set(com.draxer.dexrider.registry.DexComponents.SUIT_SLOTS.get(), slots.with(2, named).withActive(2));
+        ItemStack chest = new ItemStack(DexItems.DEX_CHESTPLATE.get());
+        com.draxer.dexrider.rider.Suits.dressOwn(chest, driver);
+        if (!named.sanitized().equals(com.draxer.dexrider.rider.Suits.worn(chest))) { fail(h, t, "el peto no lleva el diseno activo"); return; }
+        log(t, "ok: migracion, herencia por estado, codigo " + named.toCode().length() + " letras, diseno puesto");
         h.succeed();
     }
 }

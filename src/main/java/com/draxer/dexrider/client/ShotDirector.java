@@ -143,6 +143,26 @@ public final class ShotDirector {
             stand(lvl, 3.2, null, "complete", false);
         }, 0, 1.4, 0.2, 0);
         s.add(new Step(t, () -> server(srv -> cmd(srv, "time set noon"))));
+        // 5b: el editor del traje (0.33): disenos de ejemplo en cada estado
+        t = scene(s, t + 2, "trajes_editor", lvl -> {
+            for (int i = 0; i < 5; i++) {
+                ArmorStand a = stand(lvl, -3.2 + i * 1.6, i == 1 ? "violent" : i == 2 ? "heroic" : null, null, i == 3);
+                if (a == null) continue;
+                ItemStack chest = a.getItemBySlot(EquipmentSlot.CHEST);
+                chest.set(DexComponents.SUIT_PROFILE.get(), sampleDesign());
+                if (i == 4) chest.set(DexComponents.FORM.get(), "half");
+            }
+        }, 0, 1.4, 0.2, 0);
+        // 5c: el editor abierto
+        s.add(new Step(t, () -> {
+            Minecraft mc = Minecraft.getInstance();
+            hudHidden(false);
+            com.draxer.dexrider.item.SuitSlots slots = com.draxer.dexrider.item.SuitSlots.DEFAULT.with(0, sampleDesign());
+            mc.gui.setScreen(new SuitScreen(slots));
+        }));
+        s.add(new Step(t + 30, () -> shoot("editor_traje")));
+        s.add(new Step(t + 34, () -> { Minecraft.getInstance().gui.setScreen(null); hudHidden(true); }));
+        t += 40;
         // Complete Form normal y Nv.2 (de frente y de espaldas para ver la capa)
         t = scene(s, t + 2, "complete_nv2", lvl -> {
             stand(lvl, -1.2, null, "complete", false);
@@ -266,6 +286,20 @@ public final class ShotDirector {
         level.addFreshEntity(e);
         SCENE.add(e);
         return e;
+    }
+
+    /** Diseno de ejemplo: azul metalico con bufanda larga y cresta, y cambios en cada estado. */
+    private static com.draxer.dexrider.item.SuitProfile sampleDesign() {
+        com.draxer.dexrider.item.SuitLook base = com.draxer.dexrider.item.SuitLook.EMPTY;
+        for (String z : com.draxer.dexrider.item.SuitLooks.MAIN_ZONES) base = base.withColor(z, 0x1E69EB);
+        base = base.withColor("accent", 0xB8BCC8).withColor("eyes", 0xF5E642).withColor("scarf", 0xCD1C28)
+                .withPart("scarf", "long").withPart("crest", "on").withPart("pauldrons", "flat").withPart("finish", "metal");
+        return com.draxer.dexrider.item.SuitProfile.DEFAULT.withName("Azul")
+                .withLook("base", base)
+                .withLook("violent", com.draxer.dexrider.item.SuitLook.EMPTY.withColor("chest", 0x1C1C24).withColor("eyes", 0xFF3020).withPart("spikes_body", "off"))
+                .withLook("heroic", com.draxer.dexrider.item.SuitLook.EMPTY.withColor("crystal", 0x1EA0A0).withPart("scarf", "short"))
+                .withLook("upgrade", com.draxer.dexrider.item.SuitLook.EMPTY.withColor("helmet", 0x28D250).withColor("arms", 0x28D250)
+                        .withColor("legs", 0x28D250).withColor("boots", 0x28D250).withPart("finish", "matte"));
     }
 
     private static ArmorStand stand(ServerLevel level, double dx, String emotion, String rider, boolean upgrade) {
