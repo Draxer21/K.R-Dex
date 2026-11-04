@@ -818,7 +818,7 @@
   "screen.dexrider.summon.dex.missing": "Complete Form: you need %s more Kamen Ride",
   "key.dexrider.booker_prev": "Ride Booker: previous card (Shift: previous deck)",
   "key.dexrider.booker_next": "Ride Booker: next card (Shift: next deck)",
-  "key.dexrider.booker_use": "Ride Booker: insert selected card",
+  "key.dexrider.booker_use": "Ride Booker: use card (hold + mouse wheel to switch)",
   "message.dexrider.booker_selected": "Ride Booker · %s · %s: %s",
   "message.dexrider.booker_deck_empty": "Ride Booker · %s: empty deck",
   "dialog.dexrider.cipher.accel.1": "Ten seconds. At seven I come back.",
@@ -1132,5 +1132,13 @@
   "message.dexrider.starter_1": "\"The mountain house is open. It always was.\"",
   "message.dexrider.starter_2": "\"There's a spare Driver in the basement workshop. The first three cards are with it.\"",
   "message.dexrider.starter_3": "\"The compass knows the way. — G.K.\"",
-  "message.dexrider.starter_hint": "Right-click the Kagami Compass: it points to the mountain house (mountain biomes)."
+  "message.dexrider.starter_hint": "Right-click the Kagami Compass: it points to the mountain house (mountain biomes).",
+  "message.dexrider.booker_stored": "%s → Ride Booker (%s, slot %s)",
+  "message.dexrider.booker_stored_all": "%s cards stored in the Ride Booker",
+  "booker.dexrider.store_all": "Store all",
+  "booker.dexrider.store_all.tip": "Moves every card in your inventory into the Booker (repeats stay out)",
+  "key.dexrider.card_wheel": "Card wheel",
+  "screen.dexrider.card_wheel": "Card wheel",
+  "screen.dexrider.card_wheel.hint": "Click a card to use it · scroll / arrows: deck",
+  "screen.dexrider.card_wheel.empty": "This deck is empty · scroll / arrows: deck"
 }

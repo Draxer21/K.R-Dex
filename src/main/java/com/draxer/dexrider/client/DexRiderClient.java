@@ -62,6 +62,12 @@ public class DexRiderClient {
     public static final Lazy<KeyMapping> BOOKER_USE_KEY = Lazy.of(() -> new KeyMapping(
             "key.dexrider.booker_use", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, CATEGORY));
 
+    /** C: rueda de cartas del mazo actual. */
+    public static final Lazy<KeyMapping> CARD_WHEEL_KEY = Lazy.of(() -> new KeyMapping(
+            "key.dexrider.card_wheel", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_C, CATEGORY));
+    /** Alt mantenido + rueda del raton = pasar carta; al soltar Alt sin girar la rueda, se usa la carta. */
+    private static boolean altWasDown, altScrolled;
+
     public static final java.util.List<Lazy<KeyMapping>> SUMMON_SLOTS = java.util.stream.IntStream.range(0, 9)
             .mapToObj(i -> Lazy.of(() -> new KeyMapping("key.dexrider.summon_" + (i + 1),
                     InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_KP_1 + i, CATEGORY)))
@@ -80,6 +86,7 @@ public class DexRiderClient {
         event.register(BOOKER_PREV_KEY.get());
         event.register(BOOKER_NEXT_KEY.get());
         event.register(BOOKER_USE_KEY.get());
+        event.register(CARD_WHEEL_KEY.get());
         for (Lazy<KeyMapping> k : SUMMON_SLOTS) event.register(k.get());
         event.register(KTOUCH_DEX_KEY.get());
     }
@@ -121,6 +128,17 @@ public class DexRiderClient {
     }
 
     @SubscribeEvent
+    static void onScroll(net.neoforged.neoforge.client.event.InputEvent.MouseScrollingEvent event) {
+        var mc = Minecraft.getInstance();
+        if (mc.player == null || mc.screen != null || !BOOKER_USE_KEY.get().isDown() || event.getScrollDeltaY() == 0) return;
+        if (com.draxer.dexrider.item.DexDriverItem.findDriver(mc.player).isEmpty()) return;
+        ClientPacketDistributor.sendToServer(new com.draxer.dexrider.network.QuickBookerPayload(event.getScrollDeltaY() > 0
+                ? com.draxer.dexrider.menu.RideBookerMenu.QUICK_PREV : com.draxer.dexrider.menu.RideBookerMenu.QUICK_NEXT));
+        altScrolled = true;
+        event.setCanceled(true);
+    }
+
+    @SubscribeEvent
     static void onClientTick(ClientTickEvent.Post event) {
         while (TRANSFORM_KEY.get().consumeClick()) {
             if (Minecraft.getInstance().player != null) {
@@ -141,9 +159,17 @@ public class DexRiderClient {
             if (mcp != null) ClientPacketDistributor.sendToServer(new com.draxer.dexrider.network.QuickBookerPayload(
                     mcp.isShiftKeyDown() ? com.draxer.dexrider.menu.RideBookerMenu.QUICK_DECK_NEXT : com.draxer.dexrider.menu.RideBookerMenu.QUICK_NEXT));
         }
-        while (BOOKER_USE_KEY.get().consumeClick()) {
-            if (mcp != null) ClientPacketDistributor.sendToServer(new com.draxer.dexrider.network.QuickBookerPayload(
+        while (BOOKER_USE_KEY.get().consumeClick()) { /* se usa al soltar */ }
+        boolean altDown = BOOKER_USE_KEY.get().isDown();
+        if (altWasDown && !altDown && !altScrolled && mcp != null && Minecraft.getInstance().screen == null)
+            ClientPacketDistributor.sendToServer(new com.draxer.dexrider.network.QuickBookerPayload(
                     com.draxer.dexrider.menu.RideBookerMenu.QUICK_USE));
+        if (!altDown) altScrolled = false;
+        altWasDown = altDown;
+        while (CARD_WHEEL_KEY.get().consumeClick()) {
+            if (mcp != null && Minecraft.getInstance().screen == null
+                    && !com.draxer.dexrider.item.DexDriverItem.findDriver(mcp).isEmpty())
+                Minecraft.getInstance().setScreen(new CardWheelScreen());
         }
         while (SUMMON_KEY.get().consumeClick()) {
             if (Minecraft.getInstance().player != null && Minecraft.getInstance().screen == null) {

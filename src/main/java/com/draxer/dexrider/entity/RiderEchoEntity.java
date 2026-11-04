@@ -201,7 +201,7 @@ public class RiderEchoEntity extends RiderMob implements Enemy {
         FX.cardPath(level, c, player.getEyePosition(), 3, rider.color);
         DexSounds.play(level, player, DexSounds.SCAN_COMPLETE, 1.3F, 0.9F);
         ItemStack card = new ItemStack(DexItems.card(rider.card).get());
-        if (!player.getInventory().add(card)) player.drop(card, false);
+        com.draxer.dexrider.menu.Booker.give(player, card);
         DexDriverItem.registerCard(player, rider.card);
         player.sendSystemMessage(Component.translatable("message.dexrider.echo_card", rider.displayName())
                 .withStyle(ChatFormatting.LIGHT_PURPLE));

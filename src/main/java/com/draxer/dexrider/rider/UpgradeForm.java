@@ -74,7 +74,7 @@ public final class UpgradeForm {
         if (bits != 3 || deck.has(DexCard.UPGRADE_FORM)) return;
         DexDriverItem.setDeck(driver, deck.withCard(DexCard.UPGRADE_FORM));
         ItemStack card = new ItemStack(DexItems.card(DexCard.UPGRADE_FORM).get());
-        if (!p.getInventory().add(card)) p.drop(card, false);
+        com.draxer.dexrider.menu.Booker.give(p, card);
         p.sendSystemMessage(Component.translatable("message.dexrider.upgrade_forged").withStyle(ChatFormatting.RED));
     }
 }
