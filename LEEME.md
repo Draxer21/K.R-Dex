@@ -498,6 +498,11 @@ La carta **Armed Ride: Ride Booker** (el arma) también se fabrica, una vez que 
 Transformado y con el Driver encima, el Driver registra lo que **ve en uso real** a 20 bloques o
 menos (con línea de visión y mirando hacia ahí). Lo que te hacen a ti no cuenta.
 
+**Archivo del Driver** (tecla **K**, o el botón *Archivo* del Ride Booker): todas las cartas del juego por familia,
+como un álbum. Las que tienes se ven a color con su nivel (puntos dorados); las que no, en silueta, con las muestras
+que llevas y una **pista de dónde conseguirla**. Al sumar una muestra, generar una carta o subirla de nivel aparece
+un aviso arriba de la pantalla con la carta y su barra de muestras.
+
 | Carta | Qué tienes que ver | Muestras |
 |---|---|---|
 | Sword | a alguien atacar con una espada | 1 |
@@ -621,10 +626,11 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Siguientes pasos
 
-- Attack Ride del fanfic (Blast, Nitro Burst, Ground Wave, Gale, Razor Feather, Overclock).
+- Form Ride acuática, misiones de la familia Kagami, opciones de equilibrio en la configuración, duelos entre jugadores.
 
 ## Historial de versiones
 
+- **0.34.0** — Archivo del Driver (tecla K o botón del Ride Booker): todas las cartas como álbum, en silueta las que faltan, con muestras, niveles y una pista de cómo conseguir cada una. Aviso de escaneo en pantalla al sumar muestras, generar una carta o subirla de nivel. 21 pruebas automáticas.
 - **0.33.0** — Editor del traje: maniquí 3D, colores por zona (casco, pecho, brazos, piernas, botas, acentos, ojos, plata, negro, cristal, bufanda), piezas nuevas (hombreras lisas, bufanda corta o larga, cresta) y opciones (púas, brillo, acabado mate o metálico), una apariencia propia para Base, Violent, Heroic, Upgrade y cada Form Ride, 5 ranuras de diseños y código para compartir. 20 pruebas automáticas.
 - **0.32.1** — Receta de la carta *Armed Ride: Ride Booker* (tinte negro, libro, 2 lingotes de hierro, redstone; se desbloquea al tener el Driver) y la carta aparece en el cofre del taller de la casa de la montaña.
 - **0.32.0** — Ride Booker más grande (5 mazos × 27) y guardado automático de cartas nuevas, botón *Guardar todo*, rueda de cartas (C) y Alt + rueda del ratón para pasar de carta. 19 pruebas automáticas.

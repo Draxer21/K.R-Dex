@@ -66,6 +66,7 @@ public final class DexGameTests {
         FUNCTIONS.register("starter", () -> DexGameTests::starter);
         FUNCTIONS.register("booker", () -> DexGameTests::booker);
         FUNCTIONS.register("suit_editor", () -> DexGameTests::suitEditor);
+        FUNCTIONS.register("archive_hints", () -> DexGameTests::archiveHints);
     }
 
     // ------------------------------------------------------------------ utilidades
@@ -627,6 +628,29 @@ public final class DexGameTests {
         com.draxer.dexrider.rider.Suits.dressOwn(chest, driver);
         if (!named.sanitized().equals(com.draxer.dexrider.rider.Suits.worn(chest))) { fail(h, t, "el peto no lleva el diseno activo"); return; }
         log(t, "ok: migracion, herencia por estado, codigo " + named.toCode().length() + " letras, diseno puesto");
+        h.succeed();
+    }
+
+    /** El Archivo del Driver: cada carta tiene nombre, pista y textura en todos los idiomas. */
+    static void archiveHints(GameTestHelper h) {
+        String t = "archive_hints";
+        for (String lang : new String[]{"en_us", "es_es", "es_mx", "es_ar", "es_cl"}) {
+            com.google.gson.JsonObject json;
+            try (var in = DexRider.class.getResourceAsStream("/assets/dexrider/lang/" + lang + ".json")) {
+                if (in == null) { fail(h, t, "falta el idioma " + lang); return; }
+                json = com.google.gson.JsonParser.parseReader(new java.io.InputStreamReader(in, java.nio.charset.StandardCharsets.UTF_8)).getAsJsonObject();
+            } catch (java.io.IOException e) { fail(h, t, "no pude leer " + lang); return; }
+            for (DexCard c : DexCard.values()) {
+                if (!json.has("hint.dexrider." + c.id())) { fail(h, t, lang + ": falta la pista de " + c.id()); return; }
+                if (!json.has(c.translationKey())) { fail(h, t, lang + ": falta el nombre de " + c.id()); return; }
+            }
+        }
+        for (DexCard c : DexCard.values()) {
+            if (DexRider.class.getResource("/assets/dexrider/textures/item/" + c.itemName() + ".png") == null) {
+                fail(h, t, "falta la textura de " + c.id()); return;
+            }
+        }
+        log(t, "ok: " + DexCard.values().length + " cartas con nombre, pista y textura");
         h.succeed();
     }
 }
