@@ -584,9 +584,10 @@ public final class DexGameTests {
         if (!com.draxer.dexrider.menu.Booker.store(p, b)) { fail(h, t, "no guardo una carta nueva"); return; }
         if (!com.draxer.dexrider.menu.Booker.load(driver).get(0).is(b.getItem())) { fail(h, t, "la carta nueva no fue al primer hueco del mazo"); return; }
         if (com.draxer.dexrider.menu.Booker.store(p, a.copy())) { fail(h, t, "guardo una carta repetida"); return; }
+        var cItem = c.getItem();
         com.draxer.dexrider.menu.Booker.give(p, c);
-        if (p.getInventory().contains(new ItemStack(c.getItem()))) { fail(h, t, "la carta entregada fue al inventario y no al Booker"); return; }
-        if (!com.draxer.dexrider.menu.Booker.load(driver).get(1).is(c.getItem())) { fail(h, t, "la carta entregada no esta en el Booker"); return; }
+        if (p.getInventory().contains(new ItemStack(cItem))) { fail(h, t, "la carta entregada fue al inventario y no al Booker"); return; }
+        if (!com.draxer.dexrider.menu.Booker.load(driver).get(1).is(cItem)) { fail(h, t, "la carta entregada no esta en el Booker"); return; }
         log(t, "ok: Booker viejo remapeado, guardado automatico sin repetidas");
         h.succeed();
     }
