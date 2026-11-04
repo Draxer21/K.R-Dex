@@ -24,17 +24,18 @@ import net.minecraft.world.item.ItemStack;
  * Ride Booker: el estuche de cartas que Dex lleva en la cadera (en el fanfic, Mei lo diseno y el Driver lo genero
  * con cinco mazos). Se guarda en el Driver, asi que va contigo y no se pierde al destransformarte.
  *
- *  - 5 mazos (pestanas) de 18 cartas: Rescate, Multitudes, 1 vs 1, Persecucion, Todo salio mal.
+ *  - 5 mazos (pestanas) de 27 cartas: Rescate, Multitudes, 1 vs 1, Persecucion, Todo salio mal.
+ *  - GUARDAR TODO: mete en el mazo (y si no cabe, en los demas) las cartas que tengas en el inventario.
  *  - Solo admite cartas Rider (y la carta de Complete Form).
  *  - Modo INSERTAR: haces clic en una carta y se activa al instante sin sacarla (insercion directa, como en el fanfic).
  */
 public class RideBookerMenu extends AbstractContainerMenu {
 
     public static final int DECKS = 5;
-    public static final int PER_DECK = 18;
+    public static final int PER_DECK = 27;
     public static final int SIZE = DECKS * PER_DECK;
-    /** Botones: 0..4 = mazo, 10 = alternar modo insertar. */
-    public static final int BUTTON_INSERT = 10;
+    /** Botones: 0..4 = mazo, 10 = alternar modo insertar, 11 = guardar todas las cartas del inventario. */
+    public static final int BUTTON_INSERT = 10, BUTTON_STORE_ALL = 11;
 
     private final Container storage;
     private final Player player;
@@ -69,12 +70,12 @@ public class RideBookerMenu extends AbstractContainerMenu {
         super(DexMenus.RIDE_BOOKER.get(), id);
         this.storage = storage;
         this.player = inv.player;
-        for (int row = 0; row < 2; row++) {
+        for (int row = 0; row < 3; row++) {
             for (int col = 0; col < 9; col++) {
                 addSlot(new CardSlot(view, row * 9 + col, 8 + col * 18, 34 + row * 18));
             }
         }
-        addStandardInventorySlots(inv, 8, 84);
+        addStandardInventorySlots(inv, 8, 102);
     }
 
     public int deck() { return deck; }
@@ -112,7 +113,38 @@ public class RideBookerMenu extends AbstractContainerMenu {
             insertMode = !insertMode;
             return true;
         }
+        if (id == BUTTON_STORE_ALL) {
+            if (p instanceof ServerPlayer) storeAll(p);
+            return true;
+        }
         return false;
+    }
+
+    /** Pasa al Booker todas las cartas del inventario (sin copias de las que ya estan): mazo actual primero. */
+    private void storeAll(Player p) {
+        var inv = p.getInventory();
+        int moved = 0;
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            ItemStack s = inv.getItem(i);
+            if (s.isEmpty() || !isCard(s)) continue;
+            boolean dup = false;
+            for (int k = 0; k < SIZE; k++) if (!storage.getItem(k).isEmpty() && storage.getItem(k).is(s.getItem())) { dup = true; break; }
+            if (dup) continue;
+            int free = -1;
+            for (int d = 0; d < DECKS && free < 0; d++) {
+                int dd = (deck + d) % DECKS;
+                for (int k = 0; k < PER_DECK; k++) if (storage.getItem(dd * PER_DECK + k).isEmpty()) { free = dd * PER_DECK + k; break; }
+            }
+            if (free < 0) break;
+            storage.setItem(free, s.copyWithCount(1));
+            s.shrink(1);
+            moved++;
+        }
+        storage.setChanged();
+        if (p instanceof ServerPlayer sp) {
+            sp.sendSystemMessage(Component.translatable("message.dexrider.booker_stored_all", moved), true);
+            if (moved > 0 && sp.level() instanceof ServerLevel level) DexSounds.play(level, sp, DexSounds.CARD_INSERT, 0.8F, 1.0F);
+        }
     }
 
     @Override
@@ -156,7 +188,7 @@ public class RideBookerMenu extends AbstractContainerMenu {
         if (driver.isEmpty()) return;
         NonNullList<ItemStack> now = NonNullList.withSize(SIZE, ItemStack.EMPTY);
         for (int i = 0; i < SIZE; i++) now.set(i, c.getItem(i));
-        driver.set(DexComponents.BOOKER.get(), BookerContents.of(now));
+        Booker.save(driver, now);
     }
 
     @Override
@@ -168,18 +200,19 @@ public class RideBookerMenu extends AbstractContainerMenu {
     // ------------------------------------------------------------------ uso rapido en combate (sin abrir el Booker)
 
     public static final int QUICK_PREV = 0, QUICK_NEXT = 1, QUICK_DECK_PREV = 2, QUICK_DECK_NEXT = 3, QUICK_USE = 4;
-    private static final String[] DECK_KEYS = {"rescue", "crowd", "duel", "chase", "everything_wrong"};
+    /** Rueda de cartas: QUICK_SLOT + ranura = usar esa ranura. */
+    public static final int QUICK_SLOT = 100;
+    public static final String[] DECK_KEYS = {"rescue", "crowd", "duel", "chase", "everything_wrong"};
 
     /**
      * Teclas rapidas: elegir la carta anterior/siguiente del mazo, cambiar de mazo, o insertar la elegida.
      * La eleccion se guarda en el Driver y se muestra encima de la barra de objetos.
      */
     public static void quick(ServerPlayer player, int action) {
+        if (action >= QUICK_SLOT) { useSlot(player, action - QUICK_SLOT); return; }
         ItemStack driver = DexDriverItem.findDriver(player);
         if (driver.isEmpty() || !(player.level() instanceof ServerLevel level)) return;
-        NonNullList<ItemStack> items = NonNullList.withSize(SIZE, ItemStack.EMPTY);
-        BookerContents saved = driver.get(DexComponents.BOOKER.get());
-        if (saved != null) saved.copyInto(items);
+        NonNullList<ItemStack> items = Booker.load(driver);
         Integer selBox = driver.get(DexComponents.BOOKER_SEL.get());
         int sel = selBox == null ? 0 : Math.floorMod(selBox, SIZE);
         int deck = sel / PER_DECK;
@@ -233,6 +266,16 @@ public class RideBookerMenu extends AbstractContainerMenu {
                 : Component.translatable("message.dexrider.booker_selected", deckName, (sel % PER_DECK) + 1, chosen.getHoverName()), true);
     }
 
+    /** Rueda de cartas: elegir la ranura {@code slot} (0..SIZE-1) y usarla en el acto. */
+    public static void useSlot(ServerPlayer player, int slot) {
+        ItemStack driver = DexDriverItem.findDriver(player);
+        if (driver.isEmpty() || slot < 0 || slot >= SIZE) return;
+        NonNullList<ItemStack> items = Booker.load(driver);
+        if (items.get(slot).isEmpty()) return;
+        driver.set(DexComponents.BOOKER_SEL.get(), slot);
+        quick(player, QUICK_USE);
+    }
+
     /** Siguiente ranura con carta dentro del mazo (dando la vuelta). includeStart = mirar tambien la ranura de partida. */
     private static int scan(NonNullList<ItemStack> items, int deck, int from, int step, boolean includeStart) {
         for (int n = includeStart ? 0 : 1; n <= PER_DECK; n++) {
@@ -257,9 +300,7 @@ public class RideBookerMenu extends AbstractContainerMenu {
             player.sendSystemMessage(Component.translatable("message.dexrider.need_driver"), true);
             return;
         }
-        NonNullList<ItemStack> items = NonNullList.withSize(SIZE, ItemStack.EMPTY);
-        BookerContents saved = driver.get(DexComponents.BOOKER.get());
-        if (saved != null) saved.copyInto(items);
+        NonNullList<ItemStack> items = Booker.load(driver);
         // cada cambio se guarda en el Driver
         SimpleContainer storage = new SimpleContainer(SIZE) {
             private boolean loading = true;

@@ -241,7 +241,7 @@ public final class Scanner {
         // Carta nueva
         DexDriverItem.setDeck(driver, deck.withCard(card));
         ItemStack newCard = new ItemStack(DexItems.card(card).get());
-        if (!player.getInventory().add(newCard)) player.drop(newCard, false);
+        com.draxer.dexrider.menu.Booker.give(player, newCard);
         DexAdvancements.award(player, "first_scan");
         player.sendSystemMessage(Component.translatable("message.dexrider.scan_complete",
                 Component.translatable(card.translationKey())), true);

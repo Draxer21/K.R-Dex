@@ -9,7 +9,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
 /**
- * Pantalla del Ride Booker: cinco mazos (pestanas), 18 cartas por mazo, y el modo INSERTAR
+ * Pantalla del Ride Booker: cinco mazos (pestanas), 27 cartas por mazo, y el modo INSERTAR
  * (clic en una carta = se activa al instante sin sacarla del Booker).
  */
 public class RideBookerScreen extends AbstractContainerScreen<RideBookerMenu> {
@@ -19,10 +19,10 @@ public class RideBookerScreen extends AbstractContainerScreen<RideBookerMenu> {
     private Button insertButton;
 
     public RideBookerScreen(RideBookerMenu menu, Inventory inv, Component title) {
-        super(menu, inv, title, 176, 166);
+        super(menu, inv, title, 176, 184);
         this.titleLabelX = 8;
         this.titleLabelY = 6;
-        this.inventoryLabelY = 72;
+        this.inventoryLabelY = 90;
     }
 
     @Override
@@ -39,6 +39,10 @@ public class RideBookerScreen extends AbstractContainerScreen<RideBookerMenu> {
         insertButton = addRenderableWidget(Button.builder(Component.empty(), b -> press(RideBookerMenu.BUTTON_INSERT))
                 .bounds(leftPos + imageWidth + 4, topPos + 16, 70, 18)
                 .tooltip(net.minecraft.client.gui.components.Tooltip.create(Component.translatable("booker.dexrider.insert.tip")))
+                .build());
+        addRenderableWidget(Button.builder(Component.translatable("booker.dexrider.store_all"), b -> press(RideBookerMenu.BUTTON_STORE_ALL))
+                .bounds(leftPos + imageWidth + 4, topPos + 38, 70, 18)
+                .tooltip(net.minecraft.client.gui.components.Tooltip.create(Component.translatable("booker.dexrider.store_all.tip")))
                 .build());
         refresh();
     }
@@ -68,8 +72,8 @@ public class RideBookerScreen extends AbstractContainerScreen<RideBookerMenu> {
         // ranuras de cartas (dorado si esta en modo insertar)
         int frame = menu.insertMode() ? 0xFFF2C230 : 0xFF8A8C9A;
         for (int i = 0; i < RideBookerMenu.PER_DECK; i++) slotBox(g, x + 8 + (i % 9) * 18, y + 34 + (i / 9) * 18, frame);
-        for (int i = 0; i < 27; i++) slotBox(g, x + 8 + (i % 9) * 18, y + 84 + (i / 9) * 18, 0xFF8A8C9A);
-        for (int i = 0; i < 9; i++) slotBox(g, x + 8 + i * 18, y + 142, 0xFF8A8C9A);
+        for (int i = 0; i < 27; i++) slotBox(g, x + 8 + (i % 9) * 18, y + 102 + (i / 9) * 18, 0xFF8A8C9A);
+        for (int i = 0; i < 9; i++) slotBox(g, x + 8 + i * 18, y + 160, 0xFF8A8C9A);
     }
 
     private static void slotBox(GuiGraphicsExtractor g, int sx, int sy, int frame) {

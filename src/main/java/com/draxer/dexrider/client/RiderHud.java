@@ -63,10 +63,12 @@ public final class RiderHud {
             var item = BuiltInRegistries.ITEM.getValue(Identifier.parse(s.card()));
             cardName = new ItemStack(item).getHoverName();
         }
-        int deck = Math.floorMod(s.slot() / 18, DECKS.length);
+        int deck = Math.floorMod(s.slot() / com.draxer.dexrider.menu.RideBookerMenu.PER_DECK, DECKS.length);
         g.fill(x + 5, ty, x + 11, ty + 8, deckColor(deck));
         g.text(font, Component.literal(clip(font, cardName.getString(), w - 18)), x + 14, ty, 0xFFFFFFFF, true);
         ty += 11;
+
+        if (DexRiderClient.BOOKER_USE_KEY.get().isDown()) strip(g, mc, x, y - 26, s.slot());
 
         // R
         boolean ready = s.abilityLeft() <= 0;
@@ -95,6 +97,29 @@ public final class RiderHud {
             g.text(font, Component.literal("E"), x + 5, ty, 0xFF666670, true);
             bar(g, x + 14, ty + 2, w - 18, 1.0F - s.emotionCooldown() / 1800.0F, 0xFF55555F);
         }
+    }
+
+    /** Con Alt mantenido: carta anterior, actual y siguiente del mazo (gira la rueda para cambiar, suelta Alt para usar). */
+    private static void strip(GuiGraphicsExtractor g, Minecraft mc, int x, int y, int sel) {
+        ItemStack driver = com.draxer.dexrider.item.DexDriverItem.findDriver(mc.player);
+        if (driver.isEmpty()) return;
+        var items = com.draxer.dexrider.menu.Booker.view(driver);
+        int cur = Math.floorMod(sel, items.size());
+        int prev = com.draxer.dexrider.menu.Booker.neighbor(items, cur, -1), next = com.draxer.dexrider.menu.Booker.neighbor(items, cur, 1);
+        g.fill(x, y, x + 72, y + 24, 0xB0101018);
+        icon(g, items, prev, x + 4, y + 6, 12, 0x80FFFFFF);
+        icon(g, items, cur, x + 26, y + 2, 20, 0xFFF2C230);
+        icon(g, items, next, x + 56, y + 6, 12, 0x80FFFFFF);
+    }
+
+    private static void icon(GuiGraphicsExtractor g, net.minecraft.core.NonNullList<ItemStack> items, int slot, int x, int y, int size, int frame) {
+        g.fill(x - 1, y - 1, x + size + 1, y + size + 1, frame);
+        g.fill(x, y, x + size, y + size, 0xFF16151C);
+        if (slot < 0 || slot >= items.size() || items.get(slot).isEmpty()) return;
+        Identifier id = BuiltInRegistries.ITEM.getKey(items.get(slot).getItem());
+        if (!DexRider.MODID.equals(id.getNamespace())) return;
+        g.blit(net.minecraft.client.renderer.RenderPipelines.GUI_TEXTURED, DexRider.id("textures/item/" + id.getPath() + ".png"),
+                x, y, 0, 0, size, size, size, size);
     }
 
     /**

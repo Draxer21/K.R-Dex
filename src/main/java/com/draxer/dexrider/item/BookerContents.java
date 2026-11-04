@@ -3,6 +3,9 @@ package com.draxer.dexrider.item;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.NonNullList;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -16,7 +19,13 @@ public record BookerContents(List<Entry> entries) {
                 Codec.INT.fieldOf("slot").forGetter(Entry::slot),
                 ItemStack.CODEC.fieldOf("item").forGetter(Entry::stack)
         ).apply(i, Entry::new));
+        public static final StreamCodec<RegistryFriendlyByteBuf, Entry> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, Entry::slot, ItemStack.STREAM_CODEC, Entry::stack, Entry::new);
     }
+
+    /** Para que el cliente vea el Booker (rueda de cartas). */
+    public static final StreamCodec<RegistryFriendlyByteBuf, BookerContents> STREAM_CODEC =
+            Entry.STREAM_CODEC.apply(ByteBufCodecs.list()).map(BookerContents::new, BookerContents::entries);
 
     public static final BookerContents EMPTY = new BookerContents(List.of());
 

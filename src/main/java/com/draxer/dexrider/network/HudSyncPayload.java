@@ -70,11 +70,11 @@ public record HudSyncPayload(boolean active, String card, int slot, int abilityL
         ItemStack driver = DexDriverItem.findDriver(p);
         if (!driver.isEmpty()) {
             Integer s = driver.get(DexComponents.BOOKER_SEL.get());
-            BookerContents saved = driver.get(DexComponents.BOOKER.get());
             sel = s == null ? 0 : Math.max(0, s);
-            if (saved != null) {
-                NonNullList<ItemStack> items = NonNullList.withSize(com.draxer.dexrider.menu.RideBookerMenu.SIZE, ItemStack.EMPTY);
-                saved.copyInto(items);
+            {
+                NonNullList<ItemStack> items = com.draxer.dexrider.menu.Booker.load(driver);
+                s = driver.get(DexComponents.BOOKER_SEL.get());
+                sel = s == null ? 0 : Math.max(0, s);
                 sel = Math.floorMod(sel, items.size());
                 ItemStack c = items.get(sel);
                 if (!c.isEmpty()) card = BuiltInRegistries.ITEM.getKey(c.getItem()).toString();

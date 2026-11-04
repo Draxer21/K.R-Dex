@@ -29,9 +29,16 @@ public final class DexComponents {
     /** Cartas guardadas en el Ride Booker (vive en el Driver). */
     public static final Supplier<DataComponentType<com.draxer.dexrider.item.BookerContents>> BOOKER =
             COMPONENTS.registerComponentType("ride_booker", builder -> builder
-                    .persistent(com.draxer.dexrider.item.BookerContents.CODEC));
+                    .persistent(com.draxer.dexrider.item.BookerContents.CODEC)
+                    .networkSynchronized(com.draxer.dexrider.item.BookerContents.STREAM_CODEC));
 
-    /** Carta elegida en el Ride Booker para usarla rapido (mazo * 18 + ranura). */
+    /** El Booker ya usa mazos de 27 (migrado desde los de 18). */
+    public static final Supplier<DataComponentType<Boolean>> BOOKER_V27 =
+            COMPONENTS.registerComponentType("booker_v27", builder -> builder
+                    .persistent(com.mojang.serialization.Codec.BOOL)
+                    .networkSynchronized(net.minecraft.network.codec.ByteBufCodecs.BOOL));
+
+    /** Carta elegida en el Ride Booker para usarla rapido (mazo * 27 + ranura). */
     public static final Supplier<DataComponentType<Integer>> BOOKER_SEL =
             COMPONENTS.registerComponentType("ride_booker_sel", builder -> builder
                     .persistent(Codec.INT)

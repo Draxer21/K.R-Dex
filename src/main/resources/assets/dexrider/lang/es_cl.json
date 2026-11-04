@@ -818,7 +818,7 @@
   "screen.dexrider.summon.dex.missing": "Complete Form: te faltan %s Kamen Ride",
   "key.dexrider.booker_prev": "Ride Booker: carta anterior (Shift: mazo anterior)",
   "key.dexrider.booker_next": "Ride Booker: carta siguiente (Shift: mazo siguiente)",
-  "key.dexrider.booker_use": "Ride Booker: insertar la carta elegida",
+  "key.dexrider.booker_use": "Ride Booker: usar carta (mantener + rueda para cambiar)",
   "message.dexrider.booker_selected": "Ride Booker · %s · %s: %s",
   "message.dexrider.booker_deck_empty": "Ride Booker · %s: mazo vacío",
   "dialog.dexrider.cipher.accel.1": "Diez segundos. Siete y vuelvo.",
@@ -1132,5 +1132,13 @@
   "message.dexrider.starter_1": "«La casa de la montaña está abierta. Siempre lo estuvo.»",
   "message.dexrider.starter_2": "«En el taller del sótano hay un Driver de repuesto. Las tres primeras cartas están con él.»",
   "message.dexrider.starter_3": "«La brújula conoce el camino. — G. K.»",
-  "message.dexrider.starter_hint": "Clic derecho con la Brújula de los Kagami: apunta a la casa de la montaña (biomas de montaña)."
+  "message.dexrider.starter_hint": "Clic derecho con la Brújula de los Kagami: apunta a la casa de la montaña (biomas de montaña).",
+  "message.dexrider.booker_stored": "%s → Ride Booker (%s, ranura %s)",
+  "message.dexrider.booker_stored_all": "%s cartas guardadas en el Ride Booker",
+  "booker.dexrider.store_all": "Guardar todo",
+  "booker.dexrider.store_all.tip": "Mueve todas las cartas de tu inventario al Booker (las repetidas se quedan fuera)",
+  "key.dexrider.card_wheel": "Rueda de cartas",
+  "screen.dexrider.card_wheel": "Rueda de cartas",
+  "screen.dexrider.card_wheel.hint": "Clic en una carta para usarla · rueda / flechas: mazo",
+  "screen.dexrider.card_wheel.empty": "Este mazo esta vacio · rueda / flechas: mazo"
 }

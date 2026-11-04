@@ -64,6 +64,7 @@ public final class DexGameTests {
         FUNCTIONS.register("architect", () -> DexGameTests::architect);
         FUNCTIONS.register("combat_read", () -> DexGameTests::combatRead);
         FUNCTIONS.register("starter", () -> DexGameTests::starter);
+        FUNCTIONS.register("booker", () -> DexGameTests::booker);
     }
 
     // ------------------------------------------------------------------ utilidades
@@ -566,6 +567,28 @@ public final class DexGameTests {
         if (!p.getInventory().contains(new ItemStack(DexItems.KAGAMI_COMPASS.get()))) { fail(h, t, "no recibio la brujula de los Kagami"); return; }
         if (com.draxer.dexrider.rider.Starter.onLogin(p)) { fail(h, t, "la segunda vez volvio a entregar"); return; }
         log(t, "ok: carta de Genzo y brujula la primera vez, nada la segunda");
+        h.succeed();
+    }
+
+    static void booker(GameTestHelper h) {
+        String t = "booker";
+        ServerPlayer p = player(h);
+        ItemStack driver = DexDriverItem.findDriver(p);
+        DexCard[] all = DexCard.values();
+        ItemStack a = new ItemStack(DexItems.card(all[0]).get()), b = new ItemStack(DexItems.card(all[1]).get()), c = new ItemStack(DexItems.card(all[2]).get());
+        // formato viejo (18 por mazo): ranura 19 = mazo 1, carta 2 -> ahora 27 + 1
+        driver.set(com.draxer.dexrider.registry.DexComponents.BOOKER.get(),
+                new com.draxer.dexrider.item.BookerContents(java.util.List.of(new com.draxer.dexrider.item.BookerContents.Entry(19, a.copy()))));
+        var items = com.draxer.dexrider.menu.Booker.load(driver);
+        if (!items.get(28).is(a.getItem())) { fail(h, t, "no remapeo el Booker viejo a 27 por mazo"); return; }
+        if (!com.draxer.dexrider.menu.Booker.store(p, b)) { fail(h, t, "no guardo una carta nueva"); return; }
+        if (!com.draxer.dexrider.menu.Booker.load(driver).get(0).is(b.getItem())) { fail(h, t, "la carta nueva no fue al primer hueco del mazo"); return; }
+        if (com.draxer.dexrider.menu.Booker.store(p, a.copy())) { fail(h, t, "guardo una carta repetida"); return; }
+        var cItem = c.getItem();
+        com.draxer.dexrider.menu.Booker.give(p, c);
+        if (p.getInventory().contains(new ItemStack(cItem))) { fail(h, t, "la carta entregada fue al inventario y no al Booker"); return; }
+        if (!com.draxer.dexrider.menu.Booker.load(driver).get(1).is(cItem)) { fail(h, t, "la carta entregada no esta en el Booker"); return; }
+        log(t, "ok: Booker viejo remapeado, guardado automatico sin repetidas");
         h.succeed();
     }
 }

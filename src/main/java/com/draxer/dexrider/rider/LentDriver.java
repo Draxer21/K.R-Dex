@@ -124,7 +124,7 @@ public final class LentDriver {
             if (owner != null) {
                 owner.sendSystemMessage(Component.translatable("message.dexrider.bearer_card", bearer.getDisplayName()).withStyle(ChatFormatting.LIGHT_PURPLE));
                 ItemStack card = new ItemStack(DexItems.card(DexCard.KAMEN_RIDE_BEARER).get());
-                if (!owner.getInventory().add(card)) owner.drop(card, false);
+                com.draxer.dexrider.menu.Booker.give(owner, card);
             }
         }
     }

@@ -342,7 +342,7 @@ public final class AllyManager {
                 com.draxer.dexrider.vehicle.BikeKind bike = com.draxer.dexrider.vehicle.BikeKind.forRider(rider);
                 if (bike != null) {
                     ItemStack card = new ItemStack(com.draxer.dexrider.registry.DexItems.card(bike.card).get());
-                    if (!player.getInventory().add(card)) player.drop(card, false);
+                    com.draxer.dexrider.menu.Booker.give(player, card);
                     DexDriverItem.registerCard(player, bike.card);
                     player.sendSystemMessage(Component.translatable("message.dexrider.bike_gift", rider.displayName(), bike.displayName())
                             .withStyle(ChatFormatting.AQUA));
@@ -386,7 +386,7 @@ public final class AllyManager {
         if (deck.has(com.draxer.dexrider.item.DexCard.VEHICLE_RIDE_SCARAB)) return;
         com.draxer.dexrider.item.DexDriverItem.setDeck(driver, deck.withCard(com.draxer.dexrider.item.DexCard.VEHICLE_RIDE_SCARAB));
         var card = new net.minecraft.world.item.ItemStack(com.draxer.dexrider.registry.DexItems.card(com.draxer.dexrider.item.DexCard.VEHICLE_RIDE_SCARAB).get());
-        if (!player.getInventory().add(card)) player.drop(card, false);
+        com.draxer.dexrider.menu.Booker.give(player, card);
         player.sendSystemMessage(Component.translatable("message.dexrider.scarab_gift"));
     }
 

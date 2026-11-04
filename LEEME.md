@@ -244,15 +244,24 @@ del juego y de Dex, si los finales fallados rompen bloques, activar las Emotion 
 
 ### Ride Booker: el estuche de cartas
 El Ride Booker guarda tus cartas. Vive en el **Dex Driver**, así que va contigo (en el inventario o en el cinturón).
-Pulsa **G** para abrirlo (configurable). Tiene **5 mazos** de 18 cartas, como en el fanfic: *Rescate, Multitudes,
+Pulsa **G** para abrirlo (configurable). Tiene **5 mazos** de 27 cartas (135 en total), como en el fanfic: *Rescate, Multitudes,
 1 vs 1, Persecución* y *Todo salió mal*. Solo admite cartas (y la carta de Complete Form).
 - **Guardar**: mueves cartas como en un cofre (Shift + clic las pasa entre el Booker y tu inventario).
 - **Insertar**: haces clic en una carta y **se activa al instante sin sacarla del Booker** (inserción directa).
   Un Armed Ride aparece en tu mano principal y lo que tenías ahí pasa al inventario.
+- **Guardar todo**: el botón a la derecha mueve todas las cartas de tu inventario al Booker de una vez.
+- **Guardado automático**: las cartas nuevas (escaneadas, recogidas del suelo, de un eco derrotado, del K-Touch…)
+  van **directas al Booker** si llevas el Driver, empezando por el mazo elegido. Las repetidas sí van al inventario.
+  Los Booker de versiones anteriores (18 por mazo) se reordenan solos al abrirlos.
 
-**Uso rápido en combate (sin abrir el Booker)**: **Z / X** eligen la carta anterior / siguiente del mazo
-(con **Shift**, cambian de mazo) y **Alt izquierdo** inserta la elegida. La carta elegida aparece encima de la
-barra de objetos. Así cambias de arma o de carta en plena pelea. Todas las teclas se pueden cambiar en Controles.
+**Uso rápido en combate (sin abrir el Booker)**:
+- **Rueda de cartas (C)**: hasta 12 cartas del mazo en círculo; clic en una y se usa. La rueda del ratón o las
+  flechas cambian de mazo. No pausa el juego.
+- **Alt izquierdo + rueda del ratón**: mientras mantienes Alt, la rueda pasa de carta y el HUD muestra la anterior,
+  la actual y la siguiente. **Al soltar Alt** se usa la carta elegida (si giraste la rueda, soltar solo elige).
+- **Z / X** siguen eligiendo la carta anterior / siguiente (con **Shift**, cambian de mazo).
+
+La carta elegida aparece junto a la barra de objetos. Así cambias de arma o de carta en plena pelea. Todas las teclas se pueden cambiar en Controles.
 
 ### Kamen Ride de otros Riders (transformado como Dex)
 Clic derecho con la carta Kamen Ride de un Rider estando transformado → Dex **se convierte en ese Rider**
@@ -594,6 +603,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.32.0** — Ride Booker más grande (5 mazos × 27) y guardado automático de cartas nuevas, botón *Guardar todo*, rueda de cartas (C) y Alt + rueda del ratón para pasar de carta. 19 pruebas automáticas.
 - **0.31.0** — Al entrar por primera vez a un mundo: carta de Genzo, Guía y Brújula de los Kagami, que apunta a la casa de la montaña (donde está el Dex Driver). Receta de la brújula. 18 pruebas automáticas.
 - **0.30.0+26.2** — Primera versión para Minecraft 26.2 (rama `mc-26.2`): mismas funciones, adaptada a los cambios de 26.2 (tipos de entidad, pantallas, predicados de logros).
 - **0.30.0** — Form Ride Sky con alas de membrana (diseño propio): plegadas a la espalda en el suelo, se abren y aletean al volar; más grandes con el nivel y en Nv.3 dejan estela.

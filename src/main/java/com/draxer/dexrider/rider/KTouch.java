@@ -165,7 +165,7 @@ public final class KTouch {
     }
 
     private static void give(ServerPlayer player, ItemStack stack) {
-        if (!player.getInventory().add(stack)) player.drop(stack, false);
+        com.draxer.dexrider.menu.Booker.give(player, stack);
     }
 
     // ------------------------------------------------------------------ blasones: invocar a los nueve

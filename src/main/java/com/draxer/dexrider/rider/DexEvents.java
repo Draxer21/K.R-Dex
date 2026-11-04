@@ -277,6 +277,20 @@ public final class DexEvents {
         }
     }
 
+    /** Las cartas que recoges del suelo van directas al Ride Booker (si llevas el Driver y no son repetidas). */
+    @SubscribeEvent
+    public static void onPickup(net.neoforged.neoforge.event.entity.player.ItemEntityPickupEvent.Pre event) {
+        if (!(event.getPlayer() instanceof ServerPlayer player)) return;
+        ItemEntity ie = event.getItemEntity();
+        if (ie.hasPickUpDelay() || !ie.isAlive()) return;
+        ItemStack stack = ie.getItem();
+        if (!com.draxer.dexrider.menu.Booker.store(player, stack)) return;
+        player.take(ie, 1);
+        stack.shrink(1);
+        if (stack.isEmpty()) ie.discard(); else ie.setItem(stack);
+        event.setCanPickup(net.minecraft.util.TriState.FALSE);
+    }
+
     /** Primera vez en el mundo: la carta de Genzo y la brujula de los Kagami. */
     @SubscribeEvent
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
