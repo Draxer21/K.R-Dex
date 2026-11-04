@@ -75,6 +75,9 @@ public final class ScanToast {
         g.blit(RenderPipelines.GUI_TEXTURED, DexRider.id("textures/item/" + card.itemName() + ".png"), x + 5, y + 3, 0, 0, 24, 24, 24, 24,
                 complete ? 0xFFFFFFFF : 0xFF2A2A36);
         String name = Component.translatable(card.translationKey()).getString();
+        int dash = name.lastIndexOf(" - ");                    // "Carta: Form Ride - Sky" -> "Form: Sky"
+        if (dash >= 0) name = Component.translatable("screen.dexrider.archive.tab." + card.family().name().toLowerCase(java.util.Locale.ROOT))
+                .getString() + ": " + name.substring(dash + 3);
         while (mc.font.width(name) > w - 40 && name.length() > 3) name = name.substring(0, name.length() - 1);
         g.text(mc.font, Component.literal(name), x + 34, y + 5, 0xFFFFFFFF, true);
         Component sub = complete
