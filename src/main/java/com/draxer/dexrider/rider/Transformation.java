@@ -99,8 +99,7 @@ public final class Transformation {
         chest.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(originals));
         // personalizacion del traje: viaja en el peto para que todos la vean
         ItemStack driverForSuit = DexDriverItem.findDriver(player);
-        SuitConfig suit = driverForSuit.isEmpty() ? null : driverForSuit.get(DexComponents.SUIT.get());
-        chest.set(DexComponents.SUIT.get(), suit != null ? suit : SuitConfig.DEFAULT);
+        Suits.dressOwn(chest, driverForSuit);
 
         player.setItemSlot(EquipmentSlot.HEAD, helmet);
         player.setItemSlot(EquipmentSlot.CHEST, chest);

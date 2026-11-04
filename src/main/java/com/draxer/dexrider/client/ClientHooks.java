@@ -1,7 +1,5 @@
 package com.draxer.dexrider.client;
 
-import com.draxer.dexrider.item.SuitConfig;
-import com.draxer.dexrider.registry.DexComponents;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.ItemStack;
 
@@ -10,8 +8,7 @@ public final class ClientHooks {
     private ClientHooks() {}
 
     public static void openSuitScreen(ItemStack driver) {
-        SuitConfig config = driver.get(DexComponents.SUIT.get());
-        Minecraft.getInstance().setScreen(new SuitScreen(config));
+        Minecraft.getInstance().setScreen(new SuitScreen(com.draxer.dexrider.item.SuitSlots.of(driver)));
     }
 
     public static void openSummonScreen() {

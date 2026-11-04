@@ -2,7 +2,10 @@ package com.draxer.dexrider.client;
 
 import com.draxer.dexrider.DexRider;
 import com.draxer.dexrider.item.DexArmorItem;
-import com.draxer.dexrider.item.SuitConfig;
+import com.draxer.dexrider.item.SuitLook;
+import com.draxer.dexrider.item.SuitLooks;
+import com.draxer.dexrider.item.SuitProfile;
+import com.draxer.dexrider.rider.Suits;
 import com.draxer.dexrider.registry.DexComponents;
 import com.draxer.dexrider.rider.FormRide;
 import com.draxer.dexrider.rider.KamenRide;
@@ -17,72 +20,98 @@ import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.item.ItemStack;
 
 /**
- * Renderer 3D de la armadura de Dex, con personalizacion.
+ * Renderer 3D de la armadura de Dex, con el editor del traje (0.33).
  *
- * Capas (assets/dexrider/textures/item/armor/):
- *   dex_armor.png             base fija: negro, plateado, blanco y el Driver
- *   dex_armor_main.png        se tine con el color principal (o el de la Form Ride activa)
- *   dex_armor_main_right/left la misma capa partida por la mitad (Half-Cold Half-Hot: blanco hielo / rojo fuego)
- *   dex_armor_accent.png      se tine con el color de acentos (cuernos, X del pecho, guanteletes...)
- *   dex_armor_eyes.png        se tine con el color de ojos y se dibuja a plena luz (brillan de noche)
- *   dex_armor_eyes_plain.png  igual, pero sin las franjas horizontales
+ * Capas en escala de grises (assets/dexrider/textures/item/armor/, las genera split_suit.py) que se tinen con
+ * los colores del diseno puesto; las mismas para la Upgrade Form (prefijo dex_upgrade):
+ *   _main (por segmento: casco, pecho, brazos, piernas, botas), _main_right/_left (Half-Cold Half-Hot),
+ *   _accent, _silver, _inner (negro), _scarf, _crystal, _eyes / _eyes_plain (a plena luz si brillan).
+ *   Acabados: _matte y _metal para main, accent, silver y scarf.
+ * La base fija (dex_armor.png) solo deja ver el Driver, que siempre conserva su diseno.
  *
- * Variantes de piezas = huesos del modelo que se ocultan: hornsStraight, hornsCurved, hornsShort,
- * hornsInner (los centrales) y booker.
+ * Piezas = huesos del modelo que se ocultan: cuernos (hornsStraight/Curved/Short/Inner), hombreras
+ * (pauldronR/L, pauldronFlatR/L), bufanda (scarf, scarfLong), crest, booker, emotionCrystal, puas y alas de Sky.
  */
 public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderState> extends GeoArmorRenderer<DexArmorItem, R> {
 
     public static final DataTicket<String> EMOTION = DataTicket.create("dexrider_emotion", String.class);
     public static final DataTicket<Boolean> COMPLETE2 = DataTicket.create("dexrider_complete2", Boolean.class);
     public static final DataTicket<Boolean> UPGRADE = DataTicket.create("dexrider_upgrade", Boolean.class);
-    public static final DataTicket<Integer> MAIN_COLOR = DataTicket.create("dexrider_main_color", Integer.class);
-    public static final DataTicket<Integer> EYE_COLOR = DataTicket.create("dexrider_eye_color", Integer.class);
-    public static final DataTicket<Integer> ACCENT_COLOR = DataTicket.create("dexrider_accent_color", Integer.class);
-    public static final DataTicket<String> HORNS = DataTicket.create("dexrider_horns", String.class);
-    public static final DataTicket<Boolean> EYE_STRIPES = DataTicket.create("dexrider_eye_stripes", Boolean.class);
     public static final DataTicket<String> RIDER = DataTicket.create("dexrider_rider", String.class);
     public static final DataTicket<Boolean> HALF = DataTicket.create("dexrider_half", Boolean.class);
     public static final DataTicket<String> CIPHER_MODE = DataTicket.create("dexrider_cipher_mode", String.class);
-    public static final DataTicket<Boolean> SHOW_BOOKER = DataTicket.create("dexrider_show_booker", Boolean.class);
+    public static final DataTicket<SuitLooks.Resolved> LOOK = DataTicket.create("dexrider_look", SuitLooks.Resolved.class);
     /** Alas de Sky: nivel (0 = sin alas), cuanto estan abiertas (0-1) y el tiempo para el aleteo. */
     public static final DataTicket<Integer> SKY = DataTicket.create("dexrider_sky", Integer.class);
     public static final DataTicket<Float> SKY_OPEN = DataTicket.create("dexrider_sky_open", Float.class);
     public static final DataTicket<Float> SKY_TIME = DataTicket.create("dexrider_sky_time", Float.class);
     private static final java.util.Map<Integer, Float> SKY_OPENNESS = new java.util.HashMap<>();
 
-    private static final Identifier MAIN = DexRider.id("textures/item/armor/dex_armor_main.png");
-    private static final Identifier MAIN_RIGHT = DexRider.id("textures/item/armor/dex_armor_main_right.png");
-    private static final Identifier MAIN_LEFT = DexRider.id("textures/item/armor/dex_armor_main_left.png");
-    private static final Identifier ACCENT = DexRider.id("textures/item/armor/dex_armor_accent.png");
-    private static final Identifier EYES = DexRider.id("textures/item/armor/dex_armor_eyes.png");
-    private static final Identifier EYES_PLAIN = DexRider.id("textures/item/armor/dex_armor_eyes_plain.png");
+    private static final SuitLooks.Resolved FACTORY = SuitLooks.factory(SuitProfile.BASE);
+    private static final java.util.Map<String, Identifier> TEXTURES = new java.util.concurrent.ConcurrentHashMap<>();
 
     public DexArmorRenderer() {
         super(new RiderArmorModel());
-        // Capas tenidas: solo en la forma de Dex (los demas Riders traen sus colores en la textura)
-        withRenderLayer(new TintLayer<>(this, state -> !isDex(state) || isHalf(state) ? null : MAIN,
-                state -> intData(state, MAIN_COLOR, SuitConfig.DEFAULT.mainColor()), false));
-        // Half-Cold Half-Hot: lado derecho hielo, lado izquierdo fuego
-        withRenderLayer(new TintLayer<>(this, state -> isHalf(state) ? MAIN_RIGHT : null,
-                state -> FormRide.HALF.suitColor(), false));
-        withRenderLayer(new TintLayer<>(this, state -> isHalf(state) ? MAIN_LEFT : null,
-                state -> FormRide.HALF_FIRE_COLOR, false));
-        withRenderLayer(new TintLayer<>(this, state -> isDex(state) ? ACCENT : null, state -> intData(state, ACCENT_COLOR, SuitConfig.DEFAULT.accentColor()), false));
+        // zonas principales, una por segmento (en la mitad de Half-Cold Half-Hot, las dos mitades)
+        withRenderLayer(new TintLayer<>(this, s -> !custom(s) || isHalf(s) ? null : tex(s, "main", true),
+                (s, seg) -> look(s).color(zone(seg)), s -> look(s).on("glow_main")));
+        withRenderLayer(new TintLayer<>(this, s -> isHalf(s) ? tex(s, "main_right", true) : null,
+                (s, seg) -> look(s).color(SuitLook.HALF_RIGHT), s -> look(s).on("glow_main")));
+        withRenderLayer(new TintLayer<>(this, s -> isHalf(s) ? tex(s, "main_left", true) : null,
+                (s, seg) -> look(s).color(SuitLook.HALF_LEFT), s -> look(s).on("glow_main")));
+        withRenderLayer(new TintLayer<>(this, s -> custom(s) ? tex(s, "accent", true) : null,
+                (s, seg) -> look(s).color(SuitLook.ACCENT), s -> look(s).on("glow_accent")));
+        withRenderLayer(new TintLayer<>(this, s -> custom(s) ? tex(s, "silver", true) : null,
+                (s, seg) -> look(s).color(SuitLook.SILVER), s -> false));
+        withRenderLayer(new TintLayer<>(this, s -> custom(s) ? tex(s, "inner", false) : null,
+                (s, seg) -> look(s).color(SuitLook.INNER), s -> false));
+        withRenderLayer(new TintLayer<>(this, s -> isDex(s) && !"none".equals(look(s).part("scarf")) ? tex(s, "scarf", true) : null,
+                (s, seg) -> look(s).color(SuitLook.SCARF), s -> false));
+        withRenderLayer(new TintLayer<>(this, s -> isDex(s) && look(s).on("crystal") ? tex(s, "crystal", false) : null,
+                (s, seg) -> look(s).color(SuitLook.CRYSTAL), s -> look(s).on("glow_crystal")));
         withRenderLayer(new TintLayer<>(this,
-                state -> !isDex(state) ? null : Boolean.FALSE.equals(state.getGeckolibData(EYE_STRIPES)) ? EYES_PLAIN : EYES,
-                state -> intData(state, EYE_COLOR, SuitConfig.DEFAULT.eyeColor()), true));
+                s -> !custom(s) ? null : tex(s, isDex(s) && !look(s).on("stripes") ? "eyes_plain" : "eyes", false),
+                (s, seg) -> look(s).color(SuitLook.EYES), s -> look(s).on("glow_eyes")));
         // Ojos y luces de los demas Riders, a plena luz
         withRenderLayer(new TintLayer<>(this,
-                state -> isDex(state) ? null : RiderArmorModel.glowTexture(state),
+                state -> custom(state) ? null : RiderArmorModel.glowTexture(state),
                 state -> 0xFFFFFF, true));
     }
 
+    /** Dex en su forma de Dex (sin Upgrade). */
     private static boolean isDex(GeoRenderState state) {
         return RiderArmorModel.rider(state) == KamenRide.DEX && !Boolean.TRUE.equals(state.getGeckolibData(UPGRADE));
     }
 
+    /** Dex o su Upgrade Form: los dos se pintan con el diseno del jugador. */
+    private static boolean custom(GeoRenderState state) {
+        return RiderArmorModel.rider(state) == KamenRide.DEX;
+    }
+
     private static boolean isHalf(GeoRenderState state) {
-        return Boolean.TRUE.equals(state.getGeckolibData(HALF));
+        return isDex(state) && Boolean.TRUE.equals(state.getGeckolibData(HALF));
+    }
+
+    private static SuitLooks.Resolved look(GeoRenderState state) {
+        SuitLooks.Resolved l = state.getGeckolibData(LOOK);
+        return l == null ? FACTORY : l;
+    }
+
+    private static String zone(GeoArmorRenderer.ArmorSegment seg) {
+        return switch (seg) {
+            case HEAD -> SuitLook.HELMET;
+            case CHEST -> SuitLook.CHEST;
+            case LEFT_ARM, RIGHT_ARM -> SuitLook.ARMS;
+            case LEFT_LEG, RIGHT_LEG -> SuitLook.LEGS;
+            default -> SuitLook.BOOTS;
+        };
+    }
+
+    /** dex_armor_<capa>[_matte|_metal].png (o dex_upgrade_...). */
+    private static Identifier tex(GeoRenderState state, String layer, boolean finish) {
+        String f = finish ? look(state).part("finish") : "normal";
+        String name = (isDex(state) ? "dex_armor_" : "dex_upgrade_") + layer + ("normal".equals(f) ? "" : "_" + f);
+        return TEXTURES.computeIfAbsent(name, n -> DexRider.id("textures/item/armor/" + n + ".png"));
     }
 
     private static int intData(GeoRenderState state, DataTicket<Integer> ticket, int fallback) {
@@ -90,31 +119,24 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
         return v == null ? fallback : v;
     }
 
-    /** Lee la personalizacion y la forma activa del peto de quien lleva la armadura. */
+    /** Lee el diseno puesto y la forma activa del peto de quien lleva la armadura. */
     @Override
     public void addRenderData(DexArmorItem animatable, RenderData relatedObject, R renderState, float partialTick) {
         ItemStack chest = relatedObject.entity().getItemBySlot(EquipmentSlot.CHEST);
-        SuitConfig suit = chest.get(DexComponents.SUIT.get());
-        if (suit == null) suit = SuitConfig.DEFAULT;
         String formId = chest.get(DexComponents.FORM.get());
         FormRide form = formId == null ? null : FormRide.byId(formId);
-
         String emotion = chest.get(DexComponents.EMOTION.get());
-        int[] emo = com.draxer.dexrider.rider.DexEmotions.colors(emotion);
+        boolean upgrade = Boolean.TRUE.equals(chest.get(DexComponents.UPGRADE.get()));
+
         renderState.addGeckolibData(EMOTION, emotion == null ? "" : emotion);
-        renderState.addGeckolibData(MAIN_COLOR, emo != null ? emo[0] : form != null ? form.suitColor() : suit.mainColor());
-        renderState.addGeckolibData(HALF, form == FormRide.HALF);
+        renderState.addGeckolibData(HALF, form == FormRide.HALF && !upgrade && emotion == null);
         String rider = chest.get(DexComponents.RIDER.get());
         renderState.addGeckolibData(RIDER, rider == null ? "dex" : rider);
         String cipherMode = chest.get(DexComponents.CIPHER_MODE.get());
         renderState.addGeckolibData(CIPHER_MODE, cipherMode == null ? "" : cipherMode);
-        renderState.addGeckolibData(UPGRADE, Boolean.TRUE.equals(chest.get(DexComponents.UPGRADE.get())));
+        renderState.addGeckolibData(UPGRADE, upgrade);
         renderState.addGeckolibData(COMPLETE2, Boolean.TRUE.equals(chest.get(DexComponents.COMPLETE_LV2.get())));
-        renderState.addGeckolibData(EYE_COLOR, emo != null ? emo[1] : suit.eyeColor());
-        renderState.addGeckolibData(ACCENT_COLOR, emo != null ? emo[2] : suit.accentColor());
-        renderState.addGeckolibData(HORNS, suit.horns().id());
-        renderState.addGeckolibData(EYE_STRIPES, suit.eyeStripes());
-        renderState.addGeckolibData(SHOW_BOOKER, suit.showBooker());
+        renderState.addGeckolibData(LOOK, SuitLooks.resolve(Suits.worn(chest), SuitLooks.stateFor(upgrade, emotion, form)));
         // alas de Sky: plegadas en el suelo, se abren en el aire (suavizado por entidad)
         var entity = relatedObject.entity();
         int sky = 0;
@@ -139,20 +161,27 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
     public void adjustModelBonesForRender(RenderPassInfo<R> renderPassInfo, BoneSnapshots snapshots) {
         super.adjustModelBonesForRender(renderPassInfo, snapshots);
         R state = renderPassInfo.renderState();
-        SuitConfig.Horns horns = SuitConfig.Horns.byId(String.valueOf(state.getGeckolibData(HORNS)));
-
-        hide(snapshots, "hornsStraight", horns != SuitConfig.Horns.STRAIGHT);
-        hide(snapshots, "hornsCurved", horns != SuitConfig.Horns.CURVED);
-        hide(snapshots, "hornsShort", horns != SuitConfig.Horns.SHORT);
-        hide(snapshots, "hornsInner", horns == SuitConfig.Horns.NONE);
-        hide(snapshots, "booker", Boolean.FALSE.equals(state.getGeckolibData(SHOW_BOOKER)));
-        // Emotion: cristal en la frente (las dos) y puas (solo Violent)
-        String emo = state.getGeckolibData(EMOTION);
-        boolean violent = "violent".equals(emo), any = emo != null && !emo.isEmpty();
-        hide(snapshots, "emotionCrystal", !any);
-        for (String b : new String[]{"spikesHead", "spikesBody", "spikesRArm", "spikesLArm"}) hide(snapshots, b, !violent);
+        SuitLooks.Resolved look = look(state);
+        String horns = look.part("horns");
+        hide(snapshots, "hornsStraight", !"straight".equals(horns));
+        hide(snapshots, "hornsCurved", !"curved".equals(horns));
+        hide(snapshots, "hornsShort", !"short".equals(horns));
+        hide(snapshots, "hornsInner", "none".equals(horns));
+        hide(snapshots, "booker", !look.on("booker"));
+        String pauldrons = look.part("pauldrons");
+        for (String b : new String[]{"pauldronR", "pauldronL"}) hide(snapshots, b, !"layered".equals(pauldrons));
+        for (String b : new String[]{"pauldronFlatR", "pauldronFlatL"}) hide(snapshots, b, !"flat".equals(pauldrons));
+        String scarf = look.part("scarf");
+        hide(snapshots, "scarf", "none".equals(scarf));
+        hide(snapshots, "scarfLong", !"long".equals(scarf));
+        hide(snapshots, "crest", !look.on("crest"));
+        hide(snapshots, "emotionCrystal", !look.on("crystal"));
+        hide(snapshots, "spikesHead", !look.on("spikes_head"));
+        hide(snapshots, "spikesBody", !look.on("spikes_body"));
+        hide(snapshots, "spikesRArm", !look.on("spikes_arms"));
+        hide(snapshots, "spikesLArm", !look.on("spikes_arms"));
         // Alas de Sky
-        int sky = intData(state, SKY, 0);
+        int sky = look.on("wings") ? intData(state, SKY, 0) : 0;
         hide(snapshots, "skyWings", sky == 0);
         if (sky > 0) {
             Float o = state.getGeckolibData(SKY_OPEN), tm = state.getGeckolibData(SKY_TIME);

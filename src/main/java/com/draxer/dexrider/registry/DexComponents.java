@@ -73,6 +73,17 @@ public final class DexComponents {
                     .persistent(SuitConfig.CODEC)
                     .networkSynchronized(SuitConfig.STREAM_CODEC));
 
+    /** Editor del traje (0.33): las 5 ranuras de disenos, en el Driver. */
+    public static final Supplier<DataComponentType<com.draxer.dexrider.item.SuitSlots>> SUIT_SLOTS =
+            COMPONENTS.registerComponentType("suit_slots", builder -> builder
+                    .persistent(com.draxer.dexrider.item.SuitSlots.CODEC)
+                    .networkSynchronized(com.draxer.dexrider.item.SuitSlots.STREAM_CODEC));
+    /** El diseno puesto, copiado al peto mientras estas transformado (lo leen todos para dibujar el traje). */
+    public static final Supplier<DataComponentType<com.draxer.dexrider.item.SuitProfile>> SUIT_PROFILE =
+            COMPONENTS.registerComponentType("suit_profile", builder -> builder
+                    .persistent(com.draxer.dexrider.item.SuitProfile.CODEC)
+                    .networkSynchronized(com.draxer.dexrider.item.SuitProfile.STREAM_CODEC));
+
     /** Identidad de Rider activa, guardada en el peto ("nine", "cipher", "complete"...). Sin componente = Dex. */
     public static final Supplier<DataComponentType<String>> RIDER =
             COMPONENTS.registerComponentType("rider", builder -> builder

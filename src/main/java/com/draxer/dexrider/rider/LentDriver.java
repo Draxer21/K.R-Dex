@@ -112,7 +112,7 @@ public final class LentDriver {
     /** Al transformarse un portador: su traje propio, y la carta nace en el mazo del Driver. */
     public static void onBearerTransform(ServerPlayer bearer, ItemStack driver) {
         SuitConfig own = paletteFor(bearer.getUUID());
-        bearer.getItemBySlot(EquipmentSlot.CHEST).set(DexComponents.SUIT.get(), own);
+        Suits.dressLegacy(bearer.getItemBySlot(EquipmentSlot.CHEST), own);
         DriverDeck deck = DexDriverItem.getDeck(driver);
         driver.set(DexComponents.BEARER_SUIT.get(), own);
         driver.set(DexComponents.BEARER_NAME.get(), bearer.getGameProfile().name());
@@ -151,9 +151,8 @@ public final class LentDriver {
         if (bearer == null) return;
         ItemStack chest = p.getItemBySlot(EquipmentSlot.CHEST);
         SuitConfig cur = chest.get(DexComponents.SUIT.get());
-        SuitConfig own = driver.get(DexComponents.SUIT.get());
         boolean toBearer = !bearer.equals(cur);
-        chest.set(DexComponents.SUIT.get(), toBearer ? bearer : (own != null ? own : SuitConfig.DEFAULT));
+        if (toBearer) Suits.dressLegacy(chest, bearer); else Suits.dressOwn(chest, driver);
         FX.ring(level, p, toBearer ? bearer.mainColor() : FX.MAGENTA, 1.3, 7);
         com.draxer.dexrider.registry.DexSounds.play(level, p, com.draxer.dexrider.registry.DexSounds.HENSHIN, 1.0F, 1.2F);
         String name = driver.get(DexComponents.BEARER_NAME.get());

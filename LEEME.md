@@ -451,19 +451,31 @@ igual que llevarlo en el inventario. Al transformarte se oculta porque la armadu
 La Rider Kick termina con una **explosión** (sonido, fuego, humo y onda expansiva). Es solo visual y
 de daño a enemigos: no rompe bloques ni te hace daño a ti.
 
-### Personalizar el traje
-**Shift + clic derecho con el Dex Driver en la mano** abre la pantalla de personalización:
+### Editor del traje
+**Shift + clic derecho con el Dex Driver en la mano** abre el editor. A la izquierda, un **maniquí 3D** con tu
+diseño que gira solo (la rueda del ratón encima o las flechas lo giran a mano; `||` lo para).
 
-- **Colores** (pestañas Principal / Ojos / Acentos): 12 colores rápidos o barras R, G, B para cualquier color.
-  Los acentos son el dorado (cuernos, X del pecho, guanteletes, botas). Los ojos brillan de noche en el color que elijas.
-- **Cuernos**: rectos, curvos, cortos o ninguno.
-- **Ojos**: con franjas o lisos. **Ride Booker** en la cadera: visible u oculto.
-- **Original** vuelve al traje de Dex; **Guardar** lo deja en el Driver.
+**Estados** (arriba): *Base, Violent, Heroic, Upgrade* y cada **Form Ride** (el último botón; púlsalo otra vez
+para pasar a la siguiente forma). Cada estado **hereda de la base** lo que no cambies:
+- Violent / Heroic parten de tu base con los colores de la Emotion, el cristal y (Violent) las púas.
+- Las Form Ride parten de tu base con el color de la forma en las zonas principales (Half: lado derecho e izquierdo).
+- La Upgrade Form tiene su propio modelo: conserva su paleta original y hereda solo el brillo y el acabado.
+**Restablecer estado** borra lo que cambiaste en ese estado.
 
-Se guarda en el Driver y se copia a la armadura al transformarte, así los demás jugadores ven tu versión.
-Si cambias algo estando transformado, se ve al instante. Las **Form Ride mantienen su color** principal
-mientras están activas; tus colores de ojos y acentos se conservan. `personalizacion_preview.png` muestra ejemplos.
-El Driver (cinturón) no se tiñe: siempre conserva su diseño.
+**Colores**: casco, pecho, brazos, piernas, botas, acentos, ojos, plata, negro, cristal y bufanda. 16 colores rápidos,
+barras R G B y código hexadecimal (#RRGGBB). El marco dorado marca las zonas cambiadas en ese estado;
+**Por defecto** hace que la zona vuelva a heredar.
+
+**Piezas**: cuernos (rectos, curvos, cortos, ninguno), visor con o sin franjas, hombreras (en capas, lisas, ninguna),
+bufanda (ninguna, corta, larga), cresta, Booker en la cadera, cristal de la frente, púas (cabeza, espalda, brazos),
+alas (en Sky), **brillo** (ojos, cristal, acentos, traje entero) y **acabado** (normal, mate o metálico).
+
+**Diseños**: 5 ranuras con nombre; la marcada con `>` es la que llevas. **Copiar código** pone el diseño en el
+portapapeles como texto (`DEX1-…`) para pasárselo a otro jugador; **Pegar código** lo carga en la ranura.
+
+**Guardar** lo deja en el Driver y se copia a la armadura al transformarte: los demás jugadores ven tu diseño.
+Si cambias algo estando transformado, se ve al instante. El Driver (cinturón) no se tiñe: siempre conserva su diseño.
+Los trajes guardados antes de la 0.33 pasan solos a la primera ranura.
 
 ### Cómo empezar en supervivencia
 La primera vez que entras a un mundo recibes **una carta de Genzo** (en el chat), la **Guía del Rider System** y la
@@ -613,6 +625,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.33.0** — Editor del traje: maniquí 3D, colores por zona (casco, pecho, brazos, piernas, botas, acentos, ojos, plata, negro, cristal, bufanda), piezas nuevas (hombreras lisas, bufanda corta o larga, cresta) y opciones (púas, brillo, acabado mate o metálico), una apariencia propia para Base, Violent, Heroic, Upgrade y cada Form Ride, 5 ranuras de diseños y código para compartir. 20 pruebas automáticas.
 - **0.32.1** — Receta de la carta *Armed Ride: Ride Booker* (tinte negro, libro, 2 lingotes de hierro, redstone; se desbloquea al tener el Driver) y la carta aparece en el cofre del taller de la casa de la montaña.
 - **0.32.0** — Ride Booker más grande (5 mazos × 27) y guardado automático de cartas nuevas, botón *Guardar todo*, rueda de cartas (C) y Alt + rueda del ratón para pasar de carta. 19 pruebas automáticas.
 - **0.31.0** — Al entrar por primera vez a un mundo: carta de Genzo, Guía y Brújula de los Kagami, que apunta a la casa de la montaña (donde está el Dex Driver). Receta de la brújula. 18 pruebas automáticas.
