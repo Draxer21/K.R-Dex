@@ -31,6 +31,18 @@ jobs:
           set -o pipefail
           ./gradlew build --stacktrace 2>&1 | tee build.log
 
+      - name: Probe API
+        if: always()
+        run: |
+          : > probe.txt
+          JARS=$(find ~/.gradle build .gradle -name "*.jar" 2>/dev/null | grep -iE "minecraft|neoforge|geckolib" | sort -u)
+          echo "$JARS" | head -40 >> probe.txt
+          for c in net.minecraft.client.gui.screens.inventory.InventoryScreen net.minecraft.world.entity.decoration.ArmorStand net.minecraft.client.gui.components.EditBox net.minecraft.client.KeyboardHandler com.geckolib.renderer.GeoArmorRenderer 'com.geckolib.renderer.GeoArmorRenderer$ArmorSegment' com.geckolib.renderer.base.RenderPassInfo net.minecraft.client.gui.GuiGraphicsExtractor com.geckolib.renderer.base.GeoRenderer; do
+            p=$(echo $c | tr . /).class
+            for j in $JARS; do if unzip -l "$j" 2>/dev/null | grep -q " $p\$"; then echo "=== $c ($j)" >> probe.txt; javap -cp "$j" "$c" >> probe.txt 2>&1; break; fi; done
+          done
+          mkdir -p /tmp/out && cp probe.txt /tmp/out/
+
       - name: Subir el .jar
         if: success()
         uses: actions/upload-artifact@v4
@@ -93,7 +105,7 @@ jobs:
       - name: Guardar registro en la rama ci-logs
         if: always()
         run: |
-          mkdir -p /tmp/out && cp build.log /tmp/out/build.log || true
+          mkdir -p /tmp/out && cp build.log /tmp/out/build.log || true; cp probe.txt /tmp/out/ 2>/dev/null || true
           cp build/libs/*.jar /tmp/out/ 2>/dev/null || true
           cp server.log server_errors.log gametest.log gametest_summary.log shots.log server2.log /tmp/out/ 2>/dev/null || true
           mkdir -p /tmp/out/shots && cp shots/*.png /tmp/out/shots/ 2>/dev/null || true
