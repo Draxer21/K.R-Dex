@@ -288,7 +288,7 @@ public final class DexEvents {
         player.take(ie, 1);
         stack.shrink(1);
         if (stack.isEmpty()) ie.discard(); else ie.setItem(stack);
-        event.setCanPickup(net.neoforged.neoforge.common.util.TriState.FALSE);
+        event.setCanPickup(net.minecraft.util.TriState.FALSE);
     }
 
     /** Primera vez en el mundo: la carta de Genzo y la brujula de los Kagami. */
