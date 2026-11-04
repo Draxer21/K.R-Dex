@@ -159,6 +159,41 @@ public final class ShotDirector {
         s.add(new Step(t + 30, () -> shoot("editor_traje")));
         s.add(new Step(t + 34, () -> { Minecraft.getInstance().setScreen(null); Minecraft.getInstance().options.hideGui = true; }));
         t += 40;
+        // 5d: el Archivo del Driver (con un mazo a medias) y el aviso de escaneo
+        s.add(new Step(t, () -> server(srv -> {
+            ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+            ItemStack driver = new ItemStack(DexItems.DEX_DRIVER.get());
+            com.draxer.dexrider.item.DriverDeck deck = com.draxer.dexrider.item.DexDriverItem.getDeck(driver);
+            for (com.draxer.dexrider.item.DexCard c : new com.draxer.dexrider.item.DexCard[]{
+                    com.draxer.dexrider.item.DexCard.KAMEN_RIDE_DEX, com.draxer.dexrider.item.DexCard.ATTACK_RIDE_SLASH,
+                    com.draxer.dexrider.item.DexCard.FINAL_ATTACK_RIDE_DEX, com.draxer.dexrider.item.DexCard.FORM_RIDE_SPEED,
+                    com.draxer.dexrider.item.DexCard.FORM_RIDE_FROST}) deck = deck.withCard(c);
+            deck = deck.levelUp(com.draxer.dexrider.item.DexCard.FORM_RIDE_SPEED)
+                    .withSamples(com.draxer.dexrider.item.DexCard.FORM_RIDE_SPEED, 3)
+                    .withSamples(com.draxer.dexrider.item.DexCard.FORM_RIDE_SKY, 1);
+            com.draxer.dexrider.item.DexDriverItem.setDeck(driver, deck);
+            p.getInventory().add(driver);
+        })));
+        s.add(new Step(t + 10, () -> {
+            Minecraft.getInstance().options.hideGui = false;
+            Minecraft.getInstance().setScreen(new DriverArchiveScreen(com.draxer.dexrider.item.DexCard.FORM_RIDE_SKY));
+        }));
+        s.add(new Step(t + 30, () -> shoot("archivo")));
+        s.add(new Step(t + 34, () -> {
+            Minecraft.getInstance().setScreen(null);
+            server(srv -> {
+                ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+                ItemStack driver = com.draxer.dexrider.item.DexDriverItem.findDriver(p);
+                com.draxer.dexrider.item.DexDriverItem.setDeck(driver, com.draxer.dexrider.item.DexDriverItem.getDeck(driver)
+                        .withSamples(com.draxer.dexrider.item.DexCard.FORM_RIDE_TERRA, 1));
+            });
+        }));
+        s.add(new Step(t + 48, () -> shoot("aviso_escaneo")));
+        s.add(new Step(t + 52, () -> {
+            Minecraft.getInstance().options.hideGui = true;
+            server(srv -> com.draxer.dexrider.item.DexDriverItem.findDriver(srv.getPlayerList().getPlayers().get(0)).setCount(0));
+        }));
+        t += 58;
         // Complete Form normal y Nv.2 (de frente y de espaldas para ver la capa)
         t = scene(s, t + 2, "complete_nv2", lvl -> {
             stand(lvl, -1.2, null, "complete", false);
