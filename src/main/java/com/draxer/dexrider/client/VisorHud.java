@@ -313,7 +313,7 @@ public final class VisorHud {
         if (DexEmotions.HEROIC.equals(emotion)) { out.add(Component.translatable("visor.dexrider.alert_heroic")); cols.add(0x7FB8FF); }
         if (p.getAirSupply() < p.getMaxAirSupply() / 3) { out.add(Component.translatable("visor.dexrider.alert_air")); cols.add(0x4FA8FF); }
         if (out.isEmpty() || ticks % 20 >= 14) return;
-        int y = 22;
+        int y = 60;
         for (int i = 0; i < out.size(); i++) {
             String t = "⚠ " + out.get(i).getString() + " ⚠";
             int w = font.width(t);
