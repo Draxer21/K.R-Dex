@@ -110,5 +110,133 @@
       }
     ],
     "subtitle": "subtitles.dexrider.voice_final_attack_ride"
+  },
+  "voice_form_ride": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_form_ride"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_form_ride"
+  },
+  "voice_vehicle_ride": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_vehicle_ride"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_vehicle_ride"
+  },
+  "voice_upgrade": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_upgrade"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_upgrade"
+  },
+  "voice_complete": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_complete"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_complete"
+  },
+  "voice_henshin": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_henshin"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_henshin"
+  },
+  "voice_rider_dex": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_rider_dex"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_rider_dex"
+  },
+  "voice_rider_nine": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_rider_nine"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_rider_nine"
+  },
+  "voice_rider_forge": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_rider_forge"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_rider_forge"
+  },
+  "voice_rider_psyga": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_rider_psyga"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_rider_psyga"
+  },
+  "voice_rider_cipher": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_rider_cipher"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_rider_cipher"
+  },
+  "voice_rider_warden": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_rider_warden"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_rider_warden"
+  },
+  "voice_rider_orga": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_rider_orga"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_rider_orga"
+  },
+  "voice_rider_spore": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_rider_spore"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_rider_spore"
+  },
+  "voice_rider_mirage": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_rider_mirage"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_rider_mirage"
+  },
+  "voice_rider_proto": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_rider_proto"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_rider_proto"
+  },
+  "voice_rider_kaixa": {
+    "sounds": [
+      {
+        "name": "dexrider:voice_rider_kaixa"
+      }
+    ],
+    "subtitle": "subtitles.dexrider.voice_rider_kaixa"
   }
 }

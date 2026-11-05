@@ -1271,5 +1271,21 @@
   "screen.dexrider.archive.tab.attack_ride": "Attack",
   "screen.dexrider.archive.tab.armed_ride": "Armed",
   "screen.dexrider.archive.tab.vehicle_ride": "Vehicle",
-  "screen.dexrider.archive.tab.final_attack_ride": "Final"
+  "screen.dexrider.archive.tab.final_attack_ride": "Final",
+  "subtitles.dexrider.voice_form_ride": "Driver: \"Form Ride\"",
+  "subtitles.dexrider.voice_vehicle_ride": "Driver: \"Vehicle Ride\"",
+  "subtitles.dexrider.voice_upgrade": "Driver: \"Upgrade\"",
+  "subtitles.dexrider.voice_complete": "Driver: \"Complete\"",
+  "subtitles.dexrider.voice_henshin": "\"Henshin!\"",
+  "subtitles.dexrider.voice_rider_dex": "Driver: \"Dex\"",
+  "subtitles.dexrider.voice_rider_nine": "Driver: \"Nine\"",
+  "subtitles.dexrider.voice_rider_forge": "Driver: \"Forge\"",
+  "subtitles.dexrider.voice_rider_psyga": "Driver: \"Psyga\"",
+  "subtitles.dexrider.voice_rider_cipher": "Driver: \"Cipher\"",
+  "subtitles.dexrider.voice_rider_warden": "Driver: \"Warden\"",
+  "subtitles.dexrider.voice_rider_orga": "Driver: \"Orga\"",
+  "subtitles.dexrider.voice_rider_spore": "Driver: \"Spore\"",
+  "subtitles.dexrider.voice_rider_mirage": "Driver: \"Mirage\"",
+  "subtitles.dexrider.voice_rider_proto": "Driver: \"Proto\"",
+  "subtitles.dexrider.voice_rider_kaixa": "Driver: \"Kaixa\""
 }

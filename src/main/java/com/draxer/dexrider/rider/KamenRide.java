@@ -124,7 +124,7 @@ public enum KamenRide {
 
         DexSounds.play(level, player, DexSounds.CARD_INSERT, 1.0F, 1.0F);
         DexSounds.play(level, player, DexSounds.HENSHIN, 1.0F, target == COMPLETE ? 0.7F : 1.1F);
-        DexSounds.play(level, player, DexSounds.VOICE_KAMEN_RIDE, 1.0F, 1.0F);
+        Voices.kamenRide(level, player, target, 0);
         FX.ring(level, player, target.color, 1.5, 9);
         FX.ring(level, player, FX.MAGENTA, 1.0, 9);
         player.sendSystemMessage(Component.translatable("message.dexrider.kamen_ride", target.displayName()), true);

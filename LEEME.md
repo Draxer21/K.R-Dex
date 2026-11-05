@@ -611,10 +611,11 @@ Todos los efectos son **originales**, sintetizados para el mod (en `assets/dexri
 insertar carta, transformación, destransformación, Armed Ride, carga y golpe del Final Attack Ride,
 escaneo, disparo y cambio de modo del Ride Booker.
 
-**Voces**: `voice_kamen_ride.ogg`, `voice_armed_ride.ogg`, `voice_attack_ride.ogg` y
-`voice_final_attack_ride.ogg` vienen **en silencio**. Para ponerles voz basta con reemplazar cada
-archivo por tu grabación con el mismo nombre (formato .ogg, **mono**). Suenan junto con el efecto
-correspondiente.
+**Voces**: grabadas por Draxer y procesadas como la voz del Driver (un toque más grave, brillo metálico y
+eco corto). El Driver dice *Kamen Ride* seguido del nombre del Rider (*Dex, Nine, Forge, Psyga, Cipher, Warden,
+Orga, Spore, Mirage, Proto, Kaixa*; en la Complete Form, *Complete*), *Form Ride*, *Attack Ride*, *Armed Ride*,
+*Vehicle Ride*, *Final Attack Ride* y *Upgrade*. Al transformarte, tu personaje grita *¡Henshin!* y el Driver
+responde *Kamen Ride… Dex*. Para cambiar una voz basta con reemplazar su `voice_*.ogg` (mono).
 
 Para agregar una carta nueva: un valor en `DexCard`, su textura `card_<id>.png`,
 el modelo en `items/` y `models/item/`, y la traducción.
@@ -630,6 +631,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.35.0** — Voces del Driver grabadas por Draxer: Kamen Ride + nombre de cada Rider, Form Ride, Attack Ride, Armed Ride, Vehicle Ride, Final Attack Ride, Upgrade y Complete, y el ¡Henshin! del jugador al transformarse. 22 pruebas automáticas.
 - **0.34.0** — Archivo del Driver (tecla K o botón del Ride Booker): todas las cartas como álbum, en silueta las que faltan, con muestras, niveles y una pista de cómo conseguir cada una. Aviso de escaneo en pantalla al sumar muestras, generar una carta o subirla de nivel. 21 pruebas automáticas.
 - **0.33.0** — Editor del traje: maniquí 3D, colores por zona (casco, pecho, brazos, piernas, botas, acentos, ojos, plata, negro, cristal, bufanda), piezas nuevas (hombreras lisas, bufanda corta o larga, cresta) y opciones (púas, brillo, acabado mate o metálico), una apariencia propia para Base, Violent, Heroic, Upgrade y cada Form Ride, 5 ranuras de diseños y código para compartir. 20 pruebas automáticas.
 - **0.32.1** — Receta de la carta *Armed Ride: Ride Booker* (tinte negro, libro, 2 lingotes de hierro, redstone; se desbloquea al tener el Driver) y la carta aparece en el cofre del taller de la casa de la montaña.

@@ -177,7 +177,7 @@ public class DexMachineEntity extends Animal implements GeoEntity {
         FX.cardPath(level, player.position().add(0, 1, 0), pos.add(0, 0.6, 0), 2, FX.GOLD);
         FX.particle(level, ParticleTypes.CLOUD, pos.add(0, 0.5, 0), 20, 0.6, 0.05);
         DexSounds.play(level, player, DexSounds.ARMED_RIDE, 1.2F, 0.8F);
-        DexSounds.play(level, player, DexSounds.VOICE_ARMED_RIDE, 1.0F, 1.0F);
+        DexSounds.play(level, player, DexSounds.VOICE_VEHICLE_RIDE, 1.0F, 1.0F);
         player.sendSystemMessage(Component.translatable("message.dexrider.vehicle_ride",
                 kind.displayName()), true);
     }

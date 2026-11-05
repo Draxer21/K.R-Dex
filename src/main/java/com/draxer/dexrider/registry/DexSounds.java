@@ -13,8 +13,8 @@ import net.neoforged.neoforge.registries.DeferredRegister;
  * Sonidos del mod. Los archivos estan en assets/dexrider/sounds/*.ogg y se declaran en sounds.json.
  *
  * Efectos: originales, sintetizados para el mod.
- * Voces (voice_*.ogg): vienen en silencio; para darles voz basta con reemplazar el .ogg
- * por una grabacion (mono, mismo nombre de archivo).
+ * Voces (voice_*.ogg): grabadas por Draxer y procesadas como la voz del Driver (scratchpad voz_driver.sh);
+ * voice_henshin es la voz del jugador, casi sin efecto.
  */
 public final class DexSounds {
     private DexSounds() {}
@@ -36,6 +36,17 @@ public final class DexSounds {
     public static final DeferredHolder<SoundEvent, SoundEvent> VOICE_ARMED_RIDE = sound("voice_armed_ride");
     public static final DeferredHolder<SoundEvent, SoundEvent> VOICE_ATTACK_RIDE = sound("voice_attack_ride");
     public static final DeferredHolder<SoundEvent, SoundEvent> VOICE_FINAL_ATTACK_RIDE = sound("voice_final_attack_ride");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VOICE_FORM_RIDE = sound("voice_form_ride");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VOICE_VEHICLE_RIDE = sound("voice_vehicle_ride");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VOICE_UPGRADE = sound("voice_upgrade");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VOICE_COMPLETE = sound("voice_complete");
+    public static final DeferredHolder<SoundEvent, SoundEvent> VOICE_HENSHIN = sound("voice_henshin");
+    /** El Driver dice el nombre del Rider despues de "Kamen Ride" (por id: dex, nine, forge...). */
+    public static final java.util.Map<String, DeferredHolder<SoundEvent, SoundEvent>> VOICE_RIDERS = new java.util.LinkedHashMap<>();
+    static {
+        for (String id : new String[]{"dex", "nine", "forge", "psyga", "cipher", "warden", "orga", "spore", "mirage", "proto", "kaixa"})
+            VOICE_RIDERS.put(id, sound("voice_rider_" + id));
+    }
 
     private static DeferredHolder<SoundEvent, SoundEvent> sound(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(DexRider.id(name)));
