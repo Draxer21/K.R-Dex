@@ -190,14 +190,16 @@ public class BookerBookScreen extends Screen {
                         (alpha << 24) | 0xFFFFFF);
             }
             // funda: plastico translucido sobre la mitad de abajo, con borde dorado
-            g.fill(bx, by + PH / 2 + 2, bx + PW, by + PH, 0x70302C36);
-            g.fill(bx, by + PH / 2 + 2, bx + PW, by + PH / 2 + 3, slot == sel ? 0xFF28D250 : GOLD);
+            int sy = by + PH * 2 / 3;
+            g.fill(bx + 1, sy, bx + PW - 1, by + PH - 1, 0x58201C26);
+            g.fill(bx + 1, sy, bx + PW - 1, sy + 1, slot == sel ? 0xFF28D250 : 0xC0E0B23A);
+            g.fill(bx + 1, sy + 1, bx + PW - 1, sy + 2, 0x40FFFFFF);
             g.fill(bx, by, bx + 1, by + PH, GOLD_D); g.fill(bx + PW - 1, by, bx + PW, by + PH, GOLD_D);
             g.fill(bx, by + PH - 1, bx + PW, by + PH, GOLD_D);
             if (slot == sel) g.fill(bx + PW - 6, by + 2, bx + PW - 2, by + 6, 0xFF28D250);
         }
         Component hint = Component.translatable("booker.dexrider.book_hint");
-        g.text(font, hint, cx - font.width(hint) / 2, top + H - 36, 0xFF9A93A6, false);
+        g.text(font, hint, x1 - 12 - font.width(hint), y0 + 7, 0xFF9A93A6, false);
     }
 
     @Override
