@@ -44,6 +44,11 @@ public class RideBookerScreen extends AbstractContainerScreen<RideBookerMenu> {
                 .bounds(leftPos + imageWidth + 4, topPos + 38, 70, 18)
                 .tooltip(net.minecraft.client.gui.components.Tooltip.create(Component.translatable("booker.dexrider.store_all.tip")))
                 .build());
+        addRenderableWidget(Button.builder(Component.translatable("booker.dexrider.book"), b -> {
+            Minecraft mc = Minecraft.getInstance();
+            onClose();
+            mc.setScreen(new BookerBookScreen());
+        }).bounds(leftPos + imageWidth + 4, topPos + 82, 70, 18).build());
         addRenderableWidget(Button.builder(Component.translatable("booker.dexrider.archive"), b -> {
             Minecraft mc = Minecraft.getInstance();
             onClose();

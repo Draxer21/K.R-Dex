@@ -203,6 +203,28 @@ public final class ShotDirector {
         s.add(new Step(t + 20, () -> shoot("misiones")));
         s.add(new Step(t + 24, () -> { Minecraft.getInstance().setScreen(null); Minecraft.getInstance().options.hideGui = true; }));
         t += 28;
+        // 5e2: el Ride Booker abierto como libro, con cartas en los bolsillos
+        s.add(new Step(t, () -> server(srv -> {
+            ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+            ItemStack driver = new ItemStack(DexItems.DEX_DRIVER.get());
+            net.minecraft.core.NonNullList<ItemStack> book = net.minecraft.core.NonNullList.withSize(com.draxer.dexrider.menu.RideBookerMenu.SIZE, ItemStack.EMPTY);
+            com.draxer.dexrider.item.DexCard[] all = com.draxer.dexrider.item.DexCard.values();
+            for (int i = 0; i < 15; i++) book.set(i < 9 ? i : i + 0, new ItemStack(DexItems.card(all[i * 3 % all.length]).get()));
+            com.draxer.dexrider.menu.Booker.save(driver, book);
+            driver.set(DexComponents.BOOKER_SEL.get(), 4);
+            p.getInventory().add(driver);
+        })));
+        s.add(new Step(t + 10, () -> {
+            Minecraft.getInstance().options.hideGui = false;
+            Minecraft.getInstance().setScreen(new BookerBookScreen());
+        }));
+        s.add(new Step(t + 30, () -> shoot("booker_libro")));
+        s.add(new Step(t + 34, () -> {
+            Minecraft.getInstance().setScreen(null);
+            Minecraft.getInstance().options.hideGui = true;
+            server(srv -> com.draxer.dexrider.item.DexDriverItem.findDriver(srv.getPlayerList().getPlayers().get(0)).setCount(0));
+        }));
+        t += 40;
         // 5f: Form Ride Hydro junto a Frost y Speed
         t = scene(s, t, "hydro", lvl -> {
             String[] forms = {"speed", "hydro", "frost"};

@@ -1364,5 +1364,9 @@
   "screen.dexrider.missions.all": "All completed!",
   "key.dexrider.missions": "Kagami Missions",
   "screen.dexrider.archive.missions": "Missions",
-  "screen.dexrider.missions.levels": "%s levels of experience"
+  "screen.dexrider.missions.levels": "%s levels of experience",
+  "booker.dexrider.organize": "Organize cards",
+  "booker.dexrider.organize.tip": "Opens the Booker as a chest: put in, take out and move cards between decks",
+  "booker.dexrider.book": "Book",
+  "booker.dexrider.book_hint": "Click a card: draw it and use it · wheel or arrows: turn the page"
 }
