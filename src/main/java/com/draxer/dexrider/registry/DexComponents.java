@@ -73,6 +73,12 @@ public final class DexComponents {
                     .persistent(SuitConfig.CODEC)
                     .networkSynchronized(SuitConfig.STREAM_CODEC));
 
+    /** Selector rapido (rueda del raton mantenida): las cartas elegidas, por id de item (hasta 8), en el Driver. */
+    public static final Supplier<DataComponentType<java.util.List<String>>> QUICK_PICKS =
+            COMPONENTS.registerComponentType("quick_picks", builder -> builder
+                    .persistent(Codec.STRING.listOf())
+                    .networkSynchronized(ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list(8))));
+
     /** Editor del traje (0.33): las 5 ranuras de disenos, en el Driver. */
     public static final Supplier<DataComponentType<com.draxer.dexrider.item.SuitSlots>> SUIT_SLOTS =
             COMPONENTS.registerComponentType("suit_slots", builder -> builder

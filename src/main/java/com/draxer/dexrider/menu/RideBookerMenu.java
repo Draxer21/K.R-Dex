@@ -200,8 +200,9 @@ public class RideBookerMenu extends AbstractContainerMenu {
     // ------------------------------------------------------------------ uso rapido en combate (sin abrir el Booker)
 
     public static final int QUICK_PREV = 0, QUICK_NEXT = 1, QUICK_DECK_PREV = 2, QUICK_DECK_NEXT = 3, QUICK_USE = 4;
-    /** Rueda de cartas: QUICK_SLOT + ranura = usar esa ranura. */
-    public static final int QUICK_SLOT = 100;
+    /** Rueda de cartas: QUICK_SLOT + ranura = usar esa ranura. QUICK_FAV + ranura = marcar/desmarcar para el selector. */
+    public static final int QUICK_SLOT = 100, QUICK_FAV = 1000;
+    public static final int MAX_PICKS = 8;
     public static final String[] DECK_KEYS = {"rescue", "crowd", "duel", "chase", "everything_wrong"};
 
     /**
@@ -209,6 +210,7 @@ public class RideBookerMenu extends AbstractContainerMenu {
      * La eleccion se guarda en el Driver y se muestra encima de la barra de objetos.
      */
     public static void quick(ServerPlayer player, int action) {
+        if (action >= QUICK_FAV) { togglePick(player, action - QUICK_FAV); return; }
         if (action >= QUICK_SLOT) { useSlot(player, action - QUICK_SLOT); return; }
         ItemStack driver = DexDriverItem.findDriver(player);
         if (driver.isEmpty() || !(player.level() instanceof ServerLevel level)) return;
@@ -264,6 +266,25 @@ public class RideBookerMenu extends AbstractContainerMenu {
         player.sendSystemMessage(chosen.isEmpty()
                 ? Component.translatable("message.dexrider.booker_deck_empty", deckName)
                 : Component.translatable("message.dexrider.booker_selected", deckName, (sel % PER_DECK) + 1, chosen.getHoverName()), true);
+    }
+
+    /** Marca o desmarca la carta de esa ranura para el selector rapido (hasta MAX_PICKS). */
+    public static void togglePick(ServerPlayer player, int slot) {
+        ItemStack driver = DexDriverItem.findDriver(player);
+        if (driver.isEmpty() || slot < 0 || slot >= SIZE) return;
+        ItemStack card = Booker.load(driver).get(slot);
+        if (card.isEmpty()) return;
+        String id = net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(card.getItem()).toString();
+        java.util.List<String> picks = new java.util.ArrayList<>(driver.getOrDefault(DexComponents.QUICK_PICKS.get(), java.util.List.of()));
+        if (!picks.remove(id)) {
+            if (picks.size() >= MAX_PICKS) {
+                player.sendSystemMessage(Component.translatable("message.dexrider.quick_full", MAX_PICKS), true);
+                return;
+            }
+            picks.add(id);
+        }
+        driver.set(DexComponents.QUICK_PICKS.get(), java.util.List.copyOf(picks));
+        if (player.level() instanceof ServerLevel level) DexSounds.play(level, player, DexSounds.CARD_INSERT, 0.4F, 1.9F);
     }
 
     /** Rueda de cartas: elegir la ranura {@code slot} (0..SIZE-1) y usarla en el acto. */
