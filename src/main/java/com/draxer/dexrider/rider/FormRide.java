@@ -240,9 +240,8 @@ public enum FormRide {
                     // Nv2+: nadando hacia delante deja una estela de corriente
                     if (lvl >= 2 && p.isSwimming() && p.tickCount % 2 == 0) FX.particle(level, ParticleTypes.BUBBLE_COLUMN_UP, p.position(), 3, 0.3, 0.1);
                 } else if (p.tickCount % 6 == 0) {
-                    // gotas a la altura de la cintura y hacia atras (a la altura de los ojos tapan la camara)
-                    Vec3 back = Vec3.directionFromRotation(0, p.getYRot()).scale(-0.35);
-                    FX.particle(level, ParticleTypes.DRIPPING_WATER, p.position().add(back).add(0, 0.9, 0), 2, 0.3, 0.0);
+                    // gotas a la altura de las rodillas: cerca de los ojos se ven como cuadros enormes en primera persona
+                    FX.particle(level, ParticleTypes.DRIPPING_WATER, p.position().add(0, 0.4, 0), 2, 0.25, 0.0);
                 }
                 // efectos al entrar o salir del agua (sin esperar al siguiente segundo)
                 if (p.tickCount % 5 == 0) form.applyEffects(p, lvl);
