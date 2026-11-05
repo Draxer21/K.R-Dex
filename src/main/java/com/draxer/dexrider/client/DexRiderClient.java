@@ -62,7 +62,7 @@ public class DexRiderClient {
     public static final Lazy<KeyMapping> BOOKER_USE_KEY = Lazy.of(() -> new KeyMapping(
             "key.dexrider.booker_use", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_LEFT_ALT, CATEGORY));
 
-    /** C: rueda de cartas del mazo actual. */
+    /** C: el selector rapido desde el teclado (igual que mantener la rueda del raton). */
     public static final Lazy<KeyMapping> CARD_WHEEL_KEY = Lazy.of(() -> new KeyMapping(
             "key.dexrider.card_wheel", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_C, CATEGORY));
     /** K: Archivo del Driver (todas las cartas, pistas y muestras). */
@@ -205,7 +205,7 @@ public class DexRiderClient {
         while (CARD_WHEEL_KEY.get().consumeClick()) {
             if (mcp != null && Minecraft.getInstance().screen == null
                     && !com.draxer.dexrider.item.DexDriverItem.findDriver(mcp).isEmpty())
-                Minecraft.getInstance().setScreen(new CardWheelScreen());
+                Minecraft.getInstance().setScreen(new QuickSelectScreen(CARD_WHEEL_KEY.get()));
         }
         while (SUMMON_KEY.get().consumeClick()) {
             if (Minecraft.getInstance().player != null && Minecraft.getInstance().screen == null) {
