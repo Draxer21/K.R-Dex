@@ -154,8 +154,11 @@ public class DexRiderClient {
             }
         }
         while (BOOKER_KEY.get().consumeClick()) {
-            if (Minecraft.getInstance().player != null && Minecraft.getInstance().gui.screen() == null) {
-                ClientPacketDistributor.sendToServer(com.draxer.dexrider.network.OpenBookerPayload.INSTANCE);
+            var pl = Minecraft.getInstance().player;
+            if (pl != null && Minecraft.getInstance().gui.screen() == null) {
+                // con el Driver encima: el libro (cartas a la vista); sin el, el aviso de siempre del servidor
+                if (!com.draxer.dexrider.item.DexDriverItem.findDriver(pl).isEmpty()) Minecraft.getInstance().gui.setScreen(new BookerBookScreen());
+                else ClientPacketDistributor.sendToServer(com.draxer.dexrider.network.OpenBookerPayload.INSTANCE);
             }
         }
         var mcp = Minecraft.getInstance().player;

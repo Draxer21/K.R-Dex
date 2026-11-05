@@ -1364,5 +1364,9 @@
   "screen.dexrider.missions.all": "¡Todas cumplidas!",
   "key.dexrider.missions": "Misiones de los Kagami",
   "screen.dexrider.archive.missions": "Misiones",
-  "screen.dexrider.missions.levels": "%s niveles de experiencia"
+  "screen.dexrider.missions.levels": "%s niveles de experiencia",
+  "booker.dexrider.organize": "Ordenar cartas",
+  "booker.dexrider.organize.tip": "Abre el Booker como cofre: meter, sacar y mover cartas entre mazos",
+  "booker.dexrider.book": "Libro",
+  "booker.dexrider.book_hint": "Clic: sacar y usar · rueda: pasar página"
 }
