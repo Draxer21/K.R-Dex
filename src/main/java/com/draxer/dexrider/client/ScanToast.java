@@ -32,6 +32,12 @@ public final class ScanToast {
     private static int samples, needed, level, timer;
     private static boolean complete;
 
+    /** Para la reticula del visor: carta que se esta escaneando (null si no hay aviso), y su avance. */
+    static DexCard scanning() { return timer > 0 && !complete ? card : null; }
+    static float scanProgress() { return needed <= 0 ? 0 : samples / (float) needed; }
+    static boolean justCompleted() { return timer > 0 && complete; }
+    static DexCard lastCard() { return card; }
+
     @SubscribeEvent
     static void register(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.HOTBAR, DexRider.id("scan_toast"), ScanToast::draw);
