@@ -265,8 +265,8 @@ bloque que miras. La tecla se cambia en Controles. Tiene **5 mazos** de 27 carta
   Los Booker de versiones anteriores (18 por mazo) se reordenan solos al abrirlos.
 
 **Uso rápido en combate (sin abrir el Booker)**:
-- **Rueda de cartas (C)**: hasta 12 cartas del mazo en círculo; clic en una y se usa. La rueda del ratón o las
-  flechas cambian de mazo. No pausa el juego.
+- **Selector rápido** (**mantener la rueda del ratón** transformado, o **C** desde el teclado): tus cartas favoritas
+  en círculo; apuntas a una y al soltar se usa. Sin favoritas elegidas, muestra las 8 primeras del mazo actual.
 - **Alt izquierdo + rueda del ratón**: mientras mantienes Alt, la rueda pasa de carta y el HUD muestra la anterior,
   la actual y la siguiente. **Al soltar Alt** se usa la carta elegida (si giraste la rueda, soltar solo elige).
 - **Z / X** siguen eligiendo la carta anterior / siguiente (con **Shift**, cambian de mazo).
@@ -673,6 +673,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.38.1** — La tecla C abre el mismo selector rápido (la rueda de cartas antigua se retira). La Guía del Rider System suma páginas: Archivo, cartas de casa (misiones), editor del traje e Hydro, y las teclas y el Ride Booker al día.
 - **0.38.0** — Selector rápido: mantén la rueda del ratón para elegir entre tus cartas favoritas en círculo y soltar para usarla; se eligen en el libro del Ride Booker (★ Selector, hasta 8). 25 pruebas automáticas.
 - **0.37.0** — El Ride Booker se abre como un libro: estuche con páginas de bolsillos y las cartas a la vista, cintas por mazo y clic en una carta para sacarla y usarla. *Ordenar cartas* abre la vista de cofre.
 - **0.36.0** — Form Ride **Hydro** (forma del agua: respira y nada como delfín, chorro a presión, torrente y remolino; se escanea con delfines y ajolotes). **Misiones de los Kagami**: 13 cartas de Genzo, Nagisa y Tetsuya en orden, con recompensas y registro (tecla J). 24 pruebas automáticas.

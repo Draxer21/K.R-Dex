@@ -61,7 +61,19 @@ public class QuickSelectScreen extends Screen {
             slots.add(found);
             cards.add(found >= 0 ? items.get(found) : ItemStack.EMPTY);
         }
+        // sin favoritas: las primeras 8 cartas del mazo elegido
+        if (slots.isEmpty()) {
+            Integer sel = driver.get(DexComponents.BOOKER_SEL.get());
+            deckFallback = sel == null ? 0 : Math.floorMod(sel, RideBookerMenu.SIZE) / RideBookerMenu.PER_DECK;
+            for (int i = 0; i < RideBookerMenu.PER_DECK && slots.size() < RideBookerMenu.MAX_PICKS; i++) {
+                int s = deckFallback * RideBookerMenu.PER_DECK + i;
+                if (!items.get(s).isEmpty()) { slots.add(s); cards.add(items.get(s)); }
+            }
+        }
     }
+
+    /** Mazo que se muestra cuando no hay favoritas (-1 = se muestran las favoritas). */
+    private int deckFallback = -1;
 
     private int[] pos(int i) {
         double a = -Math.PI / 2 + i * 2 * Math.PI / Math.max(1, slots.size());
@@ -149,6 +161,11 @@ public class QuickSelectScreen extends Screen {
         Component center = slots.isEmpty() ? Component.translatable("screen.dexrider.quick_select.empty")
                 : hovered >= 0 ? cards.get(hovered).getHoverName() : Component.translatable("screen.dexrider.quick_select.hint");
         g.text(font, center, cx - font.width(center) / 2, cy + 10, 0xFFF2C230, true);
+        if (deckFallback >= 0) {
+            Component d = Component.translatable("screen.dexrider.quick_select.deck",
+                    Component.translatable("booker.dexrider.deck." + RideBookerMenu.DECK_KEYS[deckFallback]));
+            g.text(font, d, cx - font.width(d) / 2, cy + R + 30, 0xFF9A93A6, true);
+        }
     }
 
     @Override
