@@ -124,6 +124,20 @@ que se encienden con un botón.
 5. Al caer deja la carta **Attack Ride: Severance** (cortar la correa): corta tu correa y tu Violent Emotion, limpia efectos
    negativos de ti y de tus amigos, y deja sin órdenes a los enemigos cercanos. El Núcleo se apaga para siempre.
 
+### La interfaz del visor
+El Rider System es tecnología: transformado, ves lo que ve Dex desde dentro del casco.
+- **Arranque** al hacer Henshin: líneas de sistema que se escriben (*RIDER SYSTEM · DEX DRIVER · ENLACE OK · N CARTAS*…).
+- **Marco del visor**: esquinas, la forma del lente arriba y un barrido suave, del **color de los ojos de tu traje**
+  (cambia con la forma y la Emotion; con la Violent Emotion, interferencia roja).
+- **Lecturas** arriba a la izquierda: Rider y forma con su nivel, **integridad** (vida), **energía** (recarga de R),
+  Accel y Emotion. La carta elegida, junto a la barra de objetos. La lectura del objetivo, arriba a la derecha.
+- **Retícula de escaneo** alrededor de la mira mientras el Driver toma muestras (*ANALIZANDO* / *COPIADO*).
+- **Alertas**: integridad crítica, correa activa, salida abierta (Heroic) y oxígeno bajo.
+
+**Ajustable** (Archivo del Driver → *Visor*): modo **completo**, **mínimo** (marco, carta, retícula y alertas) o
+**clásico** (el HUD de antes); opacidad, tamaño, color (ojos del traje o uno elegido) y cada pieza por separado.
+Se guarda en `config/dexrider-visor.json`.
+
 ### La Lectura del Driver
 Transformado, cuando intercambias golpes con algo, el Driver lo lee y aparece un panel a la **derecha de la barra de objetos**:
 - **Nombre y vida** del objetivo (barra verde → amarilla → roja, y los corazones que le quedan).
@@ -673,6 +687,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.39.0** — Interfaz del visor: arranque al hacer Henshin, marco del lente con el color de los ojos del traje, lecturas de integridad y energía, retícula de escaneo y alertas. Ajustable desde el Archivo (modo, opacidad, tamaño, color y piezas).
 - **0.38.1** — La tecla C abre el mismo selector rápido (la rueda de cartas antigua se retira). La Guía del Rider System suma páginas: Archivo, cartas de casa (misiones), editor del traje e Hydro, y las teclas y el Ride Booker al día.
 - **0.38.0** — Selector rápido: mantén la rueda del ratón para elegir entre tus cartas favoritas en círculo y soltar para usarla; se eligen en el libro del Ride Booker (★ Selector, hasta 8). 25 pruebas automáticas.
 - **0.37.0** — El Ride Booker se abre como un libro: estuche con páginas de bolsillos y las cartas a la vista, cintas por mazo y clic en una carta para sacarla y usarla. *Ordenar cartas* abre la vista de cofre.

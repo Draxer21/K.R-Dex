@@ -38,7 +38,8 @@ public final class RiderHud {
     private static void draw(GuiGraphicsExtractor g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         HudSyncPayload s = HudState.last;
-        if (mc.player == null || !s.active() || !DexConfig.hud()) return;
+        if (mc.player == null || !s.active() || !DexConfig.hud() || mc.options.hideGui) return;
+        if (VisorSettings.get().mode != VisorSettings.Mode.CLASSIC) return;   // lo dibuja el visor
         if (System.currentTimeMillis() - HudState.receivedAt > 3000) return;   // datos viejos: no mostrar
         Font font = mc.font;
         int sw = mc.getWindow().getGuiScaledWidth(), sh = mc.getWindow().getGuiScaledHeight();
@@ -100,7 +101,7 @@ public final class RiderHud {
     }
 
     /** Con Alt mantenido: carta anterior, actual y siguiente del mazo (gira la rueda para cambiar, suelta Alt para usar). */
-    private static void strip(GuiGraphicsExtractor g, Minecraft mc, int x, int y, int sel) {
+    static void strip(GuiGraphicsExtractor g, Minecraft mc, int x, int y, int sel) {
         ItemStack driver = com.draxer.dexrider.item.DexDriverItem.findDriver(mc.player);
         if (driver.isEmpty()) return;
         var items = com.draxer.dexrider.menu.Booker.view(driver);
@@ -129,7 +130,8 @@ public final class RiderHud {
     private static void drawTarget(GuiGraphicsExtractor g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         var s = com.draxer.dexrider.network.TargetSyncPayload.last;
-        if (mc.player == null || mc.level == null || !s.active() || !DexConfig.hud() || !DexConfig.targetRead()) return;
+        if (mc.player == null || mc.level == null || !s.active() || !DexConfig.hud() || !DexConfig.targetRead() || mc.options.hideGui) return;
+        if (VisorSettings.get().mode != VisorSettings.Mode.CLASSIC) return;   // lo dibuja el visor
         if (System.currentTimeMillis() - com.draxer.dexrider.network.TargetSyncPayload.receivedAt > 3000) return;
         var entity = mc.level.getEntity(s.entityId());
         Font font = mc.font;
@@ -167,7 +169,7 @@ public final class RiderHud {
     }
 
     /** Puntos de vida a corazones, con medio corazon de precision ("3.5"). */
-    private static String hearts(float hp) {
+    static String hearts(float hp) {
         float h = Math.round(hp) / 2.0F;
         return h == Math.floor(h) ? String.valueOf((int) h) : String.format(java.util.Locale.ROOT, "%.1f", h);
     }
@@ -189,7 +191,7 @@ public final class RiderHud {
         };
     }
 
-    private static String clip(Font font, String s, int max) {
+    static String clip(Font font, String s, int max) {
         if (font.width(s) <= max) return s;
         while (s.length() > 1 && font.width(s + "…") > max) s = s.substring(0, s.length() - 1);
         return s + "…";

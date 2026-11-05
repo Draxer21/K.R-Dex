@@ -234,6 +234,40 @@ public final class ShotDirector {
             server(srv -> com.draxer.dexrider.item.DexDriverItem.findDriver(srv.getPlayerList().getPlayers().get(0)).setCount(0));
         }));
         t += 60;
+        // 5g: la interfaz del visor (transformado, con poca vida y escaneando)
+        s.add(new Step(t, () -> server(srv -> {
+            ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+            ItemStack driver = new ItemStack(DexItems.DEX_DRIVER.get());
+            p.getInventory().add(driver);
+            ItemStack chest = new ItemStack(DexItems.DEX_CHESTPLATE.get());
+            chest.set(DexComponents.FORM.get(), "hydro");
+            chest.set(DexComponents.FORM_LEVEL.get(), 2);
+            p.setItemSlot(EquipmentSlot.HEAD, new ItemStack(DexItems.DEX_HELMET.get()));
+            p.setItemSlot(EquipmentSlot.CHEST, chest);
+            p.setItemSlot(EquipmentSlot.LEGS, new ItemStack(DexItems.DEX_LEGGINGS.get()));
+            p.setItemSlot(EquipmentSlot.FEET, new ItemStack(DexItems.DEX_BOOTS.get()));
+            p.setHealth(4.0F);
+        })));
+        s.add(new Step(t + 4, () -> hudHidden(false)));
+        s.add(new Step(t + 22, () -> shoot("visor_arranque")));
+        s.add(new Step(t + 66, () -> server(srv -> {
+            ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+            ItemStack driver = com.draxer.dexrider.item.DexDriverItem.findDriver(p);
+            com.draxer.dexrider.item.DexDriverItem.setDeck(driver, com.draxer.dexrider.item.DexDriverItem.getDeck(driver)
+                    .withSamples(com.draxer.dexrider.item.DexCard.FORM_RIDE_SKY, 1));
+        })));
+        s.add(new Step(t + 80, () -> shoot("visor")));
+        s.add(new Step(t + 84, () -> {
+            hudHidden(true);
+            server(srv -> {
+                ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+                for (EquipmentSlot sl : new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET})
+                    p.setItemSlot(sl, ItemStack.EMPTY);
+                com.draxer.dexrider.item.DexDriverItem.findDriver(p).setCount(0);
+                p.setHealth(p.getMaxHealth());
+            });
+        }));
+        t += 90;
         // 5f: Form Ride Hydro junto a Frost y Speed
         t = scene(s, t, "hydro", lvl -> {
             String[] forms = {"speed", "hydro", "frost"};
