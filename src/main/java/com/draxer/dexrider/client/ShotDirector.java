@@ -216,6 +216,9 @@ public final class ShotDirector {
             for (int i = 0; i < 15; i++) book.set(i < 9 ? i : i + 0, new ItemStack(DexItems.card(all[i * 3 % all.length]).get()));
             com.draxer.dexrider.menu.Booker.save(driver, book);
             driver.set(DexComponents.BOOKER_SEL.get(), 4);
+            java.util.List<String> picks = new java.util.ArrayList<>();
+            for (int i = 0; i < 6; i++) picks.add(net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(book.get(i).getItem()).toString());
+            driver.set(DexComponents.QUICK_PICKS.get(), picks);
             p.getInventory().add(driver);
         })));
         s.add(new Step(t + 10, () -> {
@@ -223,12 +226,14 @@ public final class ShotDirector {
             Minecraft.getInstance().gui.setScreen(new BookerBookScreen());
         }));
         s.add(new Step(t + 30, () -> shoot("booker_libro")));
-        s.add(new Step(t + 34, () -> {
+        s.add(new Step(t + 34, () -> Minecraft.getInstance().gui.setScreen(new QuickSelectScreen(DexRiderClient.QUICK_SELECT_KEY.get(), true))));
+        s.add(new Step(t + 50, () -> shoot("selector_rapido")));
+        s.add(new Step(t + 54, () -> {
             Minecraft.getInstance().gui.setScreen(null);
             hudHidden(true);
             server(srv -> com.draxer.dexrider.item.DexDriverItem.findDriver(srv.getPlayerList().getPlayers().get(0)).setCount(0));
         }));
-        t += 40;
+        t += 60;
         // 5f: Form Ride Hydro junto a Frost y Speed
         t = scene(s, t, "hydro", lvl -> {
             String[] forms = {"speed", "hydro", "frost"};

@@ -70,6 +70,7 @@ public final class DexGameTests {
         FUNCTIONS.register("voices", () -> DexGameTests::voices);
         FUNCTIONS.register("hydro", () -> DexGameTests::hydro);
         FUNCTIONS.register("missions", () -> DexGameTests::missions);
+        FUNCTIONS.register("quick_picks", () -> DexGameTests::quickPicks);
     }
 
     // ------------------------------------------------------------------ utilidades
@@ -720,6 +721,29 @@ public final class DexGameTests {
             if (h.getLevel().getServer().getAdvancements().get(DexRider.id("mission/" + m.id())) == null) { fail(h, t, "falta el logro de " + m.id()); return; }
             else keys++;
         log(t, "ok: " + keys + " misiones, en orden y con recompensa");
+        h.succeed();
+    }
+
+    /** Selector rapido: marcar y desmarcar cartas del Booker, con tope de 8. */
+    static void quickPicks(GameTestHelper h) {
+        String t = "quick_picks";
+        ServerPlayer p = player(h);
+        ItemStack driver = DexDriverItem.findDriver(p);
+        net.minecraft.core.NonNullList<ItemStack> book = net.minecraft.core.NonNullList.withSize(com.draxer.dexrider.menu.RideBookerMenu.SIZE, ItemStack.EMPTY);
+        DexCard[] all = DexCard.values();
+        for (int i = 0; i < 10; i++) book.set(i, new ItemStack(DexItems.card(all[i]).get()));
+        com.draxer.dexrider.menu.Booker.save(driver, book);
+        int fav = com.draxer.dexrider.menu.RideBookerMenu.QUICK_FAV;
+        com.draxer.dexrider.menu.RideBookerMenu.quick(p, fav);
+        var picks = driver.getOrDefault(com.draxer.dexrider.registry.DexComponents.QUICK_PICKS.get(), java.util.List.<String>of());
+        if (picks.size() != 1) { fail(h, t, "no marco la carta"); return; }
+        com.draxer.dexrider.menu.RideBookerMenu.quick(p, fav);
+        picks = driver.getOrDefault(com.draxer.dexrider.registry.DexComponents.QUICK_PICKS.get(), java.util.List.<String>of());
+        if (!picks.isEmpty()) { fail(h, t, "no desmarco la carta"); return; }
+        for (int i = 0; i < 10; i++) com.draxer.dexrider.menu.RideBookerMenu.quick(p, fav + i);
+        picks = driver.getOrDefault(com.draxer.dexrider.registry.DexComponents.QUICK_PICKS.get(), java.util.List.<String>of());
+        if (picks.size() != com.draxer.dexrider.menu.RideBookerMenu.MAX_PICKS) { fail(h, t, "el tope no es " + com.draxer.dexrider.menu.RideBookerMenu.MAX_PICKS + ": " + picks.size()); return; }
+        log(t, "ok: marcar, desmarcar y tope de " + picks.size());
         h.succeed();
     }
 }

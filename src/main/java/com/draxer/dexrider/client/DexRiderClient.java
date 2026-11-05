@@ -68,6 +68,9 @@ public class DexRiderClient {
     /** K: Archivo del Driver (todas las cartas, pistas y muestras). */
     public static final Lazy<KeyMapping> ARCHIVE_KEY = Lazy.of(() -> new KeyMapping(
             "key.dexrider.archive", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, CATEGORY));
+    /** Rueda del raton mantenida: selector rapido de cartas favoritas. */
+    public static final Lazy<KeyMapping> QUICK_SELECT_KEY = Lazy.of(() -> new KeyMapping(
+            "key.dexrider.quick_select", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_MIDDLE, CATEGORY));
     /** J: misiones de los Kagami. */
     public static final Lazy<KeyMapping> MISSIONS_KEY = Lazy.of(() -> new KeyMapping(
             "key.dexrider.missions", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_J, CATEGORY));
@@ -95,6 +98,7 @@ public class DexRiderClient {
         event.register(CARD_WHEEL_KEY.get());
         event.register(ARCHIVE_KEY.get());
         event.register(MISSIONS_KEY.get());
+        event.register(QUICK_SELECT_KEY.get());
         for (Lazy<KeyMapping> k : SUMMON_SLOTS) event.register(k.get());
         event.register(KTOUCH_DEX_KEY.get());
     }
@@ -133,6 +137,17 @@ public class DexRiderClient {
     static void onClientSetup(FMLClientSetupEvent event) {
         ICurioRenderer.register(DexItems.DEX_DRIVER.get(), DexDriverCurioRenderer::new);
         if (net.neoforged.fml.ModList.get().isLoaded(com.draxer.dexrider.network.PosePayload.PAL)) PoseClient.init();
+    }
+
+    /** Transformado, la rueda del raton es el selector: no copia el bloque que miras. */
+    @SubscribeEvent
+    static void onPick(net.neoforged.neoforge.client.event.InputEvent.InteractionKeyMappingTriggered event) {
+        var p = Minecraft.getInstance().player;
+        if (event.isPickBlock() && p != null && com.draxer.dexrider.rider.Transformation.isTransformed(p)
+                && QUICK_SELECT_KEY.get().getKey().equals(Minecraft.getInstance().options.keyPickItem.getKey())) {
+            event.setCanceled(true);
+            event.setSwingHand(false);
+        }
     }
 
     @SubscribeEvent
@@ -177,6 +192,10 @@ public class DexRiderClient {
                     com.draxer.dexrider.menu.RideBookerMenu.QUICK_USE));
         if (!altDown) altScrolled = false;
         altWasDown = altDown;
+        while (QUICK_SELECT_KEY.get().consumeClick()) {
+            if (mcp != null && Minecraft.getInstance().gui.screen() == null && com.draxer.dexrider.rider.Transformation.isTransformed(mcp))
+                Minecraft.getInstance().gui.setScreen(new QuickSelectScreen(QUICK_SELECT_KEY.get()));
+        }
         while (MISSIONS_KEY.get().consumeClick()) {
             if (mcp != null && Minecraft.getInstance().gui.screen() == null) Minecraft.getInstance().gui.setScreen(new MissionsScreen());
         }

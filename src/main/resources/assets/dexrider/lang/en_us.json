@@ -1370,5 +1370,13 @@
   "booker.dexrider.book": "Book",
   "booker.dexrider.book_hint": "Click: draw and use · wheel: turn page",
   "booker.dexrider.book_hint_left": "Click a card: draw and use it",
-  "booker.dexrider.book_hint_right": "Mouse wheel: turn the page"
+  "booker.dexrider.book_hint_right": "Mouse wheel: turn the page",
+  "booker.dexrider.quick_pick": "Selector",
+  "booker.dexrider.quick_pick.tip": "Choose the quick selector cards (hold the mouse wheel, transformed): turn this on and click up to 8 cards",
+  "booker.dexrider.pick_hint": "Click: mark for the selector (%s/%s)",
+  "message.dexrider.quick_full": "The quick selector already has %s cards: unmark one",
+  "key.dexrider.quick_select": "Quick selector (hold)",
+  "screen.dexrider.quick_select": "Quick selector",
+  "screen.dexrider.quick_select.hint": "Move the mouse and release",
+  "screen.dexrider.quick_select.empty": "Choose your cards in the Ride Booker (★ Selector)"
 }

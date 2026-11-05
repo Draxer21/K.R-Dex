@@ -44,6 +44,7 @@ public class BookerBookScreen extends Screen {
     private int spread;                                    // pagina izquierda = spread * 2
     private int left, top;
     private float flip;                                    // animacion al pasar pagina (1 -> 0)
+    private boolean pickMode;                              // marcar cartas para el selector rapido (rueda del raton)
     private final List<Button> pockets = new ArrayList<>();
     private final List<Integer> pocketSlots = new ArrayList<>();
 
@@ -75,7 +76,7 @@ public class BookerBookScreen extends Screen {
                 int[] xy = pocketPos(side, i);
                 final int s = slot;
                 ItemStack st = items.get(slot);
-                Button b = Button.builder(Component.empty(), x -> use(s)).bounds(xy[0], xy[1], PW, PH).build();
+                Button b = Button.builder(Component.empty(), x -> { if (pickMode) togglePick(s); else use(s); }).bounds(xy[0], xy[1], PW, PH).build();
                 if (!st.isEmpty()) b.setTooltip(Tooltip.create(st.getHoverName()));
                 b.active = !st.isEmpty();
                 addRenderableWidget(b);
@@ -95,10 +96,13 @@ public class BookerBookScreen extends Screen {
         addRenderableWidget(Button.builder(Component.translatable("booker.dexrider.organize"), x -> {
             onClose();
             ClientPacketDistributor.sendToServer(OpenBookerPayload.INSTANCE);
-        }).bounds(left + W / 2 - 92, top + H - 22, 88, 16)
+        }).bounds(left + W / 2 - 84, top + H - 22, 80, 16)
                 .tooltip(Tooltip.create(Component.translatable("booker.dexrider.organize.tip"))).build());
         addRenderableWidget(Button.builder(Component.translatable("booker.dexrider.archive"), x -> Minecraft.getInstance().gui.setScreen(new DriverArchiveScreen()))
-                .bounds(left + W / 2 + 4, top + H - 22, 88, 16).build());
+                .bounds(left + W / 2 + 4, top + H - 22, 80, 16).build());
+        addRenderableWidget(Button.builder(Component.literal((pickMode ? "§a" : "") + "★ ").append(Component.translatable("booker.dexrider.quick_pick")),
+                x -> { pickMode = !pickMode; init(); }).bounds(left + 36, top + H - 22, 64, 16)
+                .tooltip(Tooltip.create(Component.translatable("booker.dexrider.quick_pick.tip"))).build());
     }
 
     /** Esquina del bolsillo i (0..8) de la pagina izquierda (side 0) o derecha (1). */
@@ -115,6 +119,18 @@ public class BookerBookScreen extends Screen {
         var p = Minecraft.getInstance().player;
         if (p != null) p.playSound(net.minecraft.sounds.SoundEvents.BOOK_PAGE_TURN, 0.8F, 1.1F);
         init();
+    }
+
+    private void togglePick(int slot) {
+        if (items.get(slot).isEmpty()) return;
+        ClientPacketDistributor.sendToServer(new QuickBookerPayload(RideBookerMenu.QUICK_FAV + slot));
+    }
+
+    /** Ids de las cartas marcadas para el selector (se leen del Driver cada vez: el servidor las actualiza). */
+    private static List<String> picks() {
+        var p = Minecraft.getInstance().player;
+        ItemStack driver = p == null ? ItemStack.EMPTY : DexDriverItem.findDriver(p);
+        return driver.isEmpty() ? List.of() : driver.getOrDefault(DexComponents.QUICK_PICKS.get(), List.of());
     }
 
     private void use(int slot) {
@@ -176,6 +192,7 @@ public class BookerBookScreen extends Screen {
             g.text(font, Component.translatable("booker.dexrider.deck." + RideBookerMenu.DECK_KEYS[deck])
                     .append(" · " + num + "/" + PAGES_PER_DECK), hx + 7, top + 22, 0xFFE8E2D6, false);
         }
+        List<String> favs = picks();
         for (int i = 0; i < pockets.size(); i++) {
             Button b = pockets.get(i);
             int slot = pocketSlots.get(i);
@@ -197,8 +214,12 @@ public class BookerBookScreen extends Screen {
             g.fill(bx, by, bx + 1, by + PH, GOLD_D); g.fill(bx + PW - 1, by, bx + PW, by + PH, GOLD_D);
             g.fill(bx, by + PH - 1, bx + PW, by + PH, GOLD_D);
             if (slot == sel) g.fill(bx + PW - 6, by + 2, bx + PW - 2, by + 6, 0xFF28D250);
+            if (!st.isEmpty() && favs.contains(BuiltInRegistries.ITEM.getKey(st.getItem()).toString()))
+                g.text(font, Component.literal("★"), bx + 3, by + 3, 0xFFFFD84A, true);
+            if (pickMode && !st.isEmpty() && hover) g.fill(bx, by, bx + PW, by + 1, 0xFFFFD84A);
         }
-        Component hl = Component.translatable("booker.dexrider.book_hint_left"), hr = Component.translatable("booker.dexrider.book_hint_right");
+        Component hl = pickMode ? Component.translatable("booker.dexrider.pick_hint", favs.size(), RideBookerMenu.MAX_PICKS)
+                : Component.translatable("booker.dexrider.book_hint_left"), hr = Component.translatable("booker.dexrider.book_hint_right");
         g.text(font, hl, (x0 + 9 + cx - 3) / 2 - font.width(hl) / 2, y1 - 36, 0xFF9A93A6, false);
         g.text(font, hr, (cx + 3 + x1 - 9) / 2 - font.width(hr) / 2, y1 - 36, 0xFF9A93A6, false);
     }

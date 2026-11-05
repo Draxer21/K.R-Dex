@@ -249,7 +249,12 @@ Pulsa **G** para abrirlo (configurable): se abre **como un libro**, un estuche n
 páginas de bolsillos con las cartas a la vista (diseño propio de Dex). **Clic en una carta: la sacas y se usa.**
 Las páginas se pasan con las flechas o la rueda del ratón; las **cintas de color** del costado saltan a cada mazo
 (3 páginas de 9 por mazo). El bolsillo con borde verde es la carta elegida para Alt. **Ordenar cartas** abre el
-Booker como cofre para meter, sacar y mover cartas. Tiene **5 mazos** de 27 cartas (135 en total), como en el fanfic: *Rescate, Multitudes,
+Booker como cofre para meter, sacar y mover cartas.
+
+**Selector rápido** (transformado): **mantén la rueda del ratón** y aparecen en círculo tus cartas de uso rápido;
+mueve el ratón hacia una y **suéltala**: se usa. Para elegir cuáles salen, en el libro activa **★ Selector** y haz clic
+en hasta **8** cartas (la estrella marca las elegidas; otro clic la quita). Transformado, la rueda deja de copiar el
+bloque que miras. La tecla se cambia en Controles. Tiene **5 mazos** de 27 cartas (135 en total), como en el fanfic: *Rescate, Multitudes,
 1 vs 1, Persecución* y *Todo salió mal*. Solo admite cartas (y la carta de Complete Form).
 - **Guardar**: mueves cartas como en un cofre (Shift + clic las pasa entre el Booker y tu inventario).
 - **Insertar**: haces clic en una carta y **se activa al instante sin sacarla del Booker** (inserción directa).
@@ -668,6 +673,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.38.0** — Selector rápido: mantén la rueda del ratón para elegir entre tus cartas favoritas en círculo y soltar para usarla; se eligen en el libro del Ride Booker (★ Selector, hasta 8). 25 pruebas automáticas.
 - **0.37.0** — El Ride Booker se abre como un libro: estuche con páginas de bolsillos y las cartas a la vista, cintas por mazo y clic en una carta para sacarla y usarla. *Ordenar cartas* abre la vista de cofre.
 - **0.36.0** — Form Ride **Hydro** (forma del agua: respira y nada como delfín, chorro a presión, torrente y remolino; se escanea con delfines y ajolotes). **Misiones de los Kagami**: 13 cartas de Genzo, Nagisa y Tetsuya en orden, con recompensas y registro (tecla J). 24 pruebas automáticas.
 - **0.35.0** — Voces del Driver grabadas por Draxer: Kamen Ride + nombre de cada Rider, Form Ride, Attack Ride, Armed Ride, Vehicle Ride, Final Attack Ride, Upgrade y Complete, y el ¡Henshin! del jugador al transformarse. 22 pruebas automáticas.

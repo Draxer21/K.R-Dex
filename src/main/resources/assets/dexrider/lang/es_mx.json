@@ -1370,5 +1370,13 @@
   "booker.dexrider.book": "Libro",
   "booker.dexrider.book_hint": "Clic: sacar y usar · rueda: pasar página",
   "booker.dexrider.book_hint_left": "Clic en una carta: sacarla y usarla",
-  "booker.dexrider.book_hint_right": "Rueda del ratón: pasar página"
+  "booker.dexrider.book_hint_right": "Rueda del ratón: pasar página",
+  "booker.dexrider.quick_pick": "Selector",
+  "booker.dexrider.quick_pick.tip": "Elige las cartas del selector rápido (mantener la rueda del ratón, transformado): activa esto y haz clic en hasta 8 cartas",
+  "booker.dexrider.pick_hint": "Clic: marcar para el selector (%s/%s)",
+  "message.dexrider.quick_full": "El selector rápido ya tiene %s cartas: desmarca una",
+  "key.dexrider.quick_select": "Selector rápido (mantener)",
+  "screen.dexrider.quick_select": "Selector rápido",
+  "screen.dexrider.quick_select.hint": "Mueve el ratón y suelta",
+  "screen.dexrider.quick_select.empty": "Elige tus cartas en el Ride Booker (★ Selector)"
 }
