@@ -1368,5 +1368,7 @@
   "booker.dexrider.organize": "Ordenar cartas",
   "booker.dexrider.organize.tip": "Abre el Booker como cofre: meter, sacar y mover cartas entre mazos",
   "booker.dexrider.book": "Libro",
-  "booker.dexrider.book_hint": "Clic: sacar y usar · rueda: pasar página"
+  "booker.dexrider.book_hint": "Clic: sacar y usar · rueda: pasar página",
+  "booker.dexrider.book_hint_left": "Clic en una carta: sacarla y usarla",
+  "booker.dexrider.book_hint_right": "Rueda del ratón: pasar página"
 }
