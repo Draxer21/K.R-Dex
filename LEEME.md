@@ -85,6 +85,7 @@ Cada forma tiene **Nivel 1 a 3**: se sube re-escaneando su fuente (el doble de m
 | Sky | negro violáceo, **alas de membrana** | **vuela** en la oscuridad (Nv.1), con poca luz (Nv.2), siempre (Nv.3); visión nocturna. Las alas se pliegan en el suelo y aletean al volar; crecen con el nivel y en Nv.3 dejan estela | forma nocturna |
 | Frost | celeste | congela el agua al caminar, golpes que congelan y ralentizan, inmune al frío | el fuego le hace ×1,5 |
 | Cinder | naranja | inmune al fuego y a la lava, golpes que queman | **el agua y la lluvia** lo debilitan (Debilidad + Lentitud) |
+| Hydro | verde azulado | respira bajo el agua y nada como delfín; golpes que empujan y apagan el fuego, más fuertes en el agua | el fuego le hace la mitad |
 | Half-Cold Half-Hot | mitad blanco hielo / mitad rojo fuego | inmune al fuego y al frío, congela el agua, golpes que queman **y** ralentizan | — |
 
 #### Habilidades activas: tecla **R** (se cambia en Controles)
@@ -494,6 +495,37 @@ La carta **Armed Ride: Ride Booker** (el arma) también se fabrica, una vez que 
  . redstone .
 ```
 
+### Form Ride: Hydro
+La forma del agua (traje verde azulado). Se escanea viendo **nadar rápido a un delfín** o **atacar a un ajolote** (2 muestras).
+- Bajo el agua **respira** y **nada como un delfín** (más rápido con el nivel); Nv2 más fuerza en el agua; Nv3 poder del
+  conducto y visión bajo el agua. Con lluvia, algo de velocidad. Se apaga solo si se prende fuego, y el fuego le hace la mitad.
+- Sus golpes **empujan**, apagan el fuego del enemigo y, en el agua o con lluvia, pegan un poco más.
+- **R**: Nv1 **chorro a presión** (rayo de agua de 12 bloques que atraviesa y empuja; apaga fuegos) · Nv2 **torrente**
+  (cabalgas una ola 1,5 s arrastrando y levantando a los enemigos) · Nv3 **remolino** (a 8 bloques: atrapa 3 s a los
+  enemigos, los arrastra al centro y estalla). En el agua o con lluvia hacen un 50 % más. **Shift + R**: el chorro.
+
+### Misiones de los Kagami
+**Tecla J** (o el botón *Misiones* del Archivo del Driver). Genzo, Nagisa y Tetsuya te escriben cartas, una misión
+a la vez y en orden. Cada misión se cumple sola cuando haces lo que pide: da su **recompensa** y llega la carta siguiente.
+
+| # | De | Misión | Recompensa |
+|---|---|---|---|
+| 1 | Genzo | Llega a la casa de la montaña | 2 manzanas doradas, 16 antorchas |
+| 2 | Genzo | Transfórmate en Dex | 5 niveles |
+| 3 | Nagisa | Escanea tu primera carta | un pastel y 8 galletas |
+| 4 | Tetsuya | Usa una Form Ride | 3 diamantes |
+| 5 | Nagisa | Consigue la Form Ride: Hydro | un tridente |
+| 6 | Genzo | Para un golpe en el momento justo | 2 diamantes, 5 niveles |
+| 7 | Tetsuya | Vence a un Rider perdido siendo Dex | 4 diamantes |
+| 8 | Nagisa | Despierta la Violent Emotion | 3 manzanas doradas |
+| 9 | Nagisa | Despierta la Heroic Emotion | una manzana de Notch |
+| 10 | Genzo | Encuentra el laboratorio de Gunma | 2 fragmentos de netherita |
+| 11 | Tetsuya | Vence a Tetsuya (Kaixa) | un lingote de netherita |
+| 12 | Nagisa | Encuentra el depósito de la Comisión | 10 esmeraldas, 3 diamantes |
+| 13 | Genzo | Derrota al Arquitecto | tótem de la inmortalidad, manzana de Notch, 10 niveles |
+
+Si ya habías hecho algo de esto antes de la 0.36, se cumplen solas al entrar, una cada 2 segundos.
+
 ### Escaneo (cómo conseguir cartas en supervivencia)
 Transformado y con el Driver encima, el Driver registra lo que **ve en uso real** a 20 bloques o
 menos (con línea de visión y mirando hacia ahí). Lo que te hacen a ti no cuenta.
@@ -524,6 +556,7 @@ Cartas nuevas de la 0.4.0 (de mobs):
 | Form Ride: Sky | un phantom en picada | 2 |
 | Form Ride: Frost | un stray o un golem de nieve atacando | 2 |
 | Form Ride: Cinder | un blaze atacando | 2 |
+| Form Ride: Hydro | un delfín nadando rápido, o un ajolote atacando | 2 |
 | Form Ride: Half-Cold Half-Hot | **teniendo ya Frost y Cinder**: ver un ataque de fuego (blaze) y uno de hielo (stray / golem de nieve) con menos de 5 s de diferencia | 2 |
 | Vehicle Ride: Dex Machine | alguien montado en un vehículo en marcha (bote, vagoneta, caballo, strider...) | 2 |
 
@@ -627,10 +660,11 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Siguientes pasos
 
-- Form Ride acuática, misiones de la familia Kagami, opciones de equilibrio en la configuración, duelos entre jugadores.
+- Opciones de equilibrio en la configuración, duelos entre jugadores.
 
 ## Historial de versiones
 
+- **0.36.0** — Form Ride **Hydro** (forma del agua: respira y nada como delfín, chorro a presión, torrente y remolino; se escanea con delfines y ajolotes). **Misiones de los Kagami**: 13 cartas de Genzo, Nagisa y Tetsuya en orden, con recompensas y registro (tecla J). 24 pruebas automáticas.
 - **0.35.0** — Voces del Driver grabadas por Draxer: Kamen Ride + nombre de cada Rider, Form Ride, Attack Ride, Armed Ride, Vehicle Ride, Final Attack Ride, Upgrade y Complete, y el ¡Henshin! del jugador al transformarse. 22 pruebas automáticas.
 - **0.34.0** — Archivo del Driver (tecla K o botón del Ride Booker): todas las cartas como álbum, en silueta las que faltan, con muestras, niveles y una pista de cómo conseguir cada una. Aviso de escaneo en pantalla al sumar muestras, generar una carta o subirla de nivel. 21 pruebas automáticas.
 - **0.33.0** — Editor del traje: maniquí 3D, colores por zona (casco, pecho, brazos, piernas, botas, acentos, ojos, plata, negro, cristal, bufanda), piezas nuevas (hombreras lisas, bufanda corta o larga, cresta) y opciones (púas, brillo, acabado mate o metálico), una apariencia propia para Base, Violent, Heroic, Upgrade y cada Form Ride, 5 ranuras de diseños y código para compartir. 20 pruebas automáticas.

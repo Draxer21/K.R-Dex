@@ -119,6 +119,7 @@ public final class Scanner {
         if (type == EntityType.ENDERMAN) return DexCard.ATTACK_RIDE_OVERCLOCK;
         if (type == EntityType.BLAZE) return DexCard.FORM_RIDE_CINDER;
         if (type == EntityType.STRAY || type == EntityType.SNOW_GOLEM) return DexCard.FORM_RIDE_FROST;
+        if (type == EntityType.AXOLOTL) return DexCard.FORM_RIDE_HYDRO;
         if (type == EntityType.GUARDIAN || type == EntityType.ELDER_GUARDIAN) return DexCard.ARMED_RIDE_VOLT_CHAIN;
         if (type == EntityType.IRON_GOLEM || type == EntityType.RAVAGER || type == EntityType.WARDEN) {
             return source.is(DamageTypeTags.IS_PROJECTILE) ? null : DexCard.ARMED_RIDE_POWER_KNUCKLE;
@@ -176,6 +177,8 @@ public final class Scanner {
         if (e instanceof com.draxer.dexrider.entity.RiderMob rm && rm.rider() == KamenRide.CIPHER && rm.riderForm() == 1) {
             return DexCard.ATTACK_RIDE_OVERCLOCK;
         }
+        // Hydro: un delfin nadando rapido
+        if (type == EntityType.DOLPHIN && e.isInWater() && e.getDeltaMovement().length() > 0.25) return DexCard.FORM_RIDE_HYDRO;
         // Sky: phantom en picada sobre un objetivo
         if (type == EntityType.PHANTOM && e instanceof Mob mob && mob.getTarget() != null) return DexCard.FORM_RIDE_SKY;
         // Vehicle: alguien montado en un vehiculo en marcha (bote, vagoneta, strider, caballo...)

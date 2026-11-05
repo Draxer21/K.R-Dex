@@ -68,6 +68,9 @@ public class DexRiderClient {
     /** K: Archivo del Driver (todas las cartas, pistas y muestras). */
     public static final Lazy<KeyMapping> ARCHIVE_KEY = Lazy.of(() -> new KeyMapping(
             "key.dexrider.archive", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, CATEGORY));
+    /** J: misiones de los Kagami. */
+    public static final Lazy<KeyMapping> MISSIONS_KEY = Lazy.of(() -> new KeyMapping(
+            "key.dexrider.missions", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_J, CATEGORY));
     /** Alt mantenido + rueda del raton = pasar carta; al soltar Alt sin girar la rueda, se usa la carta. */
     private static boolean altWasDown, altScrolled;
 
@@ -91,6 +94,7 @@ public class DexRiderClient {
         event.register(BOOKER_USE_KEY.get());
         event.register(CARD_WHEEL_KEY.get());
         event.register(ARCHIVE_KEY.get());
+        event.register(MISSIONS_KEY.get());
         for (Lazy<KeyMapping> k : SUMMON_SLOTS) event.register(k.get());
         event.register(KTOUCH_DEX_KEY.get());
     }
@@ -170,6 +174,9 @@ public class DexRiderClient {
                     com.draxer.dexrider.menu.RideBookerMenu.QUICK_USE));
         if (!altDown) altScrolled = false;
         altWasDown = altDown;
+        while (MISSIONS_KEY.get().consumeClick()) {
+            if (mcp != null && Minecraft.getInstance().screen == null) Minecraft.getInstance().setScreen(new MissionsScreen());
+        }
         while (ARCHIVE_KEY.get().consumeClick()) {
             if (mcp != null && Minecraft.getInstance().screen == null) Minecraft.getInstance().setScreen(new DriverArchiveScreen());
         }

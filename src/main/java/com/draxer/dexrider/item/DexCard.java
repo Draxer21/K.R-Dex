@@ -60,6 +60,7 @@ public enum DexCard {
     FORM_RIDE_SKY(Family.FORM_RIDE, 2),            // un phantom en picada
     FORM_RIDE_FROST(Family.FORM_RIDE, 2),          // un stray o un golem de nieve atacando
     FORM_RIDE_CINDER(Family.FORM_RIDE, 2),         // un blaze atacando
+    FORM_RIDE_HYDRO(Family.FORM_RIDE, 2),          // un delfin nadando rapido o un ajolote atacando
     FORM_RIDE_HALF(Family.FORM_RIDE, 2),           // con Frost y Cinder: ver fuego y hielo atacando casi a la vez
     // Upgrade Form: la forma sin miedo, solo de Dex. Nace tras sentir las dos Emotion (Violent y Heroic)
     UPGRADE_FORM(Family.FORM_RIDE, 0),

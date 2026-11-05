@@ -82,6 +82,9 @@ public class DriverArchiveScreen extends Screen {
                             .append(": " + owned(f) + "/" + cardsOf(f).size()))).build());
             b.active = f != family;
         }
+        addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.archive.missions"),
+                x -> net.minecraft.client.Minecraft.getInstance().setScreen(new MissionsScreen()))
+                .bounds(left + 150, top + 4, 70, 14).build());
         List<DexCard> list = cardsOf(family);
         if (selected == null || selected.family() != family) selected = list.get(0);
         for (int i = 0; i < list.size(); i++) {

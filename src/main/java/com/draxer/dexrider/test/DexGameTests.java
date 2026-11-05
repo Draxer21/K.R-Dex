@@ -68,6 +68,8 @@ public final class DexGameTests {
         FUNCTIONS.register("suit_editor", () -> DexGameTests::suitEditor);
         FUNCTIONS.register("archive_hints", () -> DexGameTests::archiveHints);
         FUNCTIONS.register("voices", () -> DexGameTests::voices);
+        FUNCTIONS.register("hydro", () -> DexGameTests::hydro);
+        FUNCTIONS.register("missions", () -> DexGameTests::missions);
     }
 
     // ------------------------------------------------------------------ utilidades
@@ -669,6 +671,55 @@ public final class DexGameTests {
             n++;
         }
         log(t, "ok: " + n + " sonidos, voces grabadas");
+        h.succeed();
+    }
+
+    /** Form Ride Hydro: en el agua respira, nada como delfin y pega mas fuerte; el remolino arrastra. */
+    static void hydro(GameTestHelper h) {
+        String t = "hydro";
+        ServerPlayer p = player(h, DexCard.KAMEN_RIDE_DEX, DexCard.FORM_RIDE_HYDRO);
+        transform(h, t, p);
+        ServerLevel level = h.getLevel();
+        BlockPos at = p.blockPosition();
+        for (BlockPos b : BlockPos.betweenClosed(at.offset(-2, 0, -2), at.offset(2, 1, 2)))
+            level.setBlockAndUpdate(b, net.minecraft.world.level.block.Blocks.WATER.defaultBlockState());
+        FormRide.use(level, p, FormRide.HYDRO);
+        if (FormRide.current(p) != FormRide.HYDRO) { fail(h, t, "no se activo Hydro"); return; }
+        tickPlayer(h, p);
+        h.runAfterDelay(30, () -> {
+            com.draxer.dexrider.rider.Transformation.applyFormEffects(p);
+            if (!p.hasEffect(net.minecraft.world.effect.MobEffects.WATER_BREATHING)) { fail(h, t, "no respira bajo el agua"); return; }
+            if (!p.hasEffect(net.minecraft.world.effect.MobEffects.DOLPHINS_GRACE)) { fail(h, t, "no nada como delfin en el agua"); return; }
+            for (int tier = 0; tier < 2; tier++) {
+                try { com.draxer.dexrider.rider.FormAbilities.use(p); }
+                catch (Throwable e) { fail(h, t, "la habilidad fallo: " + e); return; }
+            }
+            log(t, "ok: respira, nada rapido y sus habilidades funcionan");
+            h.succeed();
+        });
+    }
+
+    /** Misiones de los Kagami: en orden, una por vez, con recompensa. */
+    static void missions(GameTestHelper h) {
+        String t = "missions";
+        ServerPlayer p = player(h);
+        if (com.draxer.dexrider.rider.Missions.doneCount(p) != 0) { fail(h, t, "empezo con misiones cumplidas"); return; }
+        com.draxer.dexrider.rider.Missions.tick(p);
+        if (com.draxer.dexrider.rider.Missions.doneCount(p) != 0) { fail(h, t, "cumplio una mision sin hacer nada"); return; }
+        com.draxer.dexrider.rider.DexAdvancements.award(p, "mountain_house");
+        com.draxer.dexrider.rider.DexAdvancements.award(p, "henshin");
+        com.draxer.dexrider.rider.Missions.tick(p);
+        if (com.draxer.dexrider.rider.Missions.doneCount(p) != 1) { fail(h, t, "no cumplio la primera (llegar a la casa)"); return; }
+        if (!p.getInventory().contains(new ItemStack(net.minecraft.world.item.Items.GOLDEN_APPLE))) { fail(h, t, "no dio la recompensa"); return; }
+        com.draxer.dexrider.rider.Missions.tick(p);
+        if (com.draxer.dexrider.rider.Missions.doneCount(p) != 2) { fail(h, t, "no siguio con la segunda (Henshin)"); return; }
+        com.draxer.dexrider.rider.Missions.tick(p);
+        if (com.draxer.dexrider.rider.Missions.doneCount(p) != 2) { fail(h, t, "se salto una mision"); return; }
+        int keys = 0;
+        for (var m : com.draxer.dexrider.rider.Missions.ALL)
+            if (h.getLevel().getServer().getAdvancements().get(DexRider.id("mission/" + m.id())) == null) { fail(h, t, "falta el logro de " + m.id()); return; }
+            else keys++;
+        log(t, "ok: " + keys + " misiones, en orden y con recompensa");
         h.succeed();
     }
 }

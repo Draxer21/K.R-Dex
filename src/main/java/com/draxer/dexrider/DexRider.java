@@ -89,6 +89,10 @@ public class DexRider {
                 com.draxer.dexrider.network.HudSyncPayload.STREAM_CODEC,
                 com.draxer.dexrider.network.HudSyncPayload::handleOnClient);
         event.registrar("1").playToClient(
+                com.draxer.dexrider.network.MissionSyncPayload.TYPE,
+                com.draxer.dexrider.network.MissionSyncPayload.STREAM_CODEC,
+                com.draxer.dexrider.network.MissionSyncPayload::handleOnClient);
+        event.registrar("1").playToClient(
                 com.draxer.dexrider.network.TargetSyncPayload.TYPE,
                 com.draxer.dexrider.network.TargetSyncPayload.STREAM_CODEC,
                 com.draxer.dexrider.network.TargetSyncPayload::handleOnClient);
