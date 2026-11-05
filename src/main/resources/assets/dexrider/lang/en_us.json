@@ -1368,5 +1368,7 @@
   "booker.dexrider.organize": "Organize cards",
   "booker.dexrider.organize.tip": "Opens the Booker as a chest: put in, take out and move cards between decks",
   "booker.dexrider.book": "Book",
-  "booker.dexrider.book_hint": "Click: draw and use · wheel: turn page"
+  "booker.dexrider.book_hint": "Click: draw and use · wheel: turn page",
+  "booker.dexrider.book_hint_left": "Click a card: draw and use it",
+  "booker.dexrider.book_hint_right": "Mouse wheel: turn the page"
 }

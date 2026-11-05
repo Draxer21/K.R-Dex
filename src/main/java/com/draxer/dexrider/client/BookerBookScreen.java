@@ -198,8 +198,9 @@ public class BookerBookScreen extends Screen {
             g.fill(bx, by + PH - 1, bx + PW, by + PH, GOLD_D);
             if (slot == sel) g.fill(bx + PW - 6, by + 2, bx + PW - 2, by + 6, 0xFF28D250);
         }
-        Component hint = Component.translatable("booker.dexrider.book_hint");
-        g.text(font, hint, x1 - 12 - font.width(hint), y0 + 7, 0xFF9A93A6, false);
+        Component hl = Component.translatable("booker.dexrider.book_hint_left"), hr = Component.translatable("booker.dexrider.book_hint_right");
+        g.text(font, hl, (x0 + 9 + cx - 3) / 2 - font.width(hl) / 2, y1 - 36, 0xFF9A93A6, false);
+        g.text(font, hr, (cx + 3 + x1 - 9) / 2 - font.width(hr) / 2, y1 - 36, 0xFF9A93A6, false);
     }
 
     @Override
