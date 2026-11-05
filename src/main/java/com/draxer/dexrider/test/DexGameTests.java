@@ -67,6 +67,7 @@ public final class DexGameTests {
         FUNCTIONS.register("booker", () -> DexGameTests::booker);
         FUNCTIONS.register("suit_editor", () -> DexGameTests::suitEditor);
         FUNCTIONS.register("archive_hints", () -> DexGameTests::archiveHints);
+        FUNCTIONS.register("voices", () -> DexGameTests::voices);
     }
 
     // ------------------------------------------------------------------ utilidades
@@ -651,6 +652,23 @@ public final class DexGameTests {
             }
         }
         log(t, "ok: " + DexCard.values().length + " cartas con nombre, pista y textura");
+        h.succeed();
+    }
+
+    /** Cada sonido registrado tiene su .ogg, y las voces no son el silencio de antes. */
+    static void voices(GameTestHelper h) {
+        String t = "voices";
+        int n = 0;
+        for (var holder : com.draxer.dexrider.registry.DexSounds.SOUNDS.getEntries()) {
+            String path = holder.getId().getPath();
+            try (var in = DexRider.class.getResourceAsStream("/assets/dexrider/sounds/" + path + ".ogg")) {
+                if (in == null) { fail(h, t, "falta " + path + ".ogg"); return; }
+                byte[] b = in.readAllBytes();
+                if (path.startsWith("voice_") && b.length < 6000) { fail(h, t, path + " parece vacio (" + b.length + " bytes)"); return; }
+            } catch (java.io.IOException e) { fail(h, t, "no pude leer " + path); return; }
+            n++;
+        }
+        log(t, "ok: " + n + " sonidos, voces grabadas");
         h.succeed();
     }
 }

@@ -111,8 +111,8 @@ public final class Transformation {
         // 3. Espectaculo: anillo de "cartas" magenta y dorado que se cierra sobre el jugador.
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 DexSounds.HENSHIN.get(), SoundSource.PLAYERS, 1.2F, 1.0F);
-        level.playSound(null, player.getX(), player.getY(), player.getZ(),
-                DexSounds.VOICE_KAMEN_RIDE.get(), SoundSource.PLAYERS, 1.0F, 1.0F);
+        Voices.say(level, player, DexSounds.VOICE_HENSHIN);          // el jugador
+        Voices.kamenRide(level, player, KamenRide.DEX, 14);           // el Driver: "Kamen Ride... Dex"
         FX.ring(level, player, FX.MAGENTA, 1.6, 9);
         FX.ring(level, player, FX.GOLD, 1.1, 9);
 

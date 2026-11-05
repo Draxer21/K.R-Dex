@@ -56,6 +56,7 @@ public final class UpgradeForm {
             FX.ring(level, p, FX.WHITE, 1.1, 7);
             FX.particle(level, ParticleTypes.END_ROD, FX.center(p), 30, 0.6, 0.08);
             DexSounds.play(level, p, DexSounds.HENSHIN, 1.2F, 0.9F);
+            DexSounds.play(level, p, DexSounds.VOICE_UPGRADE, 1.0F, 1.0F);
             level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.ARMOR_EQUIP_NETHERITE.value(), SoundSource.PLAYERS, 1.2F, 0.8F);
             p.sendSystemMessage(Component.translatable("message.dexrider.upgrade_on"), true);
             DexAdvancements.award(p, "upgrade_form");

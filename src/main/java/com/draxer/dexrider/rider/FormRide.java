@@ -103,7 +103,7 @@ public enum FormRide {
             chest.set(DexComponents.FORM.get(), form.id());
             chest.set(DexComponents.FORM_LEVEL.get(), level(player, form));
             DexSounds.play(level, player, DexSounds.HENSHIN, 1.0F, 1.15F);
-            DexSounds.play(level, player, DexSounds.VOICE_KAMEN_RIDE, 1.0F, 1.0F);
+            DexSounds.play(level, player, DexSounds.VOICE_FORM_RIDE, 1.0F, 1.0F);
             player.sendSystemMessage(Component.translatable("message.dexrider.form_ride",
                     Component.translatable("form.dexrider." + form.id()), level(player, form)), true);
         }
