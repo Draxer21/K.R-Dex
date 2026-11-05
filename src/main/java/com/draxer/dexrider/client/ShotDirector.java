@@ -198,6 +198,23 @@ public final class ShotDirector {
             server(srv -> com.draxer.dexrider.item.DexDriverItem.findDriver(srv.getPlayerList().getPlayers().get(0)).setCount(0));
         }));
         t += 58;
+        // 5e: el registro de misiones de los Kagami (con cinco cumplidas)
+        s.add(new Step(t, () -> {
+            com.draxer.dexrider.network.MissionSyncPayload.clientDone = 5;
+            hudHidden(false);
+            Minecraft.getInstance().gui.setScreen(new MissionsScreen());
+        }));
+        s.add(new Step(t + 20, () -> shoot("misiones")));
+        s.add(new Step(t + 24, () -> { Minecraft.getInstance().gui.setScreen(null); hudHidden(true); }));
+        t += 28;
+        // 5f: Form Ride Hydro junto a Frost y Speed
+        t = scene(s, t, "hydro", lvl -> {
+            String[] forms = {"speed", "hydro", "frost"};
+            for (int i = 0; i < 3; i++) {
+                ArmorStand a = stand(lvl, -1.6 + i * 1.6, null, null, false);
+                if (a != null) a.getItemBySlot(EquipmentSlot.CHEST).set(DexComponents.FORM.get(), forms[i]);
+            }
+        }, 0, 1.4, 0.2, 0);
         // Complete Form normal y Nv.2 (de frente y de espaldas para ver la capa)
         t = scene(s, t + 2, "complete_nv2", lvl -> {
             stand(lvl, -1.2, null, "complete", false);

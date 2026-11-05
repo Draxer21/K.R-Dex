@@ -43,6 +43,7 @@ public final class DexEvents {
         if (player.tickCount % 100 == 50) DaiShocker.tickPlayer(player);
         AllyManager.tickReunion(player);
         Scheduler.tick(player);
+        if (player.tickCount % 40 == 20) Missions.tick(player);
 
         if (Transformation.isTransformed(player)) {
             if (player.tickCount % 20 == 0) {
@@ -145,6 +146,10 @@ public final class DexEvents {
                 event.setCanceled(true);   // los proyectiles atraviesan el humo
                 return;
             }
+            if (form == FormRide.HYDRO) {
+                if (event.getSource().is(DamageTypes.DROWN)) { event.setCanceled(true); return; }
+                if (event.getSource().is(DamageTypeTags.IS_FIRE)) event.setAmount(event.getAmount() * 0.5F);
+            }
             if (form == FormRide.FROST) {
                 if (event.getSource().is(DamageTypes.FREEZE)) { event.setCanceled(true); return; }
                 if (event.getSource().is(DamageTypeTags.IS_FIRE)) event.setAmount(event.getAmount() * 1.5F);
@@ -209,6 +214,13 @@ public final class DexEvents {
                     FX.particle(level, ParticleTypes.FLAME, FX.center(target), 15, 0.3, 0.05);
                 }
                 case TERRA -> FX.push(target, player.position(), 0.2, 0.35 + 0.15 * lvl);
+                case HYDRO -> {
+                    // el agua empuja; dentro del agua (o con lluvia) el golpe es mas fuerte
+                    FX.push(target, player.position(), 0.35 + 0.15 * lvl, 0.15);
+                    target.clearFire();
+                    if (player.isInWaterOrRain()) { target.invulnerableTime = 0; target.hurtServer(level, level.damageSources().drown(), 1.0F + lvl); }
+                    FX.particle(level, ParticleTypes.SPLASH, FX.center(target), 18, 0.35, 0.1);
+                }
                 case HALF -> {
                     target.igniteForSeconds(2.0F + lvl);
                     target.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 60, lvl - 1));
@@ -294,7 +306,7 @@ public final class DexEvents {
     /** Primera vez en el mundo: la carta de Genzo y la brujula de los Kagami. */
     @SubscribeEvent
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
-        if (event.getEntity() instanceof ServerPlayer player) Starter.onLogin(player);
+        if (event.getEntity() instanceof ServerPlayer player) { Starter.onLogin(player); Missions.onLogin(player); }
     }
 
     @SubscribeEvent

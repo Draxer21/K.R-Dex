@@ -41,6 +41,8 @@ import java.util.UUID;
  *  TERRA  : Nv1 pilar que lanza al enemigo · Nv2 rampa de tierra · Nv3 terremoto
  *  SKY    : salto de sombra (te mueves en linea recta y danas a lo que atraviesas)
  *  SPEED  : rafaga (2 s a velocidad extrema arrollando enemigos) · Nv3 deja una estela cortante
+ *  HYDRO  : Nv1 chorro a presion (empuja y apaga) · Nv2 torrente (cabalgas una ola hacia delante) ·
+ *           Nv3 remolino (atrapa y arrastra a los enemigos al centro, y estalla). En el agua o con lluvia, mas fuertes.
  *  HALF   : rayo de hielo y, medio segundo despues, choque termico (explosion de fuego en los congelados).
  *           Shift + R: muro de hielo.
  */
@@ -117,6 +119,7 @@ public final class FormAbilities {
             case TERRA -> tier == 1 ? 6 : tier == 2 ? 10 : 14;
             case SKY -> 5;
             case SPEED -> 10;
+            case HYDRO -> tier == 1 ? 5 : tier == 2 ? 8 : 15;
             case HALF -> 9;
         };
     }
@@ -142,6 +145,11 @@ public final class FormAbilities {
             };
             case SKY -> shadowDash(level, p, lvl) ? "shadow_dash" : null;
             case SPEED -> { speedBurst(level, p, lvl); yield "speed_burst"; }
+            case HYDRO -> switch (tier) {
+                case 1 -> { waterJet(level, p, lvl); yield "water_jet"; }
+                case 2 -> { torrent(level, p, lvl); yield "torrent"; }
+                default -> { maelstrom(level, p, lvl); yield "maelstrom"; }
+            };
             case HALF -> {
                 if (tier == 1 && p.isShiftKeyDown()) yield iceWall(level, p, lvl) ? "ice_wall" : null;
                 thermalShock(level, p, lvl);
@@ -490,6 +498,105 @@ public final class FormAbilities {
                 level.playSound(null, c.x, c.y, c.z, SoundEvents.GENERIC_EXPLODE, SoundSource.PLAYERS, 1.0F, 1.4F);
             }
             if (!frozen.isEmpty()) sound(level, p.position(), SoundEvents.FIRE_EXTINGUISH, 1.2F, 0.8F);
+        });
+    }
+
+    // ================================================================== HYDRO
+
+    /** Mas fuerte dentro del agua o bajo la lluvia. */
+    private static float wet(ServerPlayer p) {
+        return p.isInWaterOrRain() ? 1.5F : 1.0F;
+    }
+
+    /** Chorro a presion: rayo de agua de 12 bloques que atraviesa, empuja lejos y apaga el fuego. */
+    private static void waterJet(ServerLevel level, ServerPlayer p, int lvl) {
+        Vec3 dir = p.getLookAngle();
+        List<LivingEntity> hits = FX.beam(level, p, dir, 12, (3.0F + lvl) * wet(p), 0x3CE0D0, 1.4F, true);
+        Vec3 start = p.getEyePosition();
+        Vec3 end = FX.rayEnd(level, p, start, dir, 12);
+        for (double d = 1; d < start.distanceTo(end); d += 0.5)
+            FX.particle(level, ParticleTypes.SPLASH, start.add(dir.scale(d)), 3, 0.12, 0.05);
+        for (LivingEntity e : hits) {
+            e.clearFire();
+            FX.push(e, p.position(), 0.9 + 0.2 * lvl, 0.25);
+        }
+        // apaga el fuego donde pega
+        BlockPos hitPos = BlockPos.containing(end);
+        for (BlockPos pos : BlockPos.betweenClosed(hitPos.offset(-1, -1, -1), hitPos.offset(1, 1, 1))) {
+            if (level.getBlockState(pos).is(net.minecraft.tags.BlockTags.FIRE)) level.removeBlock(pos, false);
+        }
+        sound(level, p.position(), SoundEvents.BUCKET_EMPTY, 1.3F, 0.7F);
+        sound(level, p.position(), SoundEvents.PLAYER_SPLASH_HIGH_SPEED, 0.8F, 1.2F);
+    }
+
+    /** Torrente: cabalgas una ola 1,5 s hacia donde miras; arrastra y levanta a los enemigos que atraviesa. */
+    private static void torrent(ServerLevel level, ServerPlayer p, int lvl) {
+        Vec3 look = horizontal(p.getLookAngle());
+        float dmg = (4.0F + lvl) * wet(p);
+        Set<UUID> hit = new HashSet<>();
+        for (int t = 1; t <= 30; t++) {
+            Scheduler.later(p, t, () -> {
+                double speed = p.isInWater() ? 1.1 : 0.75;
+                p.setDeltaMovement(look.x * speed, Math.max(p.getDeltaMovement().y, p.isInWater() ? 0.02 : 0.08), look.z * speed);
+                p.hurtMarked = true;
+                p.resetFallDistance();
+                Vec3 at = p.position();
+                FX.particle(level, ParticleTypes.SPLASH, at.add(0, 0.3, 0), 10, 0.6, 0.15);
+                FX.particle(level, ParticleTypes.BUBBLE_POP, at.add(0, 0.8, 0), 4, 0.5, 0.05);
+                FX.dust(level, 0x3CE0D0, 1.4F, at.add(0, 0.4, 0), 4, 0.5);
+                for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, p.getBoundingBox().inflate(1.6),
+                        e -> e != p && e.isAlive())) {
+                    if (!hit.add(e.getUUID())) continue;
+                    FX.hit(level, p, e, dmg);
+                    e.clearFire();
+                    e.setDeltaMovement(look.x * 0.9, 0.55, look.z * 0.9);
+                    e.hurtMarked = true;
+                }
+            });
+        }
+        sound(level, p.position(), SoundEvents.GENERIC_SPLASH, 1.5F, 0.6F);
+        sound(level, p.position(), SoundEvents.BUBBLE_COLUMN_UPWARDS_INSIDE, 1.2F, 0.8F);
+    }
+
+    /** Remolino: a 8 bloques delante (o donde miras), atrapa 3 s a los enemigos y los arrastra al centro; luego estalla. */
+    private static void maelstrom(ServerLevel level, ServerPlayer p, int lvl) {
+        Vec3 c = FX.rayEnd(level, p, p.getEyePosition(), p.getLookAngle(), 8);
+        BlockPos ground = ground(level, BlockPos.containing(c));
+        Vec3 center = new Vec3(ground.getX() + 0.5, ground.getY() + 0.2, ground.getZ() + 0.5);
+        float tick = 1.0F * wet(p), burst = (6.0F + 2 * lvl) * wet(p);
+        for (int t = 0; t <= 60; t += 2) {
+            final int tt = t;
+            Scheduler.later(p, t, () -> {
+                double r = 4.5 - tt * 0.03;
+                for (int a = 0; a < 360; a += 20) {
+                    double rad = Math.toRadians(a + tt * 18);
+                    Vec3 pt = center.add(Math.cos(rad) * r, 0.2 + (a % 60) / 60.0 * 1.6, Math.sin(rad) * r);
+                    FX.particle(level, ParticleTypes.SPLASH, pt, 1, 0.05, 0.02);
+                    if (a % 60 == 0) FX.dust(level, 0x12A49A, 1.3F, pt, 1, 0.05);
+                }
+                for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, new AABB(center, center).inflate(5.5, 3, 5.5),
+                        e -> e != p && e.isAlive() && !(e instanceof net.minecraft.world.entity.player.Player))) {
+                    Vec3 to = center.subtract(e.position());
+                    Vec3 tangent = new Vec3(-to.z, 0, to.x).normalize().scale(0.25);
+                    e.setDeltaMovement(to.normalize().scale(0.22).add(tangent).add(0, 0.04, 0));
+                    e.hurtMarked = true;
+                    if (tt % 10 == 0) { e.invulnerableTime = 0; FX.hit(level, p, e, tick); }
+                }
+                if (tt % 10 == 0) sound(level, center, SoundEvents.BUBBLE_COLUMN_WHIRLPOOL_INSIDE, 1.4F, 0.8F);
+            });
+        }
+        Scheduler.later(p, 62, () -> {
+            FX.particle(level, ParticleTypes.SPLASH, center.add(0, 1, 0), 80, 1.6, 0.4);
+            FX.particle(level, ParticleTypes.BUBBLE_POP, center.add(0, 1, 0), 40, 1.4, 0.2);
+            for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, new AABB(center, center).inflate(4, 3, 4),
+                    e -> e != p && e.isAlive())) {
+                e.invulnerableTime = 0;
+                FX.hit(level, p, e, burst);
+                e.clearFire();
+                e.setDeltaMovement(e.getDeltaMovement().add(0, 0.9, 0));
+                e.hurtMarked = true;
+            }
+            sound(level, center, SoundEvents.GENERIC_SPLASH, 2.0F, 0.5F);
         });
     }
 

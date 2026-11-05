@@ -119,6 +119,7 @@ public final class Scanner {
         if (type == net.minecraft.world.entity.EntityTypes.ENDERMAN) return DexCard.ATTACK_RIDE_OVERCLOCK;
         if (type == net.minecraft.world.entity.EntityTypes.BLAZE) return DexCard.FORM_RIDE_CINDER;
         if (type == net.minecraft.world.entity.EntityTypes.STRAY || type == net.minecraft.world.entity.EntityTypes.SNOW_GOLEM) return DexCard.FORM_RIDE_FROST;
+        if (type == net.minecraft.world.entity.EntityTypes.AXOLOTL) return DexCard.FORM_RIDE_HYDRO;
         if (type == net.minecraft.world.entity.EntityTypes.GUARDIAN || type == net.minecraft.world.entity.EntityTypes.ELDER_GUARDIAN) return DexCard.ARMED_RIDE_VOLT_CHAIN;
         if (type == net.minecraft.world.entity.EntityTypes.IRON_GOLEM || type == net.minecraft.world.entity.EntityTypes.RAVAGER || type == net.minecraft.world.entity.EntityTypes.WARDEN) {
             return source.is(DamageTypeTags.IS_PROJECTILE) ? null : DexCard.ARMED_RIDE_POWER_KNUCKLE;
@@ -176,6 +177,8 @@ public final class Scanner {
         if (e instanceof com.draxer.dexrider.entity.RiderMob rm && rm.rider() == KamenRide.CIPHER && rm.riderForm() == 1) {
             return DexCard.ATTACK_RIDE_OVERCLOCK;
         }
+        // Hydro: un delfin nadando rapido
+        if (type == net.minecraft.world.entity.EntityTypes.DOLPHIN && e.isInWater() && e.getDeltaMovement().length() > 0.25) return DexCard.FORM_RIDE_HYDRO;
         // Sky: phantom en picada sobre un objetivo
         if (type == net.minecraft.world.entity.EntityTypes.PHANTOM && e instanceof Mob mob && mob.getTarget() != null) return DexCard.FORM_RIDE_SKY;
         // Vehicle: alguien montado en un vehiculo en marcha (bote, vagoneta, strider, caballo...)

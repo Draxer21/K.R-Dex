@@ -37,6 +37,8 @@ import java.util.UUID;
  *  SKY    : forma nocturna. Vuela en la oscuridad (Nv1), con poca luz (Nv2), siempre (Nv3). Vision nocturna.
  *  FROST  : congela el agua al caminar, inmune a congelarse, golpes que congelan y ralentizan. Fuego x1.5.
  *  CINDER : inmune al fuego y la lava, golpes que queman. El agua y la lluvia lo debilitan.
+ *  HYDRO  : forma del agua. Respira bajo el agua y nada como un delfin (Nv2 mas fuerte en el agua, Nv3 poder del
+ *           conducto y vision). Apaga el fuego, el fuego le hace la mitad. Golpes que empujan y pegan mas en el agua.
  *  HALF   : Half-Cold Half-Hot. Inmune al fuego y al congelamiento, golpes que queman Y ralentizan.
  *
  * Las habilidades activas (tecla R) estan en FormAbilities.
@@ -48,6 +50,7 @@ public enum FormRide {
     SKY(DexCard.FORM_RIDE_SKY),
     FROST(DexCard.FORM_RIDE_FROST),
     CINDER(DexCard.FORM_RIDE_CINDER),
+    HYDRO(DexCard.FORM_RIDE_HYDRO),
     HALF(DexCard.FORM_RIDE_HALF);
 
     public final DexCard card;
@@ -123,7 +126,8 @@ public enum FormRide {
     private static final List<Holder<MobEffect>> ALL_FORM_EFFECTS = List.of(
             MobEffects.STRENGTH, MobEffects.SPEED, MobEffects.JUMP_BOOST, MobEffects.HASTE, MobEffects.SLOW_FALLING,
             MobEffects.FIRE_RESISTANCE, MobEffects.INVISIBILITY, MobEffects.RESISTANCE, MobEffects.SLOWNESS,
-            MobEffects.NIGHT_VISION, MobEffects.WEAKNESS);
+            MobEffects.NIGHT_VISION, MobEffects.WEAKNESS, MobEffects.WATER_BREATHING, MobEffects.DOLPHINS_GRACE,
+            MobEffects.CONDUIT_POWER);
 
     // ------------------------------------------------------------------ efectos (cada 20 ticks)
 
@@ -168,6 +172,16 @@ public enum FormRide {
                     effect(p, MobEffects.SLOWNESS, 0);
                 } else {
                     effect(p, MobEffects.STRENGTH, lvl >= 3 ? 1 : 0);
+                }
+            }
+            case HYDRO -> {
+                effect(p, MobEffects.WATER_BREATHING, 0);
+                if (p.isInWater()) {
+                    effect(p, MobEffects.DOLPHINS_GRACE, lvl - 1);
+                    if (lvl >= 2) effect(p, MobEffects.STRENGTH, lvl - 2);
+                    if (lvl >= 3) { effect(p, MobEffects.CONDUIT_POWER, 0); effect(p, MobEffects.NIGHT_VISION, 0); }
+                } else if (p.isInWaterOrRain()) {
+                    effect(p, MobEffects.SPEED, 0);          // la lluvia lo anima
                 }
             }
             case HALF -> {
@@ -218,6 +232,18 @@ public enum FormRide {
                 if (p.isInWaterOrRain() && p.tickCount % 4 == 0)
                     FX.particle(level, ParticleTypes.CLOUD, p.position().add(0, 1.2, 0), 2, 0.3, 0.02);   // vapor
                 p.setTicksFrozen(0);
+            }
+            case HYDRO -> {
+                if (p.isOnFire()) { p.clearFire(); FX.particle(level, ParticleTypes.CLOUD, p.position().add(0, 1, 0), 6, 0.3, 0.03); }
+                if (p.isInWater()) {
+                    if (p.tickCount % 3 == 0) FX.particle(level, ParticleTypes.BUBBLE, p.position().add(0, 1, 0), 3, 0.4, 0.05);
+                    // Nv2+: nadando hacia delante deja una estela de corriente
+                    if (lvl >= 2 && p.isSwimming() && p.tickCount % 2 == 0) FX.particle(level, ParticleTypes.BUBBLE_COLUMN_UP, p.position(), 3, 0.3, 0.1);
+                } else if (p.tickCount % 6 == 0) {
+                    FX.particle(level, ParticleTypes.DRIPPING_WATER, p.position().add(0, 1.6, 0), 2, 0.35, 0.0);
+                }
+                // efectos al entrar o salir del agua (sin esperar al siguiente segundo)
+                if (p.tickCount % 5 == 0) form.applyEffects(p, lvl);
             }
             case HALF -> {
                 if (p.onGround()) freezeWater(level, p, 1 + lvl);
@@ -286,6 +312,7 @@ public enum FormRide {
             case SKY -> 0x46226E;
             case FROST -> 0x6ECDEB;
             case CINDER -> 0xF06912;
+            case HYDRO -> 0x12A49A;
             case HALF -> 0xE6F5FF;   // el renderer pinta el lado izquierdo con HALF_FIRE_COLOR
         };
     }
@@ -301,6 +328,7 @@ public enum FormRide {
             case SKY -> 0x5A2A8C;
             case FROST -> 0x8CE6FF;
             case CINDER -> 0xFF7814;
+            case HYDRO -> 0x3CE0D0;
             case HALF -> 0xFFFFFF;
         };
     }
