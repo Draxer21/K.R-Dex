@@ -38,7 +38,7 @@ public final class RiderHud {
     private static void draw(GuiGraphicsExtractor g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         HudSyncPayload s = HudState.last;
-        if (mc.player == null || !s.active() || !DexConfig.hud() || mc.options.hideGui) return;
+        if (mc.player == null || !s.active() || !DexConfig.hud()) return;
         if (VisorSettings.get().mode != VisorSettings.Mode.CLASSIC) return;   // lo dibuja el visor
         if (System.currentTimeMillis() - HudState.receivedAt > 3000) return;   // datos viejos: no mostrar
         Font font = mc.font;
@@ -130,7 +130,7 @@ public final class RiderHud {
     private static void drawTarget(GuiGraphicsExtractor g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         var s = com.draxer.dexrider.network.TargetSyncPayload.last;
-        if (mc.player == null || mc.level == null || !s.active() || !DexConfig.hud() || !DexConfig.targetRead() || mc.options.hideGui) return;
+        if (mc.player == null || mc.level == null || !s.active() || !DexConfig.hud() || !DexConfig.targetRead()) return;
         if (VisorSettings.get().mode != VisorSettings.Mode.CLASSIC) return;   // lo dibuja el visor
         if (System.currentTimeMillis() - com.draxer.dexrider.network.TargetSyncPayload.receivedAt > 3000) return;
         var entity = mc.level.getEntity(s.entityId());
