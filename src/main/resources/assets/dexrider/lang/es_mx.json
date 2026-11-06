@@ -1421,5 +1421,8 @@
   "screen.dexrider.visor.alerts": "Alertas",
   "screen.dexrider.visor.target": "Objetivo",
   "screen.dexrider.visor.test_boot": "Probar arranque",
-  "screen.dexrider.visor.reset": "Restablecer"
+  "screen.dexrider.visor.reset": "Restablecer",
+  "screen.dexrider.visor.filter": "Filtro de color",
+  "screen.dexrider.visor.vignette": "Bordes del lente",
+  "screen.dexrider.visor.filter_strength": "Intensidad del filtro"
 }

@@ -26,6 +26,9 @@ public final class VisorSettings {
     public ColorMode colorMode = ColorMode.SUIT;
     public int customColor = 0x28D250;
     public boolean boot = true, frame = true, scanlines = true, reticle = true, alerts = true, target = true;
+    /** Filtro de la vision: el mundo se ve a traves del lente, tenido de su color, con los bordes mas oscuros. */
+    public boolean filter = true, vignette = true;
+    public float filterStrength = 0.12F;   // 0 .. 0.5
 
     private static VisorSettings current;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -71,6 +74,7 @@ public final class VisorSettings {
         opacity = Math.max(0.2F, Math.min(1F, opacity));
         scale = Math.max(0.5F, Math.min(1.5F, scale));
         customColor &= 0xFFFFFF;
+        filterStrength = Math.max(0F, Math.min(0.5F, filterStrength));
         return this;
     }
 }

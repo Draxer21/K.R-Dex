@@ -160,7 +160,8 @@ public final class ShotDirector {
             com.draxer.dexrider.item.SuitSlots slots = com.draxer.dexrider.item.SuitSlots.DEFAULT.with(0, sampleDesign());
             mc.gui.setScreen(new SuitScreen(slots));
         }));
-        s.add(new Step(t + 30, () -> shoot("editor_traje")));
+        s.add(new Step(t + 20, () -> shoot("editor_traje")));
+        s.add(new Step(t + 31, () -> shoot("editor_traje_b")));     // medio segundo despues: el maniqui tiene que haber girado
         s.add(new Step(t + 34, () -> { Minecraft.getInstance().gui.setScreen(null); hudHidden(true); }));
         t += 40;
         // 5d: el Archivo del Driver (con un mazo a medias) y el aviso de escaneo
