@@ -165,9 +165,10 @@ public final class VisorHud {
             g.fill(0, 0, sw, sh, ((int) (255 * Math.min(0.6F, k)) << 24) | (violent ? 0xC01830 : color));
         }
         if (s.vignette) {
-            int steps = 10, edge = Math.max(sw, sh) / 9;
+            int edge = Math.max(sw, sh) / 9, steps = Math.max(8, edge);       // una franja por pixel: sin escalones
             for (int i = 0; i < steps; i++) {
-                int a = (int) ((0x55 * boot) * (1F - i / (float) steps));
+                float t = 1F - i / (float) steps;
+                int a = (int) ((0x50 * boot) * t * t);
                 int c = (a << 24) | (shade(color, 0.25F));
                 int d = i * edge / steps, e = d + edge / steps;
                 g.fill(0, d, sw, e, c); g.fill(0, sh - e, sw, sh - d, c);            // arriba / abajo
