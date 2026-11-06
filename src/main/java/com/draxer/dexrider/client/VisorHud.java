@@ -60,6 +60,7 @@ public final class VisorHud {
     @SubscribeEvent
     static void register(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.HOTBAR, DexRider.id("visor"), VisorHud::draw);
+        event.registerBelowAll(DexRider.id("visor_filter"), VisorHud::drawFilter);
     }
 
     @SubscribeEvent
@@ -141,6 +142,43 @@ public final class VisorHud {
         if (s.reticle) reticle(g, font, sw, sh, color);
         if (s.alerts) alerts(g, font, p, sw, emotion);
         g.pose().popMatrix();
+    }
+
+    /**
+     * Filtro de la vision (debajo de todo el HUD): un velo del color del lente sobre el mundo y una vineta en los bordes.
+     * Con la Violent Emotion el velo late en rojo.
+     */
+    private static void drawFilter(GuiGraphicsExtractor g, DeltaTracker delta) {
+        Minecraft mc = Minecraft.getInstance();
+        Player p = mc.player;
+        VisorSettings s = VisorSettings.get();
+        if (p == null || mc.options.hideGui || !DexConfig.hud() || s.mode == VisorSettings.Mode.CLASSIC || !Transformation.isTransformed(p)) return;
+        if (!s.filter && !s.vignette) return;
+        if (!mc.options.getCameraType().isFirstPerson()) return;
+        int sw = mc.getWindow().getGuiScaledWidth(), sh = mc.getWindow().getGuiScaledHeight();
+        int color = visorColor(p, s);
+        boolean violent = DexEmotions.VIOLENT.equals(p.getItemBySlot(EquipmentSlot.CHEST).get(DexComponents.EMOTION.get()));
+        float boot = bootTick >= 0 ? Math.min(1F, bootTick / 20F) : 1F;          // el filtro "enciende" con el arranque
+        if (s.filter && s.filterStrength > 0) {
+            float k = s.filterStrength * boot;
+            if (violent) k += 0.06F * (float) (0.5 + 0.5 * Math.sin(ticks * 0.35));
+            g.fill(0, 0, sw, sh, ((int) (255 * Math.min(0.6F, k)) << 24) | (violent ? 0xC01830 : color));
+        }
+        if (s.vignette) {
+            int steps = 10, edge = Math.max(sw, sh) / 9;
+            for (int i = 0; i < steps; i++) {
+                int a = (int) ((0x55 * boot) * (1F - i / (float) steps));
+                int c = (a << 24) | (shade(color, 0.25F));
+                int d = i * edge / steps, e = d + edge / steps;
+                g.fill(0, d, sw, e, c); g.fill(0, sh - e, sw, sh - d, c);            // arriba / abajo
+                g.fill(d, e, e, sh - e, c); g.fill(sw - e, e, sw - d, sh - e, c);  // izquierda / derecha
+            }
+        }
+    }
+
+    private static int shade(int rgb, float f) {
+        int r = (int) (((rgb >> 16) & 0xFF) * f), gg = (int) (((rgb >> 8) & 0xFF) * f), b = (int) ((rgb & 0xFF) * f);
+        return (r << 16) | (gg << 8) | b;
     }
 
     /** Esquinas y la forma del lente arriba. */

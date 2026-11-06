@@ -330,11 +330,20 @@ public class SuitScreen extends Screen {
         return stand;
     }
 
+    private long lastSpin = System.nanoTime();
+
+    /**
+     * El giro va en la rotacion del dibujo (no en el cuerpo del maniqui: el juego lo ignora para un soporte sin mundo).
+     * Gira solo a 30 grados por segundo; la rueda del raton encima o las flechas lo giran a mano.
+     */
     private void drawMannequin(GuiGraphicsExtractor g, float partialTick) {
         ArmorStand s = stand();
         if (s == null) return;
-        if (spin) yaw += 0.6F;
-        s.setYRot(yaw); s.yRotO = yaw; s.setYBodyRot(yaw); s.yBodyRotO = yaw; s.setYHeadRot(yaw); s.yHeadRotO = yaw;
+        long now = System.nanoTime();
+        if (spin) yaw += (now - lastSpin) / 1.0e9F * 30F;
+        lastSpin = now;
+        yaw %= 360F;
+        s.setYRot(0); s.yRotO = 0; s.setYBodyRot(0); s.yBodyRotO = 0; s.setYHeadRot(0); s.yHeadRotO = 0;
         s.setXRot(0);
         var dispatcher = Minecraft.getInstance().getEntityRenderDispatcher();
         var renderer = dispatcher.getRenderer(s);
@@ -342,9 +351,8 @@ public class SuitScreen extends Screen {
         rs.lightCoords = 0xF000F0;
         rs.shadowPieces.clear();
         rs.outlineColor = 0;
-        Quaternionf rot = new Quaternionf().rotateZ((float) Math.PI);
         Quaternionf cam = new Quaternionf().rotateX((float) Math.toRadians(8));
-        rot.mul(cam);
+        Quaternionf rot = new Quaternionf().rotateZ((float) Math.PI).mul(cam).rotateY((float) Math.toRadians(yaw));
         Vector3f off = new Vector3f(0, rs.boundingBoxHeight / 2.0F + 0.05F, 0);
         g.entity(rs, 70F, off, rot, cam, left + 4, top + 18, left + 98, top + 202);
     }

@@ -17,7 +17,7 @@ import java.util.function.Function;
  */
 public class VisorScreen extends Screen {
 
-    private static final int W = 300, H = 186;
+    private static final int W = 300, H = 226;
     private static final List<Integer> COLORS = List.of(0x28D250, 0x3CE0D0, 0x4FA8FF, 0xB44CFF, 0xFF2BD6, 0xFF3040, 0xF2C230, 0xFFFFFF);
     private int left, top;
 
@@ -66,6 +66,12 @@ public class VisorScreen extends Screen {
         y += 20;
         toggle(x, y, "alerts", s().alerts, v -> s().alerts = v);
         toggle(x + 144, y, "target", s().target, v -> s().target = v);
+        y += 20;
+        toggle(x, y, "filter", s().filter, v -> s().filter = v);
+        toggle(x + 144, y, "vignette", s().vignette, v -> s().vignette = v);
+        y += 20;
+        addRenderableWidget(new Slider(x, y, 284, "screen.dexrider.visor.filter_strength", 0.0, 0.5, s().filterStrength,
+                v -> s().filterStrength = v.floatValue(), v -> Math.round(v * 200) + "%"));
         y += 26;
         addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.visor.test_boot"), b -> { VisorSettings.save(); VisorHud.replayBoot(); onClose(); })
                 .bounds(x, y, 92, 18).build());

@@ -134,8 +134,11 @@ El Rider System es tecnología: transformado, ves lo que ve Dex desde dentro del
 - **Retícula de escaneo** alrededor de la mira mientras el Driver toma muestras (*ANALIZANDO* / *COPIADO*).
 - **Alertas**: integridad crítica, correa activa, salida abierta (Heroic) y oxígeno bajo.
 
+- **Filtro de la visión** (en primera persona): el mundo se ve a través del lente, con un velo de su color y los
+  bordes más oscuros. Con la Violent Emotion el velo late en rojo.
+
 **Ajustable** (Archivo del Driver → *Visor*): modo **completo**, **mínimo** (marco, carta, retícula y alertas) o
-**clásico** (el HUD de antes); opacidad, tamaño, color (ojos del traje o uno elegido) y cada pieza por separado.
+**clásico** (el HUD de antes); opacidad, tamaño, color (ojos del traje o uno elegido) y cada pieza por separado, incluidos el filtro (con su intensidad) y los bordes del lente.
 Se guarda en `config/dexrider-visor.json`.
 
 ### La Lectura del Driver
@@ -687,6 +690,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.39.1** — Filtro de la visión del color del lente (ajustable: intensidad y bordes). Arreglo: el maniquí del editor del traje no giraba.
 - **0.39.0** — Interfaz del visor: arranque al hacer Henshin, marco del lente con el color de los ojos del traje, lecturas de integridad y energía, retícula de escaneo y alertas. Ajustable desde el Archivo (modo, opacidad, tamaño, color y piezas).
 - **0.38.1** — La tecla C abre el mismo selector rápido (la rueda de cartas antigua se retira). La Guía del Rider System suma páginas: Archivo, cartas de casa (misiones), editor del traje e Hydro, y las teclas y el Ride Booker al día.
 - **0.38.0** — Selector rápido: mantén la rueda del ratón para elegir entre tus cartas favoritas en círculo y soltar para usarla; se eligen en el libro del Ride Booker (★ Selector, hasta 8). 25 pruebas automáticas.

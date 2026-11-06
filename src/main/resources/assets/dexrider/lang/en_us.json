@@ -1421,5 +1421,8 @@
   "screen.dexrider.visor.alerts": "Alerts",
   "screen.dexrider.visor.target": "Target",
   "screen.dexrider.visor.test_boot": "Test boot",
-  "screen.dexrider.visor.reset": "Reset"
+  "screen.dexrider.visor.reset": "Reset",
+  "screen.dexrider.visor.filter": "Color filter",
+  "screen.dexrider.visor.vignette": "Lens edges",
+  "screen.dexrider.visor.filter_strength": "Filter strength"
 }
