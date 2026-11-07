@@ -266,11 +266,11 @@ def bbox(els):
 
 HAND = {
     # contexto: (giro espada, giro pistola, escala, punto donde va la empunadura)
-    # Medido en las fotos del CI. Tercera persona, brazo colgando: -X = adelante, +Y = derecha, +Z = arriba
-    # (con el brazo levantado para apuntar, -Z = adelante y -X = arriba).
-    # Primera persona: +X = hacia el fondo de la pantalla, +Y = arriba, +Z = derecha.
-    "thirdperson_righthand": (R(("z", 90)), R(("z", 90)), 0.85, np.array([0.0, -2.5, 1.6])),
-    "firstperson_righthand": (R(("z", -20), ("x", -15)), R(("y", -84)), 0.55, np.array([2.0, -1.0, -2.0])),
+    # Tercera persona (ItemInHandLayer), brazo colgando: +X = derecha, +Y = adelante, +Z = arriba;
+    # con el brazo levantado para apuntar: +Y = arriba, -Z = adelante.
+    # Primera persona: el espacio de la camara (+X derecha, +Y arriba, -Z hacia el fondo).
+    "thirdperson_righthand": (R(("x", 8)), R(), 0.85, np.array([0.0, -2.5, 1.6])),
+    "firstperson_righthand": (R(("y", -30), ("x", -20), ("z", 10)), R(("y", 6)), 0.5, np.array([2.0, -2.2, -4.0])),
 }
 CENTERED = {
     "gui": (R(("y", -90), ("z", -45)), R(("y", -70), ("x", 18)), 15.0),
