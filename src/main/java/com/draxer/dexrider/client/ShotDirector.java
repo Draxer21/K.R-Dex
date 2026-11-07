@@ -258,7 +258,10 @@ public final class ShotDirector {
                     .withSamples(com.draxer.dexrider.item.DexCard.FORM_RIDE_SKY, 1));
         })));
         s.add(new Step(t + 80, () -> shoot("visor")));
-        s.add(new Step(t + 84, () -> {
+        s.add(new Step(t + 82, () -> Minecraft.getInstance().gui.setScreen(new VisorLayoutScreen(null))));
+        s.add(new Step(t + 96, () -> shoot("visor_posiciones")));
+        s.add(new Step(t + 99, () -> {
+            Minecraft.getInstance().gui.setScreen(null);
             hudHidden(true);
             server(srv -> {
                 ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
@@ -268,7 +271,7 @@ public final class ShotDirector {
                 p.setHealth(p.getMaxHealth());
             });
         }));
-        t += 90;
+        t += 105;
         // 5f: Form Ride Hydro junto a Frost y Speed
         t = scene(s, t, "hydro", lvl -> {
             String[] forms = {"speed", "hydro", "frost"};

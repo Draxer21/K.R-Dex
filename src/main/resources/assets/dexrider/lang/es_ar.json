@@ -1424,5 +1424,17 @@
   "screen.dexrider.visor.reset": "Restablecer",
   "screen.dexrider.visor.filter": "Filtro de color",
   "screen.dexrider.visor.vignette": "Bordes del lente",
-  "screen.dexrider.visor.filter_strength": "Intensidad del filtro"
+  "screen.dexrider.visor.filter_strength": "Intensidad del filtro",
+  "screen.dexrider.visor.layout": "Editar posiciones del HUD",
+  "screen.dexrider.visor.layout.tip": "Mueve cada pieza del HUD (lecturas, carta, objetivo, alertas, aviso de escaneo) a donde quieras, para que no choque con otros mods",
+  "screen.dexrider.visor_layout": "Posiciones del HUD",
+  "screen.dexrider.visor_layout.hint": "Arrastra los recuadros",
+  "screen.dexrider.visor_layout.reset_one": "Esta",
+  "screen.dexrider.visor_layout.reset_all": "Todas",
+  "screen.dexrider.visor_layout.elem.status": "Lecturas",
+  "screen.dexrider.visor_layout.elem.card": "Carta elegida",
+  "screen.dexrider.visor_layout.elem.strip": "Tira de Alt",
+  "screen.dexrider.visor_layout.elem.target": "Objetivo",
+  "screen.dexrider.visor_layout.elem.alerts": "Alertas",
+  "screen.dexrider.visor_layout.elem.toast": "Aviso de escaneo"
 }

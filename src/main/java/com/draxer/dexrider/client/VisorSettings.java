@@ -29,6 +29,8 @@ public final class VisorSettings {
     /** Filtro de la vision: el mundo se ve a traves del lente, tenido de su color, con los bordes mas oscuros. */
     public boolean filter = true, vignette = true;
     public float filterStrength = 0.12F;   // 0 .. 0.5
+    /** Posiciones de las piezas del HUD (id -> ancla, desplazamiento, tamano, visible). Vacio = de fabrica. */
+    public java.util.Map<String, HudLayout.Elem> layout = new java.util.HashMap<>();
 
     private static VisorSettings current;
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -75,6 +77,9 @@ public final class VisorSettings {
         scale = Math.max(0.5F, Math.min(1.5F, scale));
         customColor &= 0xFFFFFF;
         filterStrength = Math.max(0F, Math.min(0.5F, filterStrength));
+        if (layout == null) layout = new java.util.HashMap<>();
+        layout.values().removeIf(java.util.Objects::isNull);
+        layout.values().forEach(e -> e.scale = Math.max(0.5F, Math.min(2F, e.scale)));
         return this;
     }
 }

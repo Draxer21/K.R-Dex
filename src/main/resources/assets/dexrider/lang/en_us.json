@@ -1424,5 +1424,17 @@
   "screen.dexrider.visor.reset": "Reset",
   "screen.dexrider.visor.filter": "Color filter",
   "screen.dexrider.visor.vignette": "Lens edges",
-  "screen.dexrider.visor.filter_strength": "Filter strength"
+  "screen.dexrider.visor.filter_strength": "Filter strength",
+  "screen.dexrider.visor.layout": "Edit HUD positions",
+  "screen.dexrider.visor.layout.tip": "Move each HUD piece (readouts, card, target, alerts, scan notice) wherever you want, so it doesn't clash with other mods",
+  "screen.dexrider.visor_layout": "HUD positions",
+  "screen.dexrider.visor_layout.hint": "Drag the boxes",
+  "screen.dexrider.visor_layout.reset_one": "This",
+  "screen.dexrider.visor_layout.reset_all": "All",
+  "screen.dexrider.visor_layout.elem.status": "Readouts",
+  "screen.dexrider.visor_layout.elem.card": "Chosen card",
+  "screen.dexrider.visor_layout.elem.strip": "Alt strip",
+  "screen.dexrider.visor_layout.elem.target": "Target",
+  "screen.dexrider.visor_layout.elem.alerts": "Alerts",
+  "screen.dexrider.visor_layout.elem.toast": "Scan notice"
 }
