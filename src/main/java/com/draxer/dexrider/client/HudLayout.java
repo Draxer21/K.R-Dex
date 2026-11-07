@@ -34,6 +34,8 @@ public final class HudLayout {
         public int dx, dy;
         public float scale = 1F;
         public boolean visible = true;
+        /** Lado de la pieza que se alinea con el ancla en horizontal (0 izq., 1 centro, 2 der.); -1 = el del ancla. */
+        public int pivot = -1;
 
         Elem() {}
         Elem(Anchor a, int dx, int dy) { this.anchor = a.name(); this.dx = dx; this.dy = dy; }
@@ -42,7 +44,11 @@ public final class HudLayout {
             try { return Anchor.valueOf(anchor); } catch (RuntimeException e) { return Anchor.TOP_LEFT; }
         }
 
-        Elem copy() { Elem e = new Elem(anchor(), dx, dy); e.scale = scale; e.visible = visible; return e; }
+        Elem copy() { Elem e = new Elem(anchor(), dx, dy); e.scale = scale; e.visible = visible; e.pivot = pivot; return e; }
+
+        Elem pivot(int p) { this.pivot = p; return this; }
+
+        int pivotCol() { return pivot >= 0 && pivot <= 2 ? pivot : anchor().col; }
     }
 
     /** Piezas movibles: id -> posicion de fabrica (la de antes de 0.40). */
@@ -51,8 +57,9 @@ public final class HudLayout {
     static final Map<String, int[]> SIZE = new HashMap<>();
     static {
         def("status", new Elem(Anchor.TOP_LEFT, 12, 14), 118, 54);
-        def("card", new Elem(Anchor.BOTTOM_CENTER, -162, -3), 130, 13);
-        def("strip", new Elem(Anchor.BOTTOM_CENTER, -162, -20), 72, 24);
+        // la carta y la tira, pegadas a la izquierda de la barra de objetos (su borde derecho a 97 del centro)
+        def("card", new Elem(Anchor.BOTTOM_CENTER, -97, -3).pivot(2), 110, 13);
+        def("strip", new Elem(Anchor.BOTTOM_CENTER, -97, -20).pivot(2), 72, 24);
         def("target", new Elem(Anchor.TOP_RIGHT, -12, 14), 128, 47);
         def("alerts", new Elem(Anchor.TOP_CENTER, 0, 60), 150, 13);
         def("toast", new Elem(Anchor.TOP_CENTER, 0, 22), 150, 30);
@@ -84,7 +91,7 @@ public final class HudLayout {
     /** Esquina superior izquierda de una pieza de w x h (ya escalada) en una pantalla de sw x sh. */
     static int[] pos(Elem e, int w, int h, int sw, int sh) {
         Anchor a = e.anchor();
-        int x = a.col * sw / 2 - a.col * w / 2 + e.dx;
+        int x = a.col * sw / 2 - e.pivotCol() * w / 2 + e.dx;
         int y = a.row * sh / 2 - a.row * h / 2 + e.dy;
         x = Math.max(0, Math.min(sw - w, x));
         y = Math.max(0, Math.min(sh - h, y));
@@ -128,6 +135,7 @@ public final class HudLayout {
         int col = cx < sw / 3 ? 0 : cx > sw * 2 / 3 ? 2 : 1;
         int row = cy < sh / 3 ? 0 : cy > sh * 2 / 3 ? 2 : 1;
         e.anchor = Anchor.of(col, row).name();
+        e.pivot = -1;
         e.dx = x - (col * sw / 2 - col * w / 2);
         e.dy = y - (row * sh / 2 - row * h / 2);
     }

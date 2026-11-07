@@ -294,11 +294,12 @@ public final class VisorHud {
             int dash = name.lastIndexOf(" - ");
             if (dash >= 0) name = name.substring(dash + 3);
         }
-        String line = RiderHud.clip(font, "▸ " + name.toUpperCase(Locale.ROOT), 122);
-        if (HudLayout.begin(g, "card", 130, 13, sw, sh)) {
-            g.fill(0, 0, 130, 13, rgb(0x08080C, 0x90));
+        String line = RiderHud.clip(font, "▸ " + name.toUpperCase(Locale.ROOT), 150);
+        int cw = font.width(line) + 8;
+        if (HudLayout.begin(g, "card", cw, 13, sw, sh)) {
+            g.fill(0, 0, cw, 13, rgb(0x08080C, 0x90));
             g.fill(0, 0, 2, 13, rgb(color, 0xF0));
-            g.text(font, line, 126 - font.width(line), 3, rgb(0xFFFFFF, 0xFF), true);
+            g.text(font, line, 5, 3, rgb(0xFFFFFF, 0xFF), true);
             HudLayout.end(g);
         }
         if (DexRiderClient.BOOKER_USE_KEY.get().isDown() && HudLayout.begin(g, "strip", 72, 24, sw, sh)) {
