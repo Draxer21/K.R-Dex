@@ -8,7 +8,8 @@ Salida (en src/main/resources/assets/dexrider):
   items/ride_booker.json                   range_dispatch sobre dexrider:booker_morph
 
 Ejes del modelo: la empunadura apunta a -Y. Espada: la hoja sale hacia +Y. Pistola: el canon apunta a -Z.
-El cuerpo (el "libro" de cartas) gira 90 grados sobre X alrededor de PIVOT para pasar de una forma a la otra.
+En espada el libro va inclinado 22.5 grados: la linea hoja-empunadura lo cruza de esquina a esquina.
+Para pasar a pistola el libro gira hasta -90 (acostado) y se mueve encima de la empunadura.
 
   python3 tools/ride_booker_model.py            genera los archivos
   python3 tools/ride_booker_model.py --preview  ademas dibuja /tmp/booker_preview.png
@@ -21,10 +22,10 @@ from scipy.spatial.transform import Rotation as Rot
 ROOT = os.path.join(os.path.dirname(__file__), "..", "src", "main", "resources", "assets", "dexrider")
 TEX = "dexrider:item/ride_booker_3d"
 DY = -6.0                    # todo el arma baja 6 px para que la hoja sea mas larga (los elementos van de -16 a 32)
-PIVOT = (12.5 + DY, 7.5)     # (y, z) del eje de giro del libro
 GRIP_ANGLE = -22.5           # en pistola la empunadura se inclina hacia atras
-GRIP_TOP = np.array([8.0, 7.8 + DY, 10.0])
-GRIP = np.array([8.0, 4.5 + DY, 10.0])
+GRIP_TOP = np.array([8.0, 7.8 + DY, 7.5])
+GRIP = np.array([8.0, 4.5 + DY, 7.5])
+AXIS_Z = 7.5                 # eje de la espada (hoja y empunadura)
 
 # ---------------------------------------------------------------- textura
 PAL = {
@@ -140,56 +141,45 @@ def el(frm, to, faces, rot=None, shift=True):
     return e
 
 
-def to_gun(frm, to):
-    """Pasa una caja del marco espada al marco pistola (giro de -90 sobre X alrededor de PIVOT)."""
-    py, pz = PIVOT[0] - DY, PIVOT[1]
-    ys = [py + (z - pz) for z in (frm[2], to[2])]
-    zs = [pz - (y - py) for y in (frm[1], to[1])]
-    return [frm[0], min(ys), min(zs)], [to[0], max(ys), max(zs)]
-
-
-def body_parts(gun_frame, face_rot):
-    """El libro de cartas, definido en el marco espada (de pie: lomo delante, cantos de las paginas detras)."""
-    parts = []
+def book_local(face_rot):
+    """
+    El libro de cartas en coordenadas locales (centro en 0,0; y = largo 12, z = ancho 7; lomo en -z, cantos en +z).
+    Devuelve (from, to, caras) con x absoluto e y/z relativos al centro.
+    """
     sw = lambda n: faces_all(swatch_uv(n))
-    emb = lambda: {"uv": list(EMBLEM_UV), "texture": "#t", "rotation": face_rot}
-    pages = lambda: {"uv": list(PAGES_UV), "texture": "#t", "rotation": face_rot}
+    emb = {"uv": list(EMBLEM_UV), "texture": "#t", "rotation": face_rot}
+    pages = {"uv": list(PAGES_UV), "texture": "#t", "rotation": face_rot}
     page_rot = {"uv": list(PAGES_UV), "texture": "#t", "rotation": (face_rot + 90) % 360}
-    # bloque de paginas: los cantos (arriba, abajo y detras) se ven como hojas
-    parts.append(([7.0, 8.3, 3.4], [9.0, 19.7, 10.7], faces_all(swatch_uv("black"), up=page_rot, down=page_rot, south=pages())))
-    # tapas: negras con el emblema Dex
-    parts.append(([8.95, 8.0, 3.0], [9.45, 20.0, 11.0], faces_all(swatch_uv("black"), east=emb())))
-    parts.append(([6.55, 8.0, 3.0], [7.05, 20.0, 11.0], faces_all(swatch_uv("black"), west=emb())))
-    # lomo rojo con remates dorados y gema verde
-    parts.append(([6.6, 8.2, 2.5], [9.4, 19.8, 3.2], sw("red")))
-    parts.append(([6.45, 7.8, 2.3], [9.55, 9.0, 3.4], sw("gold")))
-    parts.append(([6.45, 19.0, 2.3], [9.55, 20.2, 3.4], sw("gold")))
-    parts.append(([7.4, 13.0, 2.15], [8.6, 15.0, 2.5], sw("glow_g")))
-    # esquinas doradas detras: por arriba sale la hoja, por abajo se engancha la empunadura
-    parts.append(([6.4, 18.6, 8.6], [9.6, 20.4, 11.4], sw("gold")))
-    parts.append(([6.4, 7.6, 8.6], [9.6, 9.4, 11.4], sw("gold_d")))
-    if gun_frame:
-        parts = [(*to_gun(f, t), fc) for f, t, fc in parts]
-    return parts
+    return [
+        ([7.0, -5.7, -3.1], [9.0, 5.7, 3.2], faces_all(swatch_uv("black"), up=page_rot, down=page_rot, south=pages)),
+        ([8.95, -6.0, -3.5], [9.45, 6.0, 3.5], faces_all(swatch_uv("black"), east=emb)),
+        ([6.55, -6.0, -3.5], [7.05, 6.0, 3.5], faces_all(swatch_uv("black"), west=emb)),
+        ([6.6, -5.8, -4.0], [9.4, 5.8, -3.3], sw("red")),                 # lomo
+        ([6.45, -6.2, -4.2], [9.55, -5.0, -3.1], sw("gold")),
+        ([6.45, 5.0, -4.2], [9.55, 6.2, -3.1], sw("gold")),
+        ([7.4, -1.0, -4.35], [8.6, 1.0, -4.0], sw("glow_g")),              # gema
+        ([6.4, 4.6, -3.8], [9.6, 6.4, -1.2], sw("gold")),                  # esquina por donde sale la hoja
+        ([6.4, -6.4, 1.2], [9.6, -4.6, 3.8], sw("gold_d")),                # esquina de la empunadura
+    ]
 
 
-def gun_extras(muzzle_len):
-    """En el marco pistola: la boca sale por la esquina delantera de abajo; miras arriba."""
+def gun_local(muzzle_len):
+    """Piezas que solo existen en pistola, relativas al centro del libro ya acostado (giro de -90)."""
     sw = lambda n: faces_all(swatch_uv(n))
     out = []
     if muzzle_len > 0:
-        z0 = -muzzle_len
-        out.append(([7.2, 8.8, z0], [8.8, 11.2, 0.2], faces_all(swatch_uv("gun"), north={"uv": swatch_uv("glow_g"), "texture": "#t"})))
-        out.append(([6.9, 8.5, z0 - 0.01], [9.1, 11.5, z0 + 0.7], faces_all(swatch_uv("gold"), north={"uv": swatch_uv("glow_g"), "texture": "#t"})))
-    out.append(([7.5, 16.3, 9.6], [8.5, 17.4, 11.2], sw("red")))                        # mira trasera
-    out.append(([7.6, 16.3, 0.6], [8.4, 17.0, 1.4], sw("gold")))                        # mira delantera
+        z0 = -6.0 - muzzle_len
+        out.append(([7.2, -2.9, z0], [8.8, -0.5, -5.8], faces_all(swatch_uv("gun"), north={"uv": swatch_uv("glow_g"), "texture": "#t"})))
+        out.append(([6.9, -3.2, z0 - 0.01], [9.1, -0.2, z0 + 0.7], faces_all(swatch_uv("gold"), north={"uv": swatch_uv("glow_g"), "texture": "#t"})))
+    out.append(([7.5, 3.5, 4.4], [8.5, 4.6, 5.8], sw("red")))             # mira trasera
+    out.append(([7.6, 3.5, -5.4], [8.4, 4.2, -4.6], sw("gold")))          # mira delantera
     return out
 
 
 def blade(top):
-    """Hoja que sale por la esquina de arriba-atras del libro: nucleo de 20.4 a top y punta en rombo."""
+    """Hoja sobre el eje: sale de la esquina de arriba del libro inclinado. Nucleo de 20.4 a top y punta en rombo."""
     out = []
-    zc = 10.0
+    zc = AXIS_Z
     side = {"uv": list(BLADE_UV), "texture": "#t"}
     edge = {"uv": swatch_uv("white"), "texture": "#t"}
     out.append(el([7.6, 20.4, zc - 2.4], [8.4, top, zc + 2.4],
@@ -203,40 +193,64 @@ def blade(top):
 
 
 def static_parts(trigger, angled):
-    """Empunadura (sale de la esquina de abajo-atras del libro), gatillo y guardamonte."""
+    """Empunadura sobre el eje (sale de la esquina de abajo del libro), gatillo y guardamonte."""
     out = []
-    gr = {"origin": [8, 7.8, 10], "axis": "x", "angle": GRIP_ANGLE} if angled else None
+    zc = AXIS_Z
+    gr = {"origin": [8, 7.8, zc], "axis": "x", "angle": GRIP_ANGLE} if angled else None
     grip = {"uv": list(GRIP_UV), "texture": "#t"}
-    out.append(el([7.0, 1.2, 9.0], [9.0, 7.8, 11.0], faces_all(swatch_uv("black"), east=grip, west=grip, north=grip, south=grip), gr))
-    out.append(el([6.6, 0.0, 8.6], [9.4, 1.4, 11.4], faces_all(swatch_uv("gold"), down={"uv": swatch_uv("green"), "texture": "#t"}), gr))
-    out.append(el([6.8, 7.4, 8.8], [9.2, 8.0, 11.2], faces_all(swatch_uv("gold_d"))))
+    out.append(el([7.0, 1.2, zc - 1], [9.0, 7.8, zc + 1], faces_all(swatch_uv("black"), east=grip, west=grip, north=grip, south=grip), gr))
+    out.append(el([6.6, 0.0, zc - 1.4], [9.4, 1.4, zc + 1.4], faces_all(swatch_uv("gold"), down={"uv": swatch_uv("green"), "texture": "#t"}), gr))
+    out.append(el([6.8, 7.2, zc - 1.2], [9.2, 7.8, zc + 1.2], faces_all(swatch_uv("gold_d"))))
     if trigger:
-        out.append(el([7.6, 5.9, 7.4], [8.4, 7.8, 8.2], faces_all(swatch_uv("red"))))      # gatillo
-        out.append(el([7.5, 5.0, 5.8], [8.5, 5.5, 8.8], faces_all(swatch_uv("gold"))))     # guardamonte
-        out.append(el([7.5, 5.0, 5.8], [8.5, 7.8, 6.3], faces_all(swatch_uv("gold"))))
+        out.append(el([7.6, 5.9, zc - 2.5], [8.4, 7.8, zc - 1.7], faces_all(swatch_uv("red"))))      # gatillo
+        out.append(el([7.5, 5.0, zc - 4.0], [8.5, 5.5, zc - 1.0], faces_all(swatch_uv("gold"))))     # guardamonte
+        out.append(el([7.5, 5.0, zc - 4.0], [8.5, 7.8, zc - 3.5], faces_all(swatch_uv("gold"))))
     return out
 
 
+# centro del libro: en espada, sobre el eje y girado +22.5 (la linea hoja-empunadura cruza el libro de esquina a
+# esquina); en pistola, acostado (-90) encima de la empunadura
+BOOK_SWORD = (14.0, AXIS_Z)
+BOOK_GUN = (11.5, 1.5)
+
 FRAMES = [
-    # (angulo del cuerpo en grados, tope de la hoja o None, largo del canon)
-    (0.0, 35.6, 0), (0.0, 28.0, 0), (-22.5, None, 0), (-45.0, None, 0), (-67.5, None, 1.2), (-90.0, None, 2.6),
+    # (angulo del libro, tope de la hoja o None, largo del canon)
+    (22.5, 35.6, 0), (0.0, 28.0, 0), (-22.5, None, 0), (-45.0, None, 0), (-67.5, None, 1.2), (-90.0, None, 2.6),
 ]
+
+
+def place(local, center, angle):
+    """Ubica una pieza local del libro con el angulo dado (si pasa de -45, la caja va acostada y gira lo que falta)."""
+    (f, t, fc) = local
+    cy, cz = center
+    if angle < -45.0:
+        ys = [f[2], t[2]]                 # giro de -90: (y, z) -> (z, -y)
+        zs = [-f[1], -t[1]]
+        f2 = [f[0], cy + min(ys), cz + min(zs)]
+        t2 = [t[0], cy + max(ys), cz + max(zs)]
+        rest = angle + 90.0
+    else:
+        f2 = [f[0], cy + f[1], cz + f[2]]
+        t2 = [t[0], cy + t[1], cz + t[2]]
+        rest = angle
+    rot = {"origin": [8, cy, cz], "axis": "x", "angle": rest} if rest != 0.0 else None
+    return el(f2, t2, fc, rot)
 
 
 def frame_elements(k):
     angle, blade_top, muzzle = FRAMES[k]
+    t = k / (len(FRAMES) - 1)
+    center = (BOOK_SWORD[0] + (BOOK_GUN[0] - BOOK_SWORD[0]) * t, BOOK_SWORD[1] + (BOOK_GUN[1] - BOOK_SWORD[1]) * t)
+    lying = angle < -45.0
     els = static_parts(trigger=k >= 4, angled=k >= 4)
-    gun_frame = angle <= -67.5
-    rot = None
-    if gun_frame and angle != -90.0:
-        rot = {"origin": [8, PIVOT[0] - DY, PIVOT[1]], "axis": "x", "angle": angle + 90.0}
-    elif not gun_frame and angle != 0.0:
-        rot = {"origin": [8, PIVOT[0] - DY, PIVOT[1]], "axis": "x", "angle": angle}
-    for f, t, fc in body_parts(gun_frame, 90 if gun_frame else 0):
-        els.append(el(f, t, fc, rot))
-    if gun_frame:
-        for f, t, fc in gun_extras(muzzle):
-            els.append(el(f, t, fc, rot))
+    for part in book_local(90 if lying else 0):
+        els.append(place(part, center, angle))
+    if lying:
+        cy, cz = center
+        rest = angle + 90.0
+        rot = {"origin": [8, cy, cz], "axis": "x", "angle": rest} if rest != 0.0 else None
+        for f, t2, fc in gun_local(muzzle):
+            els.append(el([f[0], cy + f[1], cz + f[2]], [t2[0], cy + t2[1], cz + t2[2]], fc, rot))
     if blade_top is not None:
         els.extend(blade(blade_top))
     return els
