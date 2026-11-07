@@ -420,7 +420,8 @@ public final class FormAbilities {
             e.addEffect(new MobEffectInstance(MobEffects.BLINDNESS, 40, 0));
         }
         for (double d = 0; d < delta.length(); d += 0.4) {
-            FX.particle(level, ParticleTypes.SQUID_INK, from.add(dir.scale(d)).add(0, 1, 0), 2, 0.25, 0.01);
+            FX.dust(level, 0x2A1240, 1.0F, from.add(dir.scale(d)).add(0, 0.8, 0), 2, 0.2);
+            FX.particle(level, ParticleTypes.SMOKE, from.add(dir.scale(d)).add(0, 0.8, 0), 1, 0.15, 0.01);
         }
         FX.dust(level, 0x5A2A8C, 1.5F, to.add(0, 1, 0), 20, 0.5);
         p.teleportTo(to.x, to.y, to.z);
