@@ -270,7 +270,7 @@ HAND = {
     # con el brazo levantado para apuntar: +Y = arriba, -Z = adelante.
     # Primera persona: el espacio de la camara (+X derecha, +Y arriba, -Z hacia el fondo).
     "thirdperson_righthand": (R(("x", 8)), R(), 0.85, np.array([0.0, -2.5, 1.6])),
-    "firstperson_righthand": (R(("y", -30), ("x", -20), ("z", 10)), R(("y", 6)), 0.5, np.array([2.0, -2.2, -4.0])),
+    "firstperson_righthand": (R(("y", -80), ("x", -15), ("z", 12)), R(("y", 6)), 0.5, np.array([2.0, -2.2, -4.0])),
 }
 CENTERED = {
     "gui": (R(("y", -90), ("z", -45)), R(("y", -70), ("x", 18)), 15.0),
