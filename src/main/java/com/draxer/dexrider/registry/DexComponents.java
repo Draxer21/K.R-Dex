@@ -171,4 +171,9 @@ public final class DexComponents {
             COMPONENTS.registerComponentType("gun_mode", builder -> builder
                     .persistent(Codec.BOOL)
                     .networkSynchronized(ByteBufCodecs.BOOL));
+
+    /** Ride Booker: tiempo de juego del ultimo cambio espada/pistola (el cliente anima la transformacion con el). */
+    public static final Supplier<DataComponentType<Long>> BOOKER_SHIFT =
+            COMPONENTS.registerComponentType("booker_shift", builder -> builder
+                    .networkSynchronized(ByteBufCodecs.VAR_LONG));
 }

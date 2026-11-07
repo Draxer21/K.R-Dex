@@ -65,6 +65,27 @@ public class DexWeaponItem extends Item {
         return stack.has(DexComponents.GUN_MODE.get());
     }
 
+    /** Ticks que dura la transformacion espada <-> pistola del Ride Booker (modelo 3D animado en el cliente). */
+    public static final int MORPH_TICKS = 8;
+
+    /**
+     * Avance de la forma del Ride Booker: 0 = espada, 1 = pistola; en medio, la transformacion.
+     * {@code time} es el tiempo de juego (con la fraccion del tick, en el cliente).
+     */
+    public static float morph(ItemStack stack, double time) {
+        boolean gun = isGunMode(stack);
+        Long start = stack.get(DexComponents.BOOKER_SHIFT.get());
+        float t = 1.0F;
+        if (start != null) t = (float) Math.max(0.0, Math.min(1.0, (time - start) / MORPH_TICKS));
+        return gun ? t : 1.0F - t;
+    }
+
+    /** Cambiar de forma o de componente no baja y sube el arma en la mano (solo al cambiar de objeto o de ranura). */
+    @Override
+    public boolean shouldCauseReequipAnimation(ItemStack oldStack, ItemStack newStack, boolean slotChanged) {
+        return slotChanged || !ItemStack.isSameItem(oldStack, newStack);
+    }
+
     @Override
     public InteractionResult use(Level level, Player player, InteractionHand hand) {
         ItemStack stack = player.getItemInHand(hand);
@@ -109,6 +130,8 @@ public class DexWeaponItem extends Item {
         boolean toGun = !isGunMode(stack);
         if (toGun) stack.set(DexComponents.GUN_MODE.get(), true);
         else stack.remove(DexComponents.GUN_MODE.get());
+        stack.set(DexComponents.BOOKER_SHIFT.get(), level.getGameTime());
+        player.getCooldowns().addCooldown(stack, MORPH_TICKS);
         level.playSound(null, player.getX(), player.getY(), player.getZ(),
                 DexSounds.MODE_SWITCH.get(), SoundSource.PLAYERS, 1.0F, toGun ? 1.2F : 0.9F);
         player.sendSystemMessage(Component.translatable(toGun

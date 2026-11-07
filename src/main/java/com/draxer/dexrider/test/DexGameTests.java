@@ -71,6 +71,7 @@ public final class DexGameTests {
         FUNCTIONS.register("hydro", () -> DexGameTests::hydro);
         FUNCTIONS.register("missions", () -> DexGameTests::missions);
         FUNCTIONS.register("quick_picks", () -> DexGameTests::quickPicks);
+        FUNCTIONS.register("booker_morph", () -> DexGameTests::bookerMorph);
     }
 
     // ------------------------------------------------------------------ utilidades
@@ -744,6 +745,28 @@ public final class DexGameTests {
         picks = driver.getOrDefault(com.draxer.dexrider.registry.DexComponents.QUICK_PICKS.get(), java.util.List.<String>of());
         if (picks.size() != com.draxer.dexrider.menu.RideBookerMenu.MAX_PICKS) { fail(h, t, "el tope no es " + com.draxer.dexrider.menu.RideBookerMenu.MAX_PICKS + ": " + picks.size()); return; }
         log(t, "ok: marcar, desmarcar y tope de " + picks.size());
+        h.succeed();
+    }
+
+    /** Ride Booker: Shift + clic derecho pasa a pistola con la transformacion animada (componente + avance 0..1). */
+    static void bookerMorph(GameTestHelper h) {
+        String t = "booker_morph";
+        ServerPlayer p = player(h);
+        transform(h, t, p);
+        ItemStack booker = new ItemStack(DexItems.RIDE_BOOKER.get());
+        p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, booker);
+        if (com.draxer.dexrider.item.DexWeaponItem.morph(booker, 0) != 0.0F) { fail(h, t, "la espada no empieza en 0"); return; }
+        p.setShiftKeyDown(true);
+        booker.getItem().use(h.getLevel(), p, net.minecraft.world.InteractionHand.MAIN_HAND);
+        p.setShiftKeyDown(false);
+        Long start = booker.get(DexComponents.BOOKER_SHIFT.get());
+        if (!com.draxer.dexrider.item.DexWeaponItem.isGunMode(booker) || start == null) { fail(h, t, "no paso a pistola"); return; }
+        float a = com.draxer.dexrider.item.DexWeaponItem.morph(booker, start);
+        float mid = com.draxer.dexrider.item.DexWeaponItem.morph(booker, start + com.draxer.dexrider.item.DexWeaponItem.MORPH_TICKS / 2.0);
+        float b = com.draxer.dexrider.item.DexWeaponItem.morph(booker, start + com.draxer.dexrider.item.DexWeaponItem.MORPH_TICKS);
+        if (a != 0.0F || Math.abs(mid - 0.5F) > 0.01F || b != 1.0F) { fail(h, t, "avance raro: " + a + " / " + mid + " / " + b); return; }
+        if (!p.getCooldowns().isOnCooldown(booker)) { fail(h, t, "sin espera durante la transformacion"); return; }
+        log(t, "ok: espada -> pistola en " + com.draxer.dexrider.item.DexWeaponItem.MORPH_TICKS + " ticks");
         h.succeed();
     }
 }
