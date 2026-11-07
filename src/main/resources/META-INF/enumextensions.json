@@ -1,0 +1,13 @@
+{
+    "entries": [
+        {
+            "enum": "net/minecraft/client/model/HumanoidModel$ArmPose",
+            "name": "DEXRIDER_GUN_AIM",
+            "constructor": "(ZZLnet/neoforged/neoforge/client/IArmPoseTransformer;)V",
+            "parameters": {
+                "class": "com/draxer/dexrider/client/BookerClient$EnumParams",
+                "field": "GUN_AIM"
+            }
+        }
+    ]
+}

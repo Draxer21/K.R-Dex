@@ -335,6 +335,26 @@ public final class ShotDirector {
         s.add(new Step(t + 78, () -> shoot("pose_kick")));
         s.add(new Step(t + 95, () -> server(srv -> com.draxer.dexrider.network.PosePayload.send(srv.getPlayerList().getPlayers().get(0), "finisher"))));
         s.add(new Step(t + 108, () -> shoot("pose_finisher")));
+        // 7b: el Ride Booker 3D en la mano: espada, transformacion y pistola (tercera persona de frente y primera persona)
+        s.add(new Step(t + 112, () -> server(srv -> {
+            ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+            p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(DexItems.RIDE_BOOKER.get()));
+        })));
+        s.add(new Step(t + 130, () -> shoot("booker_espada_3p")));
+        s.add(new Step(t + 132, () -> server(srv -> bookerMode(srv, true))));
+        s.add(new Step(t + 136, () -> shoot("booker_transicion_3p")));
+        s.add(new Step(t + 150, () -> shoot("booker_pistola_3p")));
+        s.add(new Step(t + 152, () -> {
+            Minecraft.getInstance().options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON);
+            hudHidden(false);   // con la interfaz oculta tampoco se ve la mano
+        }));
+        s.add(new Step(t + 162, () -> shoot("booker_pistola_1p")));
+        s.add(new Step(t + 164, () -> server(srv -> bookerMode(srv, false))));
+        s.add(new Step(t + 168, () -> shoot("booker_transicion_1p")));
+        s.add(new Step(t + 182, () -> shoot("booker_espada_1p")));
+        s.add(new Step(t + 184, () -> server(srv -> srv.getPlayerList().getPlayers().get(0)
+                .setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, ItemStack.EMPTY))));
+        t += 76;
         // 8: la Lectura del Driver (primera persona, frente a un golem que ya intercambio golpes contigo)
         s.add(new Step(t + 112, () -> {
             Minecraft.getInstance().options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON);
@@ -359,6 +379,14 @@ public final class ShotDirector {
             Minecraft.getInstance().stop();
         }));
         return s;
+    }
+
+    /** Cambia el Ride Booker de la mano a pistola o espada, como Shift + clic derecho (con la animacion). */
+    private static void bookerMode(MinecraftServer srv, boolean gun) {
+        ItemStack stack = srv.getPlayerList().getPlayers().get(0).getMainHandItem();
+        if (gun) stack.set(DexComponents.GUN_MODE.get(), true);
+        else stack.remove(DexComponents.GUN_MODE.get());
+        stack.set(DexComponents.BOOKER_SHIFT.get(), srv.overworld().getGameTime());
     }
 
     /** Monta una escena, espera a que cargue, coloca la camara y saca la foto. Devuelve el tick siguiente. */

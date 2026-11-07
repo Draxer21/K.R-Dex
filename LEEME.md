@@ -37,7 +37,7 @@ Solo hay un arma activa a la vez; sacar otra desmaterializa la anterior.
 
 | Carta | Arma | Uso especial | Final Attack Ride |
 |---|---|---|---|
-| Ride Booker | espada / pistola | **Shift + clic derecho** cambia de modo; en pistola, clic derecho dispara | Booker Slash (onda de corte) / Booker Blast (rayo de 40 bloques) |
+| Ride Booker | espada / pistola (modelo 3D) | **Shift + clic derecho** cambia de modo (se transforma en la mano); en pistola, clic derecho dispara | Booker Slash (onda de corte) / Booker Blast (rayo de 40 bloques) |
 | Shock Baton | porra | los golpes ralentizan | **Volt Crush**: rayos sobre todos en 6 bloques |
 | Blast Shot | pistola | clic derecho dispara | **Full Burst**: cinco ráfagas en abanico |
 | Sword | espada | la de más daño | **Cross Slash**: dos cortes en X |
@@ -696,6 +696,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.41.0** — Ride Booker en 3D: modelo propio (estuche negro y dorado con emblema Dex, hoja con filo rojo) que se transforma de espada a pistola con animación al hacer **Shift + clic derecho**; en pistola el brazo apunta hacia donde miras.
 - **0.40.0** — HUD movible: Visor → *Editar posiciones del HUD* para arrastrar cada pieza (lecturas, carta, tira de Alt, objetivo, alertas, aviso de escaneo), con ancla automática, ajuste fino, tamaño propio y ocultar.
 - **0.39.2** — Sky: el aura de sombra y la estela del Paso sombra ahora son polvo violeta fino (antes, manchas negras enormes que podían tapar la cámara).
 - **0.39.1** — Filtro de la visión del color del lente (ajustable: intensidad y bordes). Arreglo: el maniquí del editor del traje no giraba.
