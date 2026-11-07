@@ -690,6 +690,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.39.2** — Sky: el aura de sombra y la estela del Paso sombra ahora son polvo violeta fino (antes, manchas negras enormes que podían tapar la cámara).
 - **0.39.1** — Filtro de la visión del color del lente (ajustable: intensidad y bordes). Arreglo: el maniquí del editor del traje no giraba.
 - **0.39.0** — Interfaz del visor: arranque al hacer Henshin, marco del lente con el color de los ojos del traje, lecturas de integridad y energía, retícula de escaneo y alertas. Ajustable desde el Archivo (modo, opacidad, tamaño, color y piezas).
 - **0.38.1** — La tecla C abre el mismo selector rápido (la rueda de cartas antigua se retira). La Guía del Rider System suma páginas: Archivo, cartas de casa (misiones), editor del traje e Hydro, y las teclas y el Ride Booker al día.

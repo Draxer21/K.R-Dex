@@ -211,7 +211,11 @@ public enum FormRide {
                     if (light <= maxLight) grantFlight(p);
                     else revokeFlight(p);
                 }
-                if (p.tickCount % 4 == 0) FX.particle(level, ParticleTypes.SQUID_INK, p.position().add(0, 1, 0), 2, 0.4, 0.01);
+                // aura de sombra: polvo violeta oscuro, fino y bajo (la tinta de calamar se veia como manchas enormes)
+                if (p.tickCount % 3 == 0) {
+                    FX.dust(level, 0x2A1240, 0.7F, p.position().add(0, 0.5, 0), 2, 0.35);
+                    if (p.tickCount % 9 == 0) FX.dust(level, 0x5A2A8C, 0.5F, p.position().add(0, 0.9, 0), 1, 0.4);
+                }
                 // Nv.3: las puntas de las alas dejan estela al volar
                 if (lvl >= 3 && p.getAbilities().flying && p.tickCount % 2 == 0) {
                     net.minecraft.world.phys.Vec3 right = net.minecraft.world.phys.Vec3.directionFromRotation(0, p.yBodyRot + 90);
