@@ -696,6 +696,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.41.2** — Ride Booker: en espada el libro va inclinado y la hoja y la empuñadura lo cruzan en diagonal, de esquina a esquina (la guarda queda pareja).
 - **0.41.1** — Ride Booker con forma de libro de cartas: tapas con el emblema Dex, lomo rojo y cantos de páginas; en espada la hoja sale por una esquina, en pistola se despliega la empuñadura y la boca asoma por la esquina delantera.
 - **0.41.0** — Ride Booker en 3D: modelo propio (estuche negro y dorado con emblema Dex, hoja con filo rojo) que se transforma de espada a pistola con animación al hacer **Shift + clic derecho**; en pistola el brazo apunta hacia donde miras.
 - **0.40.0** — HUD movible: Visor → *Editar posiciones del HUD* para arrastrar cada pieza (lecturas, carta, tira de Alt, objetivo, alertas, aviso de escaneo), con ancla automática, ajuste fino, tamaño propio y ocultar.
