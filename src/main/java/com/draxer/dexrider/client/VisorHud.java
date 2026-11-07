@@ -135,12 +135,12 @@ public final class VisorHud {
         if (s.scanlines) scanlines(g, sw, sh, color, violent);
         if (bootTick >= 0 && s.boot) boot(g, font, sw, sh, color);
         else {
-            if (full) status(g, font, p, color);
+            if (full) status(g, font, p, color, sw, sh);
             card(g, mc, font, sw, sh, color);
-            if (full && s.target && DexConfig.targetRead()) target(g, mc, font, sw, color);
+            if (full && s.target && DexConfig.targetRead()) target(g, mc, font, sw, sh, color);
         }
         if (s.reticle) reticle(g, font, sw, sh, color);
-        if (s.alerts) alerts(g, font, p, sw, emotion);
+        if (s.alerts) alerts(g, font, p, sw, sh, emotion);
         g.pose().popMatrix();
     }
 
@@ -233,9 +233,12 @@ public final class VisorHud {
         g.fill(x - 6, y - 4, x - 4, y + lines.length * 12, rgb(color, (int) (0xA0 * fade)));
     }
 
-    private static void status(GuiGraphicsExtractor g, Font font, Player p, int color) {
+    private static void status(GuiGraphicsExtractor g, Font font, Player p, int color, int sw, int sh) {
         HudSyncPayload hs = HudState.last;
-        int x = 12, y = 14, w = 118;
+        boolean live0 = System.currentTimeMillis() - HudState.receivedAt < 3000 && hs.active();
+        int rows = 1 + (live0 ? 1 + (hs.accelLeft() > 0 ? 1 : 0) + (hs.emotion().isEmpty() ? 0 : 1) : 0);
+        if (!HudLayout.begin(g, "status", 118, 12 + 14 * rows, sw, sh)) return;
+        int x = 0, y = 0, w = 118;
         ItemStack chest = p.getItemBySlot(EquipmentSlot.CHEST);
         KamenRide k = KamenRide.current(p);
         String formId = chest.get(DexComponents.FORM.get());
@@ -267,6 +270,7 @@ public final class VisorHud {
                         v ? 0xB44CFF : 0x7FB8FF, (hs.emotionLeft() + 19) / 20 + "s");
             }
         }
+        HudLayout.end(g);
     }
 
     private static void readout(GuiGraphicsExtractor g, Font font, int x, int y, int w, String key, float t, int color, String value) {
@@ -290,21 +294,26 @@ public final class VisorHud {
             int dash = name.lastIndexOf(" - ");
             if (dash >= 0) name = name.substring(dash + 3);
         }
-        String line = "▸ " + name.toUpperCase(Locale.ROOT);
-        int x = sw / 2 - 91 - 10 - font.width(line), y = sh - 12;
-        if (x < 4) x = 4;
-        g.fill(x - 4, y - 3, sw / 2 - 91 - 6, y + 10, rgb(0x08080C, 0x90));
-        g.fill(x - 4, y - 3, x - 2, y + 10, rgb(color, 0xF0));
-        g.text(font, line, x, y, rgb(0xFFFFFF, 0xFF), true);
-        if (DexRiderClient.BOOKER_USE_KEY.get().isDown()) RiderHud.strip(g, mc, x - 4, y - 30, hs.slot());
+        String line = RiderHud.clip(font, "▸ " + name.toUpperCase(Locale.ROOT), 122);
+        if (HudLayout.begin(g, "card", 130, 13, sw, sh)) {
+            g.fill(0, 0, 130, 13, rgb(0x08080C, 0x90));
+            g.fill(0, 0, 2, 13, rgb(color, 0xF0));
+            g.text(font, line, 126 - font.width(line), 3, rgb(0xFFFFFF, 0xFF), true);
+            HudLayout.end(g);
+        }
+        if (DexRiderClient.BOOKER_USE_KEY.get().isDown() && HudLayout.begin(g, "strip", 72, 24, sw, sh)) {
+            RiderHud.strip(g, mc, 0, 0, hs.slot());
+            HudLayout.end(g);
+        }
     }
 
     /** Lectura del objetivo, arriba a la derecha. */
-    private static void target(GuiGraphicsExtractor g, Minecraft mc, Font font, int sw, int color) {
+    private static void target(GuiGraphicsExtractor g, Minecraft mc, Font font, int sw, int sh, int color) {
         var s = TargetSyncPayload.last;
         if (!s.active() || mc.level == null || System.currentTimeMillis() - TargetSyncPayload.receivedAt > 3000) return;
         var e = mc.level.getEntity(s.entityId());
-        int w = 128, x = sw - 12 - w, y = 14;
+        if (!HudLayout.begin(g, "target", 128, 27 + (s.dealt() > 0 ? 10 : 0) + (s.taken() > 0 ? 10 : 0), sw, sh)) return;
+        int w = 128, x = 0, y = 0;
         String name = e != null ? e.getDisplayName().getString() : Component.translatable("hud.dexrider.target").getString();
         g.text(font, RiderHud.clip(font, name.toUpperCase(Locale.ROOT), w), x, y, rgb(color, 0xFF), true);
         y += 12;
@@ -322,6 +331,7 @@ public final class VisorHud {
                     : Component.translatable("hud.dexrider.it_hits", RiderHud.hearts(s.taken())).getString();
             g.text(font, RiderHud.clip(font, l, w), x, y, rgb(s.survive() > 0 && s.survive() <= 2 ? 0xFF6A6A : 0xFFC8A0, 0xFF), true);
         }
+        HudLayout.end(g);
     }
 
     /** Reticula de escaneo alrededor de la mira mientras el Driver toma muestras. */
@@ -344,7 +354,7 @@ public final class VisorHud {
         }
     }
 
-    private static void alerts(GuiGraphicsExtractor g, Font font, Player p, int sw, String emotion) {
+    private static void alerts(GuiGraphicsExtractor g, Font font, Player p, int sw, int sh, String emotion) {
         List<Component> out = new ArrayList<>();
         List<Integer> cols = new ArrayList<>();
         if (p.getHealth() / Math.max(1F, p.getMaxHealth()) <= 0.25F) { out.add(Component.translatable("visor.dexrider.alert_integrity")); cols.add(0xFF3040); }
@@ -352,13 +362,17 @@ public final class VisorHud {
         if (DexEmotions.HEROIC.equals(emotion)) { out.add(Component.translatable("visor.dexrider.alert_heroic")); cols.add(0x7FB8FF); }
         if (p.getAirSupply() < p.getMaxAirSupply() / 3) { out.add(Component.translatable("visor.dexrider.alert_air")); cols.add(0x4FA8FF); }
         if (out.isEmpty() || ticks % 20 >= 14) return;
-        int y = 60;
+        int bw = 0;
+        for (Component c : out) bw = Math.max(bw, font.width("⚠ " + c.getString() + " ⚠") + 12);
+        if (!HudLayout.begin(g, "alerts", bw, out.size() * 15 - 2, sw, sh)) return;
+        int y = 0;
         for (int i = 0; i < out.size(); i++) {
             String t = "⚠ " + out.get(i).getString() + " ⚠";
             int w = font.width(t);
-            g.fill(sw / 2 - w / 2 - 6, y - 3, sw / 2 + w / 2 + 6, y + 10, rgb(0x08080C, 0xA0));
-            g.text(font, t, sw / 2 - w / 2, y, rgb(cols.get(i), 0xFF), true);
+            g.fill(bw / 2 - w / 2 - 6, y, bw / 2 + w / 2 + 6, y + 13, rgb(0x08080C, 0xA0));
+            g.text(font, t, bw / 2 - w / 2, y + 3, rgb(cols.get(i), 0xFF), true);
             y += 15;
         }
+        HudLayout.end(g);
     }
 }

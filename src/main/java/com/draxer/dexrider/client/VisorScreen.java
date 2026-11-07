@@ -17,7 +17,7 @@ import java.util.function.Function;
  */
 public class VisorScreen extends Screen {
 
-    private static final int W = 300, H = 226;
+    private static final int W = 300, H = 248;
     private static final List<Integer> COLORS = List.of(0x28D250, 0x3CE0D0, 0x4FA8FF, 0xB44CFF, 0xFF2BD6, 0xFF3040, 0xF2C230, 0xFFFFFF);
     private int left, top;
 
@@ -73,6 +73,10 @@ public class VisorScreen extends Screen {
         addRenderableWidget(new Slider(x, y, 284, "screen.dexrider.visor.filter_strength", 0.0, 0.5, s().filterStrength,
                 v -> s().filterStrength = v.floatValue(), v -> Math.round(v * 200) + "%"));
         y += 26;
+        addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.visor.layout"),
+                b -> { VisorSettings.save(); minecraft.setScreen(new VisorLayoutScreen(this)); })
+                .bounds(x, y, 284, 18).tooltip(Tooltip.create(Component.translatable("screen.dexrider.visor.layout.tip"))).build());
+        y += 22;
         addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.visor.test_boot"), b -> { VisorSettings.save(); VisorHud.replayBoot(); onClose(); })
                 .bounds(x, y, 92, 18).build());
         addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.visor.reset"), b -> { VisorSettings.reset(); init(); })

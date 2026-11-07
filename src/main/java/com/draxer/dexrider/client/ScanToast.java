@@ -72,10 +72,16 @@ public final class ScanToast {
     private static void draw(GuiGraphicsExtractor g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         if (timer <= 0 || card == null || mc.player == null || mc.options.hideGui) return;
-        int sw = mc.getWindow().getGuiScaledWidth();
-        int w = 150, h = 30, x = sw / 2 - w / 2, y = 22;
+        int sw = mc.getWindow().getGuiScaledWidth(), sh = mc.getWindow().getGuiScaledHeight();
+        int w = 150, h = 30;
+        if (!HudLayout.begin(g, "toast", w, h, sw, sh)) return;
         float slide = Math.min(1F, (SHOW - timer) / 6F) * Math.min(1F, timer / 8F);
-        y = (int) (y - (1F - slide) * 30);
+        int x = 0, y = (int) (-(1F - slide) * 12);
+        drawBody(g, mc, x, y, w, h);
+        HudLayout.end(g);
+    }
+
+    private static void drawBody(GuiGraphicsExtractor g, Minecraft mc, int x, int y, int w, int h) {
         g.fill(x, y, x + w, y + h, 0xD0101018);
         g.fill(x, y, x + 2, y + h, 0xFFFF2BD6);
         g.blit(RenderPipelines.GUI_TEXTURED, DexRider.id("textures/item/" + card.itemName() + ".png"), x + 5, y + 3, 0, 0, 24, 24, 24, 24,

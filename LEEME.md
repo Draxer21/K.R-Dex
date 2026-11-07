@@ -139,6 +139,12 @@ El Rider System es tecnología: transformado, ves lo que ve Dex desde dentro del
 
 **Ajustable** (Archivo del Driver → *Visor*): modo **completo**, **mínimo** (marco, carta, retícula y alertas) o
 **clásico** (el HUD de antes); opacidad, tamaño, color (ojos del traje o uno elegido) y cada pieza por separado, incluidos el filtro (con su intensidad) y los bordes del lente.
+**Editar posiciones del HUD** (Visor → *Editar posiciones del HUD*): cada pieza (lecturas, carta elegida, tira de
+Alt, objetivo, alertas y aviso de escaneo) aparece como un recuadro; **arrástrala** con el ratón a donde quieras (se
+ancla sola a la esquina, borde o centro más cercano, así no se descoloca al cambiar la ventana), o muévela fino con
+las flechas (1 o 10 píxeles). Cada pieza tiene su **tamaño** (50–200 %) y se puede **ocultar**. *Esta* / *Todas*
+vuelven a la posición de fábrica; ▲▼ pasa el panel arriba o abajo. Útil si el HUD choca con el de otro mod.
+
 Se guarda en `config/dexrider-visor.json`.
 
 ### La Lectura del Driver
@@ -690,6 +696,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.40.0** — HUD movible: Visor → *Editar posiciones del HUD* para arrastrar cada pieza (lecturas, carta, tira de Alt, objetivo, alertas, aviso de escaneo), con ancla automática, ajuste fino, tamaño propio y ocultar.
 - **0.39.2** — Sky: el aura de sombra y la estela del Paso sombra ahora son polvo violeta fino (antes, manchas negras enormes que podían tapar la cámara).
 - **0.39.1** — Filtro de la visión del color del lente (ajustable: intensidad y bordes). Arreglo: el maniquí del editor del traje no giraba.
 - **0.39.0** — Interfaz del visor: arranque al hacer Henshin, marco del lente con el color de los ojos del traje, lecturas de integridad y energía, retícula de escaneo y alertas. Ajustable desde el Archivo (modo, opacidad, tamaño, color y piezas).
