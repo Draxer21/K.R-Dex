@@ -2476,5 +2476,21 @@
   "screen.dexrider.ally_menu.chore.breed": "Junta parejas de animales con la comida que haya en el cofre (hasta 10 por especie). También: dale una rienda.",
   "screen.dexrider.ally_menu.chore.smelt": "Usa los hornos, ahumadores y altos hornos a 6 bloques de su casa: mete lo del cofre, pone combustible y guarda lo que sale. También: dale un horno.",
   "screen.dexrider.ally_menu.chore.guard": "De noche patrulla alrededor de su casa y ve a los monstruos desde más lejos (no duerme). También: dale una espada.",
-  "message.dexrider.ally_no_water": "%s no encuentra agua cerca de su casa para pescar."
+  "message.dexrider.ally_no_water": "%s no encuentra agua cerca de su casa para pescar.",
+  "job.dexrider.build": "construir",
+  "screen.dexrider.ally_menu.plan": "Plano:",
+  "screen.dexrider.ally_menu.plan_blocks": "%s bloques",
+  "screen.dexrider.ally_menu.plan_copy": "Copiar plano",
+  "screen.dexrider.ally_menu.plan_copy.tip": "Memoriza lo que hay dentro de la zona marcada (hasta 12×12×12 y 600 bloques). Después la zona se borra.",
+  "screen.dexrider.ally_menu.build": "Construir",
+  "screen.dexrider.ally_menu.build.tip": "Luego haz Shift + clic derecho en un bloque: la copia empieza encima de él (es la esquina). Usa los materiales del cofre de su casa.",
+  "message.dexrider.ally_plan_nozone": "%s necesita una zona marcada alrededor de lo que quieres que copie (Shift + clic derecho con un pico en dos esquinas).",
+  "message.dexrider.ally_plan_big": "Es demasiado grande para %s: máximo %3$s bloques por lado y %4$s bloques en total.",
+  "message.dexrider.ally_plan_empty": "%s no ve nada que copiar en esa zona.",
+  "message.dexrider.ally_plan_ok": "%s memorizó el plano: %s bloques. Pulsa Construir para elegir dónde levantar la copia.",
+  "message.dexrider.ally_plan_none": "%s todavía no tiene un plano: márcale una zona y pulsa Copiar plano.",
+  "message.dexrider.ally_build_pick": "Shift + clic derecho en un bloque: %s construirá la copia encima (esa es la esquina).",
+  "message.dexrider.ally_build_start": "%s empieza a construir la copia (%s bloques).",
+  "message.dexrider.ally_build_missing": "%s necesita %s en el cofre de su casa para seguir construyendo.",
+  "message.dexrider.ally_build_done": "%s terminó la copia."
 }

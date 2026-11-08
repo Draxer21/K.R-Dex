@@ -65,7 +65,9 @@ public final class AllyWork {
         /** Aplanar la zona marcada: quitar lo que sobresale y rellenar hoyos (usa lo aprendido al picar). */
         FLATTEN,
         /** Quehaceres (no se aprenden mirandote: se encargan y listo). Ver AllyChores. */
-        FISH, BREED, SMELT, GUARD;
+        FISH, BREED, SMELT, GUARD,
+        /** Construir una copia del plano (ver AllyBlueprint). Se encarga eligiendo el sitio. */
+        BUILD;
 
         public String id() { return name().toLowerCase(Locale.ROOT); }
 
@@ -455,6 +457,11 @@ public final class AllyWork {
         if (!owner.getMainHandItem().is(net.minecraft.tags.ItemTags.PICKAXES) || !com.draxer.dexrider.config.DexConfig.showZones()) return;
         String dim = level.dimension().identifier().toString();
         for (AllySkills.Entry e : skills(owner).riders().values()) {
+            if (e.hasBuild() && e.hasPlan() && dim.equals(e.buildDim())) {      // copia en construccion
+                BlockPos o = AllyBlueprint.origin(e);
+                if (o != null && net.minecraft.world.phys.Vec3.atCenterOf(o).distanceTo(owner.position()) <= 64)
+                    outline(level, o, o.offset(AllyBlueprint.width(e) - 1, AllyBlueprint.height(e) - 1, AllyBlueprint.depth(e) - 1));
+            }
             if (!e.hasZone() || !dim.equals(e.zoneDim())) continue;
             BlockPos min = zoneMin(e), max = zoneMax(e);
             if (net.minecraft.world.phys.Vec3.atCenterOf(min).distanceTo(owner.position()) > 64) continue;
