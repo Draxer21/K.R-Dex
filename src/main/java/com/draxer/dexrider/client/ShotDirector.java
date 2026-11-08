@@ -116,13 +116,15 @@ public final class ShotDirector {
             ServerLevel lvl = srv.overworld();
             for (int i = 0; i < 2; i++) {
                 Entity e = spawnStill(lvl, DexEntities.ECHOES.get(KamenRide.PSYGA).get(), i == 0 ? -0.8 : 0.8, 2.7);
-                if (e instanceof Mob m) { m.setYRot(125); m.yBodyRot = 125; m.yHeadRot = 125; }
+                if (e instanceof Mob m) { m.setYRot(150); m.yBodyRot = 150; m.yHeadRot = 150; }
             }
             cmd(srv, String.format(java.util.Locale.ROOT, "tp @a %.2f %.2f %.2f 0 8", bx, by + 0.3, bz));
         })));
         s.add(new Step(t + 26, () -> server(srv -> {
             int i = 0;
             for (Entity e : SCENE) if (e instanceof com.draxer.dexrider.entity.RiderMob rm) rm.setCivilian(i++ == 0);
+            // los acompanantes que trae cada Rider estorban en la foto
+            for (Entity e : srv.overworld().getAllEntities()) if (!(e instanceof net.minecraft.world.entity.player.Player) && !SCENE.contains(e)) e.discard();
         })));
         s.add(new Step(t + 32, () -> shoot("nagisa_perfil")));
         t += 38;
