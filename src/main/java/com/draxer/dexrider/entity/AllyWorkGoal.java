@@ -32,6 +32,7 @@ public class AllyWorkGoal extends Goal {
     private final RiderAllyEntity ally;
     @Nullable private BlockPos target;
     private int progress, needed, stuck, scanCooldown, craftCooldown, fullCooldown;
+    private boolean placing;      // aplanar: el objetivo es un hueco que rellenar
     private final Set<Long> blacklist = new HashSet<>();
 
     public AllyWorkGoal(RiderAllyEntity ally) {
@@ -61,8 +62,9 @@ public class AllyWorkGoal extends Goal {
     }
 
     private void clearTarget() {
-        if (target != null && ally.level() instanceof ServerLevel level) level.destroyBlockProgress(ally.getId(), target, -1);
+        if (target != null && !placing && ally.level() instanceof ServerLevel level) level.destroyBlockProgress(ally.getId(), target, -1);
         target = null;
+        placing = false;
         progress = 0;
         stuck = 0;
     }
@@ -97,7 +99,8 @@ public class AllyWorkGoal extends Goal {
                     ally.getNavigation().moveTo(center.getX() + 0.5, center.getY(), center.getZ() + 0.5, 0.9);
                 return;
             }
-            needed = AllyWork.breakTicks(level, target, level.getBlockState(target), xp);
+            needed = placing ? Math.max(4, Math.round(8 / Math.max(1.0F, AllyWork.speed(xp))))
+                    : AllyWork.breakTicks(level, target, level.getBlockState(target), xp);
         }
 
         Vec3 c = Vec3.atCenterOf(target);
@@ -116,6 +119,10 @@ public class AllyWorkGoal extends Goal {
         ally.getNavigation().stop();
         if (progress % 6 == 0) ally.swing(InteractionHand.MAIN_HAND);
         progress++;
+        if (placing) {
+            if (progress >= needed) placeFiller(level);
+            return;
+        }
         level.destroyBlockProgress(ally.getId(), target, Math.min(9, progress * 10 / Math.max(1, needed)));
         if (progress >= needed) breakTarget(level, job);
     }
@@ -129,6 +136,7 @@ public class AllyWorkGoal extends Goal {
             case CHOP -> s.is(net.minecraft.tags.BlockTags.LOGS);
             case FARM -> AllyWork.isRipeCrop(s);
             case CRAFT -> false;
+            case FLATTEN -> placing ? AllyWork.needsFill(level, p, s) : AllyWork.zoneMineable(level, p, s);
         };
     }
 
@@ -159,8 +167,109 @@ public class AllyWorkGoal extends Goal {
         return best;
     }
 
+    /**
+     * Aplanar: el suelo queda a la altura de la esquina mas baja. Primero quita lo que sobresale (de arriba hacia
+     * abajo), luego rellena hoyos (de abajo hacia arriba).
+     */
+    @Nullable
+    private BlockPos findFlatten(ServerLevel level, BlockPos min, BlockPos max) {
+        int ground = min.getY();
+        int top = Math.min(ground + AllyWork.FLATTEN_UP, Math.max(max.getY(), ground + AllyWork.FLATTEN_UP));
+        placing = false;
+        BlockPos best = null, stuckOne = null;
+        double bestScore = Double.MAX_VALUE;
+        for (BlockPos p : BlockPos.betweenClosed(new BlockPos(min.getX(), ground + 1, min.getZ()), new BlockPos(max.getX(), top, max.getZ()))) {
+            BlockState s = level.getBlockState(p);
+            if (!AllyWork.zoneMineable(level, p, s) || s.canBeReplaced()) continue;
+            if (!AllyWork.exposed(level, p)) continue;
+            if (blacklist.contains(p.asLong())) { if (stuckOne == null || p.getY() > stuckOne.getY()) stuckOne = p.immutable(); continue; }
+            double score = -p.getY() * 1000.0 + p.distToCenterSqr(ally.position());
+            if (score < bestScore) { bestScore = score; best = p.immutable(); }
+        }
+        // las plantas y la hierba alta se quitan sin mas
+        for (BlockPos p : BlockPos.betweenClosed(new BlockPos(min.getX(), ground + 1, min.getZ()), new BlockPos(max.getX(), Math.min(top, ground + 3), max.getZ()))) {
+            BlockState s = level.getBlockState(p);
+            if (!s.isAir() && s.canBeReplaced() && s.getFluidState().isEmpty()) level.destroyBlock(p, true, ally);
+        }
+        if (best != null) return best;
+        if (stuckOne != null) {
+            BlockPos up = stuckOne.above();
+            if (level.getBlockState(up).isAir() && level.getBlockState(up.above()).isAir()) {
+                ally.teleportTo(up.getX() + 0.5, up.getY(), up.getZ() + 0.5);
+                blacklist.clear();
+                return stuckOne;
+            }
+        }
+        // rellenar: el hueco mas bajo que tenga algo solido debajo
+        if (!hasFiller(level)) return null;
+        BlockPos occupied = null;
+        for (BlockPos p : BlockPos.betweenClosed(new BlockPos(min.getX(), ground - AllyWork.FLATTEN_DOWN, min.getZ()), new BlockPos(max.getX(), ground, max.getZ()))) {
+            if (blacklist.contains(p.asLong())) continue;
+            BlockState s = level.getBlockState(p);
+            if (!AllyWork.needsFill(level, p, s)) continue;
+            BlockState below = level.getBlockState(p.below());
+            if (AllyWork.needsFill(level, p.below(), below) && p.getY() > ground - AllyWork.FLATTEN_DOWN) continue;
+            // solo hoyos abiertos hacia arriba (no cuevas bajo el suelo)
+            boolean open = true;
+            for (int y = p.getY() + 1; y <= ground && open; y++) {
+                BlockPos u = new BlockPos(p.getX(), y, p.getZ());
+                open = AllyWork.needsFill(level, u, level.getBlockState(u));
+            }
+            if (!open) continue;
+            if (!level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class, new net.minecraft.world.phys.AABB(p)).isEmpty()) {
+                if (ally.getBoundingBox().intersects(new net.minecraft.world.phys.AABB(p))) occupied = p.immutable();
+                continue;
+            }
+            double score = p.getY() * 1000.0 + p.distToCenterSqr(ally.position());
+            if (score < bestScore) { bestScore = score; best = p.immutable(); }
+        }
+        if (best == null && occupied != null) {
+            // esta parado justo en el hoyo: se sube al suelo de al lado para poder rellenarlo
+            for (BlockPos q : BlockPos.betweenClosed(new BlockPos(min.getX() - 1, ground + 1, min.getZ() - 1), new BlockPos(max.getX() + 1, ground + 1, max.getZ() + 1))) {
+                if (q.getX() == occupied.getX() && q.getZ() == occupied.getZ()) continue;
+                if (level.getBlockState(q).isAir() && level.getBlockState(q.above()).isAir()
+                        && !AllyWork.needsFill(level, q.below(), level.getBlockState(q.below()))) {
+                    ally.teleportTo(q.getX() + 0.5, q.getY(), q.getZ() + 0.5);
+                    break;
+                }
+            }
+            best = occupied;
+        }
+        placing = best != null;
+        return best;
+    }
+
+    private boolean hasFiller(ServerLevel level) {
+        for (ItemStack s : ally.bagView()) if (AllyWork.isFiller(s)) return true;
+        Container chest = AllyWork.chestNear(level, ally.home());
+        if (chest == null) return false;
+        for (int i = 0; i < chest.getContainerSize(); i++) if (AllyWork.isFiller(chest.getItem(i))) return true;
+        return false;
+    }
+
+    private void placeFiller(ServerLevel level) {
+        BlockPos p = target;
+        BlockState fill = ally.bagTakeFiller();
+        if (fill == null) fill = AllyWork.takeFiller(AllyWork.chestNear(level, ally.home()));
+        if (fill != null && AllyWork.needsFill(level, p, level.getBlockState(p))
+                && level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class, new net.minecraft.world.phys.AABB(p)).isEmpty()) {
+            level.setBlockAndUpdate(p, fill);
+            level.playSound(null, p, fill.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 0.8F, 1.0F);
+            ally.gainWorkXp(Job.FLATTEN, 1);
+        } else if (fill != null) {
+            ally.bagAdd(new ItemStack(fill.getBlock()));
+            blacklist.add(p.asLong());
+        }
+        clearTarget();
+    }
+
     @Nullable
     private BlockPos find(ServerLevel level, Job job, BlockPos center) {
+        if (job == Job.FLATTEN) {
+            BlockPos[] z = ally.workZone();
+            return z == null ? null : findFlatten(level, z[0], z[1]);
+        }
+        placing = false;
         BlockPos[] zone = job == Job.MINE ? ally.workZone() : null;
         if (zone != null) return findInZone(level, zone[0], zone[1]);
         boolean helping = ally.isHelping();

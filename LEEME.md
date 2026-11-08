@@ -448,6 +448,10 @@ Para probarlos: `/summon dexrider:echo_nine` (o `echo_cipher`, `echo_spore`, `ec
 - **Dónde picar:** **Shift + clic derecho** sobre tu amigo con el pico y luego **Shift + clic derecho con el pico en
   dos esquinas**. Dentro de esa zona excava todo (o solo lo del filtro) de arriba hacia abajo, aunque no sea natural,
   y no toca nada fuera de ella. Máximo 32 bloques por lado. Con un pico en la mano ves el borde de las zonas.
+- **Aplanar:** con una zona marcada, clic derecho sobre tu amigo con una **pala**. El suelo queda a la altura de la
+  **esquina más baja** que marcaste: quita todo lo que sobresale (hasta 24 bloques por encima, árboles y plantas
+  incluidos) y luego rellena los hoyos (hasta 3 de hondo) con tierra o piedra de su bolsa o del cofre de su casa.
+  Usa lo que aprendió picando.
 - **Reaccionan** a lo que haces: al verte picar, talar, cultivar, construir o fabricar, al aprender, al encontrar
   algo raro o si se les llenan las manos (cinco frases distintas por situación y por Rider).
 
@@ -718,6 +722,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.42.2** — Aplanar: márcale una zona y dale una pala; deja el suelo a la altura de la esquina más baja (quita lo que sobra y rellena hoyos con tierra o piedra).
 - **0.42.1** — Picar con exactitud: dale a tu amigo el bloque o mineral que quieres (solo picará eso) y márcale una zona con el pico (Shift + clic derecho en dos esquinas): excava dentro, de arriba hacia abajo.
 - **0.42.0** — Los amigos Rider aprenden mirándote: picar, talar, cultivar y fabricar (cada uno según su personalidad), te ayudan cuando te ven hacerlo y aceptan encargos con clic derecho y una herramienta; guardan todo en un cofre junto a su casa. 600 frases nuevas: reacciones al verte trabajar o construir, al aprender, al encontrar algo raro...
 - **0.41.4** — Nagisa (civil y Psyga): busto con volumen al estilo MCA, inclinado hacia abajo desde el pecho en vez de una placa plana (`tools/bust.py`; solo personajes adultos).

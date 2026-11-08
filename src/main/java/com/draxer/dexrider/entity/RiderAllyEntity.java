@@ -354,7 +354,10 @@ public class RiderAllyEntity extends RiderMob {
     @Nullable
     public com.draxer.dexrider.rider.AllyWork.Job workJob() {
         if (helpJob != null) return helpJob;
-        if (job != null && mode == Mode.WANDER && home != null && skills.knows(job.id())) return job;
+        if (job != null && mode == Mode.WANDER && home != null && skills.knows(job.skill())) {
+            if (job == com.draxer.dexrider.rider.AllyWork.Job.FLATTEN && workZone() == null) return null;
+            return job;
+        }
         return null;
     }
 
@@ -365,7 +368,7 @@ public class RiderAllyEntity extends RiderMob {
             return o != null && o.level() == level() ? o.blockPosition() : helpPos;
         }
         BlockPos[] z = workZone();
-        if (z != null && job == com.draxer.dexrider.rider.AllyWork.Job.MINE) {
+        if (z != null && (job == com.draxer.dexrider.rider.AllyWork.Job.MINE || job == com.draxer.dexrider.rider.AllyWork.Job.FLATTEN)) {
             return new BlockPos((z[0].getX() + z[1].getX()) / 2, z[1].getY() + 1, (z[0].getZ() + z[1].getZ()) / 2);
         }
         return home;
@@ -381,7 +384,7 @@ public class RiderAllyEntity extends RiderMob {
 
     public java.util.List<String> workFilter() { return skills.filter(); }
 
-    public int workXp(com.draxer.dexrider.rider.AllyWork.Job j) { return skills.xp(j.id()); }
+    public int workXp(com.draxer.dexrider.rider.AllyWork.Job j) { return skills.xp(j.skill()); }
     public java.util.List<String> workBlocks() { return skills.blocks(); }
     public java.util.List<com.draxer.dexrider.item.AllySkills.Pattern> workPatterns() { return skills.patterns(); }
 
@@ -390,17 +393,21 @@ public class RiderAllyEntity extends RiderMob {
         ServerPlayer o = ownerPlayer();
         if (o == null || tickCount % 4 != 0) return;     // un punto cada pocos bloques
         skills = com.draxer.dexrider.rider.AllyWork.entry(o, rider);
-        skills = skills.withXp(j.id(), skills.xp(j.id()) + amount);
+        skills = skills.withXp(j.skill(), skills.xp(j.skill()) + amount);
         com.draxer.dexrider.rider.AllyWork.save(o, rider, skills);
     }
 
     private void assignJob(ServerLevel level, ServerPlayer o, com.draxer.dexrider.rider.AllyWork.Job j) {
         refreshSkills(o);
         com.draxer.dexrider.rider.RiderDialogue.forget(this);
-        if (!skills.knows(j.id())) {
+        if (!skills.knows(j.skill())) {
             com.draxer.dexrider.rider.RiderDialogue.force(level, this, rider, com.draxer.dexrider.rider.RiderDialogue.Line.NOT_YET, j.displayName());
-            int pct = Math.min(99, skills.xp(j.id()) * 100 / com.draxer.dexrider.item.AllySkills.LEARNED);
+            int pct = Math.min(99, skills.xp(j.skill()) * 100 / com.draxer.dexrider.item.AllySkills.LEARNED);
             o.sendSystemMessage(Component.translatable("message.dexrider.ally_job_learning", rider.displayName(), j.displayName(), pct), true);
+            return;
+        }
+        if (j == com.draxer.dexrider.rider.AllyWork.Job.FLATTEN && job != j && !skills.hasZone()) {
+            o.sendSystemMessage(Component.translatable("message.dexrider.ally_flatten_nozone", rider.displayName()), false);
             return;
         }
         if (job == j) {
@@ -434,6 +441,23 @@ public class RiderAllyEntity extends RiderMob {
         if (rest.isEmpty()) return;
         if (bag.size() < BAG_SLOTS) bag.add(rest);
         else if (level() instanceof ServerLevel) spawnAtLocation((ServerLevel) level(), rest);
+    }
+
+    public java.util.List<net.minecraft.world.item.ItemStack> bagView() { return java.util.Collections.unmodifiableList(bag); }
+
+    /** Saca un bloque de relleno de la bolsa (tierra, piedra...) o null. */
+    @Nullable
+    public net.minecraft.world.level.block.state.BlockState bagTakeFiller() {
+        for (int i = 0; i < bag.size(); i++) {
+            net.minecraft.world.item.ItemStack st = bag.get(i);
+            if (com.draxer.dexrider.rider.AllyWork.isFiller(st)) {
+                var s = ((net.minecraft.world.item.BlockItem) st.getItem()).getBlock().defaultBlockState();
+                st.shrink(1);
+                if (st.isEmpty()) bag.remove(i);
+                return s;
+            }
+        }
+        return null;
     }
 
     public java.util.List<net.minecraft.world.item.ItemStack> bagTakeAll() {
