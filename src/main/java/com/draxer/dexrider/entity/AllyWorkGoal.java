@@ -101,6 +101,7 @@ public class AllyWorkGoal extends Goal {
             }
             needed = placing ? Math.max(4, Math.round(8 / Math.max(1.0F, AllyWork.speed(xp))))
                     : AllyWork.breakTicks(level, target, level.getBlockState(target), xp);
+            needed = Math.max(3, Math.round(needed / com.draxer.dexrider.rider.AllyTrust.workBonus(ally.trust())));
         }
 
         Vec3 c = Vec3.atCenterOf(target);

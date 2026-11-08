@@ -76,6 +76,7 @@ public final class DexGameTests {
         FUNCTIONS.register("ally_mining", () -> DexGameTests::allyMining);
         FUNCTIONS.register("ally_zone", () -> DexGameTests::allyZone);
         FUNCTIONS.register("ally_flatten", () -> DexGameTests::allyFlatten);
+        FUNCTIONS.register("ally_trust", () -> DexGameTests::allyTrust);
     }
 
     // ------------------------------------------------------------------ utilidades
@@ -902,5 +903,33 @@ public final class DexGameTests {
             log(t, "ok: quito el pilar y relleno el hoyo");
             h.succeed();
         });
+    }
+
+    /** Confianza: charlar cuenta una vez al dia, el regalo favorito vale mas y los temas se abren por nivel. */
+    static void allyTrust(GameTestHelper h) {
+        String t = "ally_trust";
+        ServerPlayer p = player(h);
+        var lvl = h.getLevel();
+        var ally = com.draxer.dexrider.registry.DexEntities.ally(KamenRide.SPORE).get().create(lvl, net.minecraft.world.entity.EntitySpawnReason.MOB_SUMMONED);
+        if (ally == null) { fail(h, t, "no aparecio el amigo"); return; }
+        BlockPos at = h.absolutePos(new BlockPos(8, 1, 8));
+        ally.setPos(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
+        ally.setup(p.getUUID(), 0, com.draxer.dexrider.entity.RiderAllyEntity.Mode.WANDER, at);
+        lvl.addFreshEntity(ally);
+        com.draxer.dexrider.rider.AllyTrust.onTalk(lvl, p, ally);
+        com.draxer.dexrider.rider.AllyTrust.onTalk(lvl, p, ally);
+        int afterTalk = com.draxer.dexrider.rider.AllyWork.entry(p, KamenRide.SPORE).trust();
+        p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(net.minecraft.world.item.Items.BROWN_MUSHROOM, 3));
+        String key = com.draxer.dexrider.rider.AllyTrust.onGift(lvl, p, ally);
+        int afterGift = com.draxer.dexrider.rider.AllyWork.entry(p, KamenRide.SPORE).trust();
+        boolean consumed = p.getMainHandItem().getCount() == 2 || p.isCreative();
+        ally.discard();
+        if (afterTalk != 2) { fail(h, t, "charlar dio " + afterTalk + " (esperaba 2, una vez al dia)"); return; }
+        if (afterGift != 8 || key == null || !key.contains("gift_love")) { fail(h, t, "regalo favorito: " + afterGift + " " + key); return; }
+        if (!consumed) { fail(h, t, "no gasto el regalo"); return; }
+        int low = com.draxer.dexrider.rider.AllyTrust.topics(10), mid = com.draxer.dexrider.rider.AllyTrust.topics(55), top = com.draxer.dexrider.rider.AllyTrust.topics(90);
+        if ((low & 8) != 0 || (mid & 8) == 0 || (mid & 16) != 0 || (top & 16) == 0) { fail(h, t, "temas por nivel mal"); return; }
+        log(t, "ok: charla diaria, regalo favorito y temas por confianza");
+        h.succeed();
     }
 }

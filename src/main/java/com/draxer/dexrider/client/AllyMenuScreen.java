@@ -125,6 +125,10 @@ public class AllyMenuScreen extends Screen {
         g.fill(left, top, left + W, top + H, 0xFF1A1A22);
         g.fill(left, top, left + W, top + 2, accent);
         g.text(font, rider().displayName(), left + 8, top + 7, accent, true);
+        // confianza, al lado del nombre
+        Component trust = Component.translatable("screen.dexrider.ally_talk.trust", com.draxer.dexrider.rider.AllyTrust.levelName(data.trust()));
+        int tx = left + 14 + font.width(rider().displayName());
+        g.text(font, trust, tx, top + 7, 0xFFE8608A, false);
         Component mode = Component.translatable(data.summoned() ? "screen.dexrider.ally_menu.with_you"
                 : data.hasHome() ? "screen.dexrider.ally_menu.at_home" : "screen.dexrider.ally_menu.no_home");
         g.text(font, mode, left + W - 8 - font.width(mode), top + 7, 0xFFB8BCC8, false);

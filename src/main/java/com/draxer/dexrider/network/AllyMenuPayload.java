@@ -14,7 +14,7 @@ import net.neoforged.neoforge.network.handling.IPayloadContext;
  */
 public record AllyMenuPayload(int entityId, String rider, boolean summoned, boolean hasHome, String job,
                               int mine, int chop, int farm, int craft, String filter,
-                              int zoneX, int zoneY, int zoneZ, int bag, int recipes, int blocks) implements CustomPacketPayload {
+                              int zoneX, int zoneY, int zoneZ, int bag, int recipes, int blocks, int trust) implements CustomPacketPayload {
 
     public static final CustomPacketPayload.Type<AllyMenuPayload> TYPE = new CustomPacketPayload.Type<>(DexRider.id("ally_menu"));
 
@@ -36,10 +36,11 @@ public record AllyMenuPayload(int entityId, String rider, boolean summoned, bool
                 buf.writeVarInt(p.bag);
                 buf.writeVarInt(p.recipes);
                 buf.writeVarInt(p.blocks);
+                buf.writeVarInt(p.trust);
             },
             buf -> new AllyMenuPayload(buf.readVarInt(), buf.readUtf(), buf.readBoolean(), buf.readBoolean(), buf.readUtf(),
                     buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readUtf(),
-                    buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt()));
+                    buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt(), buf.readVarInt()));
 
     @Override
     public CustomPacketPayload.Type<? extends CustomPacketPayload> type() {

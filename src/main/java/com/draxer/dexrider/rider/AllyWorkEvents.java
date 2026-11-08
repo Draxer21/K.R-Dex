@@ -39,6 +39,15 @@ public final class AllyWorkEvents {
         if (event.getEntity() instanceof ServerPlayer p) AllyWork.showZones(p);
     }
 
+    /** Un amigo derriba a un enemigo: pelear juntos une. */
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public static void onKill(net.neoforged.neoforge.event.entity.living.LivingDeathEvent event) {
+        if (event.isCanceled() || !(event.getSource().getEntity() instanceof com.draxer.dexrider.entity.RiderAllyEntity ally)) return;
+        if (!(event.getEntity() instanceof net.minecraft.world.entity.monster.Enemy)) return;
+        ServerPlayer o = ally.ownerPlayer();
+        if (o != null && ally.level() instanceof net.minecraft.server.level.ServerLevel level) AllyTrust.onFight(level, o, ally);
+    }
+
     @SubscribeEvent
     public static void onCraft(PlayerEvent.ItemCraftedEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer p)) return;

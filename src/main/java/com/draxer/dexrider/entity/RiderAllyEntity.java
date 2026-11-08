@@ -334,7 +334,7 @@ public class RiderAllyEntity extends RiderMob {
                 getId(), rider.id(), mode == Mode.SUMMONED, home != null, skills.job(),
                 skills.xp("mine"), skills.xp("chop"), skills.xp("farm"), skills.xp("craft"), filterName,
                 z == null ? 0 : z[1].getX() - z[0].getX() + 1, z == null ? 0 : z[1].getY() - z[0].getY() + 1, z == null ? 0 : z[1].getZ() - z[0].getZ() + 1,
-                bagCount, skills.patterns().size(), skills.blocks().size()));
+                bagCount, skills.patterns().size(), skills.blocks().size(), skills.trust()));
     }
 
     /** Un boton del menu. Despues refresca el menu del jugador (salvo los que lo cierran). */
@@ -344,9 +344,35 @@ public class RiderAllyEntity extends RiderMob {
         com.draxer.dexrider.rider.AllyWork.Job J = null;
         switch (action) {
             case com.draxer.dexrider.network.AllyActionPayload.CHAT -> {
-                com.draxer.dexrider.rider.RiderDialogue.forget(this);
-                com.draxer.dexrider.rider.RiderDialogue.force(level, this, rider, com.draxer.dexrider.rider.RiderDialogue.Line.TALK);
+                // abre la conversacion: saluda y cuenta la charla del dia
                 getLookControl().setLookAt(sp);
+                com.draxer.dexrider.rider.AllyTrust.onTalk(level, sp, this);
+                com.draxer.dexrider.rider.AllyTrust.sendTalk(sp, this, com.draxer.dexrider.rider.AllyTrust.answerKey(level, rider, -1));
+                return;
+            }
+            case com.draxer.dexrider.network.AllyActionPayload.GIFT -> {
+                getLookControl().setLookAt(sp);
+                String k = com.draxer.dexrider.rider.AllyTrust.onGift(level, sp, this);
+                if (k == null) {
+                    sp.sendSystemMessage(Component.translatable("message.dexrider.gift_empty"), true);
+                    return;
+                }
+                swing(InteractionHand.MAIN_HAND);
+                com.draxer.dexrider.rider.FX.particle(level, net.minecraft.core.particles.ParticleTypes.HEART, getEyePosition(), 4, 0.3, 0.02);
+                com.draxer.dexrider.rider.AllyTrust.sendTalk(sp, this, k);
+                return;
+            }
+            case com.draxer.dexrider.network.AllyActionPayload.BACK -> { }
+            case com.draxer.dexrider.network.AllyActionPayload.TOPIC_BASE,
+                 com.draxer.dexrider.network.AllyActionPayload.TOPIC_BASE + 1,
+                 com.draxer.dexrider.network.AllyActionPayload.TOPIC_BASE + 2,
+                 com.draxer.dexrider.network.AllyActionPayload.TOPIC_BASE + 3,
+                 com.draxer.dexrider.network.AllyActionPayload.TOPIC_BASE + 4 -> {
+                int topic = action - com.draxer.dexrider.network.AllyActionPayload.TOPIC_BASE;
+                getLookControl().setLookAt(sp);
+                if ((com.draxer.dexrider.rider.AllyTrust.topics(skills.trust()) & (1 << topic)) != 0)
+                    com.draxer.dexrider.rider.AllyTrust.sendTalk(sp, this, com.draxer.dexrider.rider.AllyTrust.answerKey(level, rider, topic));
+                return;
             }
             case com.draxer.dexrider.network.AllyActionPayload.TOGGLE -> AllyManager.toggle(sp, rider);
             case com.draxer.dexrider.network.AllyActionPayload.LIVE_HERE -> AllyManager.setHome(sp, this, blockPosition());
@@ -454,6 +480,8 @@ public class RiderAllyEntity extends RiderMob {
     public java.util.List<String> workFilter() { return skills.filter(); }
 
     public int workXp(com.draxer.dexrider.rider.AllyWork.Job j) { return skills.xp(j.skill()); }
+    public int trust() { return skills.trust(); }
+    private int workActions;
     public java.util.List<String> workBlocks() { return skills.blocks(); }
     public java.util.List<com.draxer.dexrider.item.AllySkills.Pattern> workPatterns() { return skills.patterns(); }
 
@@ -464,6 +492,10 @@ public class RiderAllyEntity extends RiderMob {
         skills = com.draxer.dexrider.rider.AllyWork.entry(o, rider);
         skills = skills.withXp(j.skill(), skills.xp(j.skill()) + amount);
         com.draxer.dexrider.rider.AllyWork.save(o, rider, skills);
+        if (++workActions % 10 == 0) {     // cada tanto, trabajar para ti tambien une
+            com.draxer.dexrider.rider.AllyTrust.onWork(o, this);
+            skills = com.draxer.dexrider.rider.AllyWork.entry(o, rider);
+        }
     }
 
     private void assignJob(ServerLevel level, ServerPlayer o, com.draxer.dexrider.rider.AllyWork.Job j) {
