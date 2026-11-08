@@ -73,7 +73,11 @@ public class DaiShockerSealItem extends Item {
     public static KaijinBossEntity challenge(ServerLevel level, ServerPlayer p, BlockPos center, KaijinEntity.Kind kind) {
         KaijinEntity e = DexEntities.KAIJIN.get(kind).get().create(level, EntitySpawnReason.EVENT);
         if (!(e instanceof KaijinBossEntity boss)) return null;
-        BlockState wall = Blocks.POLISHED_BLACKSTONE_BRICKS.defaultBlockState(), glass = Blocks.RED_STAINED_GLASS.defaultBlockState();
+        BlockState wall = Blocks.POLISHED_BLACKSTONE_BRICKS.defaultBlockState();
+        // en 26.2 cambian los nombres de los bloques de color: se busca por id y, si no esta, vidrio normal
+        BlockState glass = net.minecraft.core.registries.BuiltInRegistries.BLOCK
+                .getOptional(net.minecraft.resources.Identifier.withDefaultNamespace("red_stained_glass"))
+                .map(net.minecraft.world.level.block.Block::defaultBlockState).orElse(Blocks.GLASS.defaultBlockState());
         for (int a = 0; a < 360; a += 3) {
             double rad = Math.toRadians(a);
             int x = (int) Math.round(Math.cos(rad) * RADIUS), z = (int) Math.round(Math.sin(rad) * RADIUS);
