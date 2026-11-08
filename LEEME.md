@@ -429,6 +429,22 @@ Para probarlos: `/summon dexrider:echo_nine` (o `echo_cipher`, `echo_spore`, `ec
 - **Shift + clic derecho** sobre tu amigo: "tu casa ahora es aquí" (sirve para juntarlos a todos).
 - Ni tú le haces daño a tus amigos ni ellos a ti.
 
+### Amigos que aprenden a trabajar
+- **Aprenden mirándote.** Si picas, talas, cultivas o fabricas a 16 bloques o menos de un amigo que te ve, gana
+  experiencia en ese trabajo. Con suficiente, lo aprende (lo dice en el chat). Cada uno tiene su personalidad:
+  Mei, Momo y Takumi fabrican rapidísimo; Kinoko y Nagisa son de cultivar; Genzo es de picar y talar...
+  Practicando, siguen mejorando y trabajan más rápido.
+- **De ti aprenden qué hacer:** pican solo los bloques naturales que te vieron picar (piedra, minerales, tierra,
+  grava, arena; nunca tus construcciones) y fabrican las recetas que te vieron hacer, con la misma forma en la mesa.
+- **Te ayudan:** si ya saben un trabajo y te ven hacerlo, se ponen a tu lado un rato haciendo lo mismo y te dan lo
+  que sacan.
+- **Encargos:** clic derecho sobre tu amigo con un **pico** (picar), **hacha** (talar y replantar), **azada**
+  (cosechar y resembrar) o **mesa de crafteo** (fabricar). Trabaja alrededor de su casa y guarda todo en un
+  **cofre o barril a 6 bloques de su casa** (fabricar usa los materiales de ese cofre). Otra vez con lo mismo: para.
+  Si todavía no sabe, te dice cuánto le falta.
+- **Reaccionan** a lo que haces: al verte picar, talar, cultivar, construir o fabricar, al aprender, al encontrar
+  algo raro o si se les llenan las manos (cinco frases distintas por situación y por Rider).
+
 ### El portal a casa
 Todos buscan a Dex: cuando **todos los Riders perdidos que existen ya son tus amigos** y están **juntos a tu lado**
 (a 20 bloques o menos, invocados o viviendo cerca; muda sus casas al mismo sitio con Shift + clic derecho) y estás
@@ -696,6 +712,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.42.0** — Los amigos Rider aprenden mirándote: picar, talar, cultivar y fabricar (cada uno según su personalidad), te ayudan cuando te ven hacerlo y aceptan encargos con clic derecho y una herramienta; guardan todo en un cofre junto a su casa. 600 frases nuevas: reacciones al verte trabajar o construir, al aprender, al encontrar algo raro...
 - **0.41.4** — Nagisa (civil y Psyga): busto con volumen al estilo MCA, inclinado hacia abajo desde el pecho en vez de una placa plana (`tools/bust.py`; solo personajes adultos).
 - **0.41.3** — Ride Booker: el libro en espada va a 45° (más cuadrado, 11×9), así la hoja y la empuñadura lo cruzan de esquina a esquina. `tools/ride_booker_model.py --tilt=22|35|45` genera las otras variantes.
 - **0.41.2** — Ride Booker: en espada el libro va inclinado y la hoja y la empuñadura lo cruzan en diagonal, de esquina a esquina (la guarda queda pareja).

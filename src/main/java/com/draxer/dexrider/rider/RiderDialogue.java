@@ -20,7 +20,7 @@ import java.util.UUID;
  * Sus trajes les avisan que no aguantarian la atmosfera de este mundo, asi que no pueden destransformarse;
  * los OC de la familia Kagami si (su Rider System se lo permite). Si los reunes a todos, abren un portal a casa.
  *
- * Frases: lang "dialog.dexrider.<rider>.<situacion>.<n>", n = 1..VARIANTS.
+ * Frases: lang "dialog.dexrider.<rider>.<situacion>.<n>", n = 1..variantes de la situacion (VARIANTS o 5).
  */
 public final class RiderDialogue {
     private RiderDialogue() {}
@@ -30,7 +30,15 @@ public final class RiderDialogue {
 
     public enum Line {
         LOST, SPOT_DEX, SPOT_PLAYER, HURT, PANIC, CONVINCED, RETREAT, SUIT,
-        SUMMONED, HOME, DOWN, CHAT, REPLY, REUNION, PORTAL, FAREWELL, RETURN, HENSHIN, RELAX, FORM_CHANGE, RISING, ACCEL, ACCEL_END, BLASTER, GIFT;
+        SUMMONED, HOME, DOWN, CHAT, REPLY, REUNION, PORTAL, FAREWELL, RETURN, HENSHIN, RELAX, FORM_CHANGE, RISING, ACCEL, ACCEL_END, BLASTER, GIFT,
+        // trabajo: reacciones al verte, aprender y trabajar (5 variantes cada una)
+        SEE_MINE(5), SEE_CHOP(5), SEE_FARM(5), SEE_BUILD(5), SEE_CRAFT(5), LEARN(5), HELP(5), JOB(5), JOB_STOP(5),
+        NOT_YET(5), FIND(5), FULL(5);
+
+        public final int variants;
+
+        Line() { this(VARIANTS); }
+        Line(int variants) { this.variants = variants; }
 
         public String key() {
             return name().toLowerCase(Locale.ROOT);
@@ -45,7 +53,7 @@ public final class RiderDialogue {
         Long last = LAST_LINE.get(speaker.getUUID());
         if (last != null && now - last < minGap) return false;
         LAST_LINE.put(speaker.getUUID(), now);
-        int n = 1 + level.getRandom().nextInt(VARIANTS);
+        int n = 1 + level.getRandom().nextInt(line.variants);
         Component text = Component.translatable("dialog.dexrider." + rider.id() + "." + line.key() + "." + n, args);
         broadcast(level, speaker, rider, text);
         return true;

@@ -49,6 +49,7 @@ public class DexRider {
         modContainer.registerConfig(net.neoforged.fml.config.ModConfig.Type.COMMON, com.draxer.dexrider.config.DexConfig.SPEC);
 
         NeoForge.EVENT_BUS.register(DexEvents.class);
+        NeoForge.EVENT_BUS.register(com.draxer.dexrider.rider.AllyWorkEvents.class);
     }
 
     private static void registerPayloads(RegisterPayloadHandlersEvent event) {

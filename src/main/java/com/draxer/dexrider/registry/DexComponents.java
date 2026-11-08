@@ -155,6 +155,11 @@ public final class DexComponents {
                     .networkSynchronized(ByteBufCodecs.BOOL));
 
     /** Amigos Rider: version, descanso, invocacion activa y casa de cada uno (en el Driver). */
+    /** Lo que los amigos Rider aprendieron mirandote trabajar (solo servidor). */
+    public static final Supplier<DataComponentType<com.draxer.dexrider.item.AllySkills>> ALLY_SKILLS =
+            COMPONENTS.registerComponentType("ally_skills", builder -> builder
+                    .persistent(com.draxer.dexrider.item.AllySkills.CODEC));
+
     public static final Supplier<DataComponentType<AllyBook>> ALLIES =
             COMPONENTS.registerComponentType("allies", builder -> builder
                     .persistent(AllyBook.CODEC)
