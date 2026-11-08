@@ -54,7 +54,11 @@ public class KaijinEntity extends Monster implements GeoEntity {
         RHINO("kaijin_rhino", 70, 9, 0.24, 12, 1.15F),
         CHIMERA("kaijin_chimera", 360, 14, 0.29, 16, 1.5F),
         /** El Arquitecto: la Dai-Shocker que no es la casa de la montania (ver ArchitectEntity). */
-        ARCHITECT("kaijin_architect", 560, 15, 0.27, 18, 1.35F);
+        ARCHITECT("kaijin_architect", 560, 15, 0.27, 18, 1.35F),
+        /** Jefes de la arena de Dai-Shocker (0.52, ver KaijinBossEntity). */
+        MANTIS_QUEEN("kaijin_mantis_queen", 300, 11, 0.34, 10, 1.6F),
+        RHINO_TITAN("kaijin_rhino_titan", 420, 14, 0.26, 20, 1.9F),
+        COMMANDER("kaijin_commander", 340, 12, 0.30, 14, 1.45F);
 
         public final String id;
         final double health, damage, speed, armor;
@@ -64,7 +68,9 @@ public class KaijinEntity extends Monster implements GeoEntity {
             this.id = id; this.health = health; this.damage = damage; this.speed = speed; this.armor = armor; this.scale = scale;
         }
 
-        public boolean boss() { return this == CHIMERA || this == ARCHITECT; }
+        public boolean boss() { return this == CHIMERA || this == ARCHITECT || arenaBoss(); }
+
+        public boolean arenaBoss() { return this == MANTIS_QUEEN || this == RHINO_TITAN || this == COMMANDER; }
     }
 
     private static final EntityDataAccessor<Boolean> DATA_LEAP = SynchedEntityData.defineId(KaijinEntity.class, EntityDataSerializers.BOOLEAN);
@@ -81,11 +87,11 @@ public class KaijinEntity extends Monster implements GeoEntity {
     public KaijinEntity(EntityType<? extends Monster> type, Level level, Kind kind) {
         super(type, level);
         this.kind = kind;
-        this.xpReward = kind == Kind.ARCHITECT ? 300 : kind == Kind.CHIMERA ? 120 : kind == Kind.SOLDIER ? 6 : 15;
+        this.xpReward = kind == Kind.ARCHITECT ? 300 : kind.arenaBoss() ? 160 : kind == Kind.CHIMERA ? 120 : kind == Kind.SOLDIER ? 6 : 15;
         this.boss = kind.boss()
                 ? new ServerBossEvent(java.util.UUID.randomUUID(), Component.translatable("entity.dexrider." + kind.id),
                         kind == Kind.ARCHITECT ? BossEvent.BossBarColor.RED : BossEvent.BossBarColor.PURPLE,
-                        kind == Kind.ARCHITECT ? BossEvent.BossBarOverlay.NOTCHED_6 : BossEvent.BossBarOverlay.NOTCHED_10)
+                        kind == Kind.ARCHITECT || kind.arenaBoss() ? BossEvent.BossBarOverlay.NOTCHED_6 : BossEvent.BossBarOverlay.NOTCHED_10)
                 : null;
     }
 
@@ -98,7 +104,7 @@ public class KaijinEntity extends Monster implements GeoEntity {
                 .add(Attributes.MOVEMENT_SPEED, kind.speed)
                 .add(Attributes.ARMOR, kind.armor)
                 .add(Attributes.FOLLOW_RANGE, kind.boss() ? 48 : 32)
-                .add(Attributes.KNOCKBACK_RESISTANCE, kind == Kind.ARCHITECT ? 1.0 : kind == Kind.CHIMERA ? 0.9 : kind == Kind.RHINO ? 0.7 : 0.1)
+                .add(Attributes.KNOCKBACK_RESISTANCE, kind == Kind.ARCHITECT || kind.arenaBoss() ? 1.0 : kind == Kind.CHIMERA ? 0.9 : kind == Kind.RHINO ? 0.7 : 0.1)
                 .add(Attributes.STEP_HEIGHT, 1.0);
     }
 
@@ -165,12 +171,14 @@ public class KaijinEntity extends Monster implements GeoEntity {
                 special = d > 5 && d < 16 ? 140 + random.nextInt(40) : 20;
             }
             case CHIMERA -> chimeraSpecial(level, target, d);
-            case ARCHITECT -> bossSpecial(level, target, d);
+            case ARCHITECT, MANTIS_QUEEN, RHINO_TITAN, COMMANDER -> bossSpecial(level, target, d);
         }
     }
 
     /** Ataques especiales de los jefes con clase propia. */
     protected void bossSpecial(ServerLevel level, LivingEntity target, double d) { special = 40; }
+
+    protected int chargeTicks() { return charge; }
 
     protected boolean bossBarVisible() { return boss != null; }
     protected void setBossName(Component name) { if (boss != null) boss.setName(name); }
@@ -182,6 +190,13 @@ public class KaijinEntity extends Monster implements GeoEntity {
         if (kind == Kind.CHIMERA && level() instanceof ServerLevel level) {
             level.addFreshEntity(new net.minecraft.world.entity.item.ItemEntity(level, getX(), getY() + 0.5, getZ(),
                     new net.minecraft.world.item.ItemStack(com.draxer.dexrider.registry.DexItems.SIGNAL_TRACKER.get())));
+            level.addFreshEntity(new net.minecraft.world.entity.item.ItemEntity(level, getX(), getY() + 0.5, getZ(),
+                    new net.minecraft.world.item.ItemStack(com.draxer.dexrider.registry.DexItems.DAISHOCKER_SEAL.get())));
+        }
+        // a veces un kaijin lleva encima un sello de desafio
+        if ((kind == Kind.MANTIS || kind == Kind.RHINO) && level() instanceof ServerLevel level && random.nextInt(20) == 0) {
+            level.addFreshEntity(new net.minecraft.world.entity.item.ItemEntity(level, getX(), getY() + 0.5, getZ(),
+                    new net.minecraft.world.item.ItemStack(com.draxer.dexrider.registry.DexItems.DAISHOCKER_SEAL.get())));
         }
     }
 
@@ -227,7 +242,7 @@ public class KaijinEntity extends Monster implements GeoEntity {
         charge--;
         setYRot((float) (Math.atan2(-chargeDir.x, chargeDir.z) * 180 / Math.PI));
         yBodyRot = getYRot();
-        setDeltaMovement(chargeDir.scale(kind == Kind.CHIMERA ? 0.75 : 0.65).add(0, getDeltaMovement().y, 0));
+        setDeltaMovement(chargeDir.scale(kind == Kind.CHIMERA || kind == Kind.RHINO_TITAN ? 0.75 : 0.65).add(0, getDeltaMovement().y, 0));
         hurtMarked = true;
         if (tickCount % 2 == 0) FX.particle(level, ParticleTypes.CLOUD, position(), 3, 0.4, 0.02);
         for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(0.6),

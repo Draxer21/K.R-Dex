@@ -1,0 +1,23 @@
+{
+  "parent": "dexrider:daishocker",
+  "display": {
+    "icon": {
+      "id": "dexrider:daishocker_seal"
+    },
+    "title": {
+      "translate": "advancements.dexrider.daishocker_boss.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.daishocker_boss.description"
+    },
+    "frame": "challenge",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

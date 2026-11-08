@@ -112,6 +112,9 @@ public final class DexItems {
     // ---------- Arco de la Senal (Dai-Shocker que no es la casa de la montania) ----------
     public static final DeferredItem<com.draxer.dexrider.item.SignalTrackerItem> SIGNAL_TRACKER = ITEMS.registerItem("signal_tracker",
             props -> new com.draxer.dexrider.item.SignalTrackerItem(props.stacksTo(1).rarity(Rarity.RARE)));
+    /** Sello de desafio de Dai-Shocker: levanta una arena y llama a uno de sus jefes (0.52). */
+    public static final DeferredItem<com.draxer.dexrider.item.DaiShockerSealItem> DAISHOCKER_SEAL = ITEMS.registerItem("daishocker_seal",
+            props -> new com.draxer.dexrider.item.DaiShockerSealItem(props.stacksTo(16).rarity(Rarity.RARE)));
     /** Brujula de los Kagami: apunta a la casa de la montania (donde esta el Dex Driver de repuesto). */
     public static final DeferredItem<com.draxer.dexrider.item.SignalTrackerItem> KAGAMI_COMPASS = ITEMS.registerItem("kagami_compass",
             props -> new com.draxer.dexrider.item.SignalTrackerItem(props.stacksTo(1).rarity(Rarity.UNCOMMON),
@@ -205,6 +208,7 @@ public final class DexItems {
                         output.accept(COMPLETE_FORM_CARD.get());
                         output.accept(KAGAMI_COMPASS.get());
                         output.accept(SIGNAL_TRACKER.get());
+                        output.accept(DAISHOCKER_SEAL.get());
                         output.accept(SIGNAL_CORE.get());
                         output.accept(COMPLETE_FORM_CARD_2.get());
                         output.accept(CIPHER_ACCEL.get());

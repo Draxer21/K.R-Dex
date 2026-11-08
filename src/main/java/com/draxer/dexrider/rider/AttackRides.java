@@ -42,7 +42,7 @@ public final class AttackRides {
             case ATTACK_RIDE_OVERCLOCK, ATTACK_RIDE_GALE, ATTACK_RIDE_RAZOR_FEATHER,
                  ATTACK_RIDE_NITRO_BURST, ATTACK_RIDE_GROUND_WAVE,
                  ATTACK_RIDE_MANTIS_REAP, ATTACK_RIDE_RHINO_CHARGE, ATTACK_RIDE_CHIMERA_DIVE,
-                 ATTACK_RIDE_SEVERANCE -> true;
+                 ATTACK_RIDE_SEVERANCE, ATTACK_RIDE_QUEEN_BLINK, ATTACK_RIDE_TITAN_QUAKE, ATTACK_RIDE_COMMAND -> true;
             default -> false;
         };
     }
@@ -61,6 +61,9 @@ public final class AttackRides {
             case ATTACK_RIDE_RHINO_CHARGE -> rhinoCharge(level, p, lvl);
             case ATTACK_RIDE_CHIMERA_DIVE -> chimeraDive(level, p, lvl);
             case ATTACK_RIDE_SEVERANCE -> severance(level, p);
+            case ATTACK_RIDE_QUEEN_BLINK -> queenBlink(level, p);
+            case ATTACK_RIDE_TITAN_QUAKE -> titanQuake(level, p);
+            case ATTACK_RIDE_COMMAND -> command(level, p);
             default -> 0;
         };
         if (cd > 0) DexAdvancements.award(p, "attack_ride");
@@ -342,6 +345,72 @@ public final class AttackRides {
         level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.CHAIN_PLACE, SoundSource.PLAYERS, 1.5F, 0.5F);
         level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.AMETHYST_BLOCK_CHIME, SoundSource.PLAYERS, 1.5F, 1.6F);
         return 300;
+    }
+
+    /** Queen Blink: apareces detras del enemigo que miras y das dos cortes. */
+    private static int queenBlink(ServerLevel level, ServerPlayer p) {
+        LivingEntity t = FX.findTarget(level, p, 18, 0.8);
+        if (t == null) { p.sendSystemMessage(Component.translatable("message.dexrider.double_no_target"), true); return 0; }
+        Vec3 back = t.position().subtract(t.getLookAngle().multiply(1, 0, 1).normalize().scale(1.6));
+        FX.particle(level, ParticleTypes.PORTAL, FX.center(p), 30, 0.5, 0.4);
+        p.teleportTo(back.x, t.getY(), back.z);
+        p.lookAt(net.minecraft.commands.arguments.EntityAnchorArgument.Anchor.EYES, FX.center(t));
+        FX.particle(level, ParticleTypes.PORTAL, FX.center(p), 30, 0.5, 0.4);
+        level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.ENDERMAN_TELEPORT, SoundSource.PLAYERS, 1.0F, 1.5F);
+        for (int k = 0; k < 2; k++) {
+            Scheduler.later(p, 3 + k * 5, () -> {
+                if (!t.isAlive()) return;
+                hit(level, p, t, 9.0F);
+                t.addEffect(new MobEffectInstance(MobEffects.WITHER, 60, 1));
+                FX.particle(level, ParticleTypes.SWEEP_ATTACK, FX.center(t), 2, 0.4, 0);
+                FX.dust(level, 0xA45AF0, 1.2F, FX.center(t), 12, 0.5);
+                level.playSound(null, t.getX(), t.getY(), t.getZ(), SoundEvents.PLAYER_ATTACK_SWEEP, SoundSource.PLAYERS, 1.0F, 1.4F);
+            });
+        }
+        return 160;
+    }
+
+    /** Titan Quake: pisoton con una onda en anillo que crece hasta 9 bloques; lanza y frena a los enemigos. */
+    private static int titanQuake(ServerLevel level, ServerPlayer p) {
+        Vec3 c = p.position();
+        java.util.Set<LivingEntity> done = new java.util.HashSet<>();
+        level.playSound(null, c.x, c.y, c.z, SoundEvents.GENERIC_EXPLODE.value(), SoundSource.PLAYERS, 1.2F, 0.6F);
+        for (int k = 0; k <= 9; k++) {
+            final double r = 1.0 + k;
+            Scheduler.later(p, k, () -> {
+                for (int a = 0; a < 360; a += 10) {
+                    double rad = Math.toRadians(a);
+                    FX.dust(level, 0xE0402C, 1.6F, c.add(Math.cos(rad) * r, 0.2, Math.sin(rad) * r), 1, 0.05);
+                }
+                for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, new net.minecraft.world.phys.AABB(c, c).inflate(r + 0.6, 2, r + 0.6), e -> foe(p, e))) {
+                    if (done.contains(e) || e.position().subtract(c).horizontalDistance() > r + 0.6) continue;
+                    done.add(e);
+                    hit(level, p, e, 12.0F);
+                    e.setDeltaMovement(e.getDeltaMovement().add(0, 0.7, 0));
+                    e.hurtMarked = true;
+                    e.addEffect(new MobEffectInstance(MobEffects.SLOWNESS, 60, 2));
+                }
+            });
+        }
+        return 240;
+    }
+
+    /** Command: tus amigos Rider a 24 bloques atacan al enemigo que miras, con Fuerza II y Velocidad II; tu, Resistencia. */
+    private static int command(ServerLevel level, ServerPlayer p) {
+        LivingEntity t = FX.findTarget(level, p, 24, 0.7);
+        int n = 0;
+        for (RiderAllyEntity a : level.getEntitiesOfClass(RiderAllyEntity.class, p.getBoundingBox().inflate(24),
+                a -> a.isAlive() && p.getUUID().equals(a.owner()) && !a.isCivilian())) {
+            a.addEffect(new MobEffectInstance(MobEffects.STRENGTH, 300, 1));
+            a.addEffect(new MobEffectInstance(MobEffects.SPEED, 300, 1));
+            if (t != null) a.setTarget(t);
+            FX.dust(level, 0x3CC86E, 1.4F, FX.center(a), 15, 0.5);
+            n++;
+        }
+        p.addEffect(new MobEffectInstance(MobEffects.RESISTANCE, 300, 0));
+        level.playSound(null, p.getX(), p.getY(), p.getZ(), SoundEvents.RAID_HORN.value(), SoundSource.PLAYERS, 1.5F, 1.2F);
+        p.sendSystemMessage(Component.translatable("message.dexrider.command_used", n), false);
+        return 400;
     }
 
     private static void cleanse(LivingEntity e) {

@@ -106,6 +106,21 @@ Cada forma tiene **Nivel 1 a 3**: se sube re-escaneando su fuente (el doble de m
 
 Con una forma activa, el daño también se multiplica por el escalado de la familia Form Ride.
 
+### Arena de Dai-Shocker (jefes con fases y cartas raras)
+El **Sello de desafío de Dai-Shocker** lo suelta siempre la Quimera (y a veces una Mantis o un Rinoceronte). Transformado,
+clic derecho en el suelo: se levanta una **arena** circular (12 bloques de radio, muros de ladrillo negro con vidrio rojo)
+y aparece un jefe. Primero viene el jefe cuya carta rara aún no tienes; con las tres, uno al azar. Cada jefe tiene
+**tres fases** (al 66 % y al 33 % de vida ruge, queda invulnerable 2 s y empuja):
+
+| Jefe | Fase 1 | Fase 2 | Fase 3 | Carta rara |
+|---|---|---|---|---|
+| **Mantis Reina** | saltos y barridos que hacen sangrar | llama a sus mantis y salta más | aparece detrás de ti y corta | **Queen Blink**: apareces detrás del enemigo que miras y das dos cortes |
+| **Rinoceronte Titán** | embestidas | pisotón con una onda que crece (sáltala) | tres embestidas seguidas y lluvia de rocas (mira las marcas) | **Titan Quake**: onda en anillo de 9 bloques que lanza y frena |
+| **Comandante** | llama combatientes | escudo (−80 % de daño) mientras le quede tropa cerca | furia: corre, salta y debilita con su grito | **Command**: tus amigos Rider atacan a tu objetivo con Fuerza II y Velocidad II; tú, Resistencia |
+
+Las cartas raras tienen el borde tornasol. La arena desaparece sola cuando cae el jefe.
+Herramientas: `tools/boss_skins.py` (modelos y colores de los jefes) y `tools/rare_cards.py` (dibujo de las cartas).
+
 ### La Señal y el Arquitecto
 "No toda Dai-Shocker es la casa de la montaña": hay gente de fuera de la familia que pensó qué haría con diez Riders
 que se encienden con un botón.
@@ -808,6 +823,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.52.0** — Jefes de Dai-Shocker: Sello de desafío que levanta una arena y llama a la Mantis Reina, el Rinoceronte Titán o el Comandante, cada uno con tres fases; dejan las cartas raras Queen Blink, Titan Quake y Command.
 - **0.51.0** — Mazos por tipo en el Ride Booker: Kamen Ride, Form Ride, Attack Ride, Armed Ride y Vehicle Ride (en vez de Rescate, Multitudes, etc.). Las cartas nuevas van solas a su mazo y los Booker existentes se reordenan una vez; las favoritas del selector y la carta elegida se conservan.
 - **0.50.0** — Ataque combinado: Shift + Final Attack Ride con un amigo Rider cerca hace una doble Rider Kick coreografiada (llamada, salto juntos, dos filas de cartas, picada con estelas trenzadas, impacto con los dos colores) con frases propias de cada amigo.
 - **0.49.0** — Escanear se ve: mientras el Driver toma muestras, los ojos de Dex brillan y pasan por magenta, dorado, verde, rojo y azul; al completar, parpadean en blanco (lo ven todos). Visor nuevo: **ondas** (líneas onduladas paralelas, sin centro). Más relieve en los trajes de Nine, Forge, Cipher, Warden, Spore, Mirage y Proto: piezas 3D nuevas con diseño propio (sombrero de seta de Spore, cristales de Mirage, puertos y aro del visor de Proto, placas desmontables de Forge, gorra y placa de Warden, rieles y cartuchos de Cipher, espina y guardas de Nine). Herramientas `tools/rider_relief.py` y `tools/geo_preview.py`.
