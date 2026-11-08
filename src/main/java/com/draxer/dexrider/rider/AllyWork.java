@@ -405,7 +405,7 @@ public final class AllyWork {
         for (AllySkills.Entry e : skills(owner).riders().values()) {
             if (!e.hasZone() || !dim.equals(e.zoneDim())) continue;
             BlockPos min = zoneMin(e), max = zoneMax(e);
-            if (min.getCenter().distanceTo(owner.position()) > 64) continue;
+            if (net.minecraft.world.phys.Vec3.atCenterOf(min).distanceTo(owner.position()) > 64) continue;
             outline(level, min, max);
         }
     }
