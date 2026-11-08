@@ -430,6 +430,12 @@ Para probarlos: `/summon dexrider:echo_nine` (o `echo_cipher`, `echo_spore`, `ec
 - Ni tú le haces daño a tus amigos ni ellos a ti.
 
 ### Amigos que aprenden a trabajar
+- **Menú del amigo:** clic derecho sobre tu amigo **con la mano vacía** abre su menú: **Charlar** (ocho frases propias
+  por personaje), **Acompáñame / Vuelve a casa**, **Vive aquí**, lo que sabe (barras de cada trabajo y cuánto le
+  falta), y botones para encargarle **picar, talar, cultivar, fabricar o aplanar**, **descansar**, **marcar o borrar
+  la zona**, usar lo que tienes en la mano como **filtro** o quitarlo, y **darte lo que lleva encima**.
+  (Antes, clic derecho con la mano vacía lo invocaba o lo mandaba a casa; ahora eso está en el menú.
+  Shift + clic derecho con la mano vacía sigue fijando su casa.)
 - **Aprenden mirándote.** Si picas, talas, cultivas o fabricas a 16 bloques o menos de un amigo que te ve, gana
   experiencia en ese trabajo. Con suficiente, lo aprende (lo dice en el chat). Cada uno tiene su personalidad:
   Mei, Momo y Takumi fabrican rapidísimo; Kinoko y Nagisa son de cultivar; Genzo es de picar y talar...
@@ -722,6 +728,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.43.0** — Menú del amigo Rider (clic derecho con la mano vacía): charlar, acompañarte o volver a casa, vivir aquí, encargar trabajos, zona y filtro y recoger lo que lleva; muestra lo que sabe. 80 frases nuevas para charlar.
 - **0.42.2** — Aplanar: márcale una zona y dale una pala; deja el suelo a la altura de la esquina más baja (quita lo que sobra y rellena hoyos con tierra o piedra).
 - **0.42.1** — Picar con exactitud: dale a tu amigo el bloque o mineral que quieres (solo picará eso) y márcale una zona con el pico (Shift + clic derecho en dos esquinas): excava dentro, de arriba hacia abajo.
 - **0.42.0** — Los amigos Rider aprenden mirándote: picar, talar, cultivar y fabricar (cada uno según su personalidad), te ayudan cuando te ven hacerlo y aceptan encargos con clic derecho y una herramienta; guardan todo en un cofre junto a su casa. 600 frases nuevas: reacciones al verte trabajar o construir, al aprender, al encontrar algo raro...

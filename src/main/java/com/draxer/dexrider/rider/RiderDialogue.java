@@ -33,7 +33,9 @@ public final class RiderDialogue {
         SUMMONED, HOME, DOWN, CHAT, REPLY, REUNION, PORTAL, FAREWELL, RETURN, HENSHIN, RELAX, FORM_CHANGE, RISING, ACCEL, ACCEL_END, BLASTER, GIFT,
         // trabajo: reacciones al verte, aprender y trabajar (5 variantes cada una)
         SEE_MINE(5), SEE_CHOP(5), SEE_FARM(5), SEE_BUILD(5), SEE_CRAFT(5), LEARN(5), HELP(5), JOB(5), JOB_STOP(5),
-        NOT_YET(5), FIND(5), FULL(5);
+        NOT_YET(5), FIND(5), FULL(5),
+        // charlar contigo desde el menu
+        TALK(8);
 
         public final int variants;
 
