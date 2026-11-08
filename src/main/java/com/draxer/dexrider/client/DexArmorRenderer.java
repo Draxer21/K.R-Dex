@@ -65,12 +65,15 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
                 (s, seg) -> look(s).color(SuitLook.SILVER), s -> false));
         withRenderLayer(new TintLayer<>(this, s -> custom(s) ? tex(s, "inner", false) : null,
                 (s, seg) -> look(s).color(SuitLook.INNER), s -> false));
-        withRenderLayer(new TintLayer<>(this, s -> isDex(s) && !"none".equals(look(s).part("scarf")) ? tex(s, "scarf", true) : null,
+        withRenderLayer(new TintLayer<>(this, s -> usesScarf(s) ? tex(s, "scarf", true) : null,
                 (s, seg) -> look(s).color(SuitLook.SCARF), s -> false));
-        withRenderLayer(new TintLayer<>(this, s -> isDex(s) && look(s).on("crystal") ? tex(s, "crystal", false) : null,
+        withRenderLayer(new TintLayer<>(this, s -> usesCrystal(s) ? tex(s, "crystal", false) : null,
                 (s, seg) -> look(s).color(SuitLook.CRYSTAL), s -> look(s).on("glow_crystal")));
+        // lineas del visor (los huecos entre los lentes), con su propio color
+        withRenderLayer(new TintLayer<>(this, s -> isDex(s) && visor(s) != null ? tex(s, "lines" + visor(s), false) : null,
+                (s, seg) -> look(s).color(SuitLook.VISOR), s -> false));
         withRenderLayer(new TintLayer<>(this,
-                s -> !custom(s) ? null : tex(s, isDex(s) && !look(s).on("stripes") ? "eyes_plain" : "eyes", false),
+                s -> !custom(s) ? null : tex(s, eyesLayer(s), false),
                 (s, seg) -> look(s).color(SuitLook.EYES), s -> look(s).on("glow_eyes")));
         // Ojos y luces de los demas Riders, a plena luz
         withRenderLayer(new TintLayer<>(this,
@@ -86,6 +89,32 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
     /** Dex o su Upgrade Form: los dos se pintan con el diseno del jugador. */
     private static boolean custom(GeoRenderState state) {
         return RiderArmorModel.rider(state) == KamenRide.DEX;
+    }
+
+    private static boolean usesScarf(GeoRenderState s) {
+        if (!custom(s)) return false;
+        return isDex(s) ? !"none".equals(look(s).part("scarf")) : !"none".equals(look(s).part("upg_cape"));
+    }
+
+    private static boolean usesCrystal(GeoRenderState s) {
+        if (!custom(s)) return false;
+        SuitLooks.Resolved l = look(s);
+        return isDex(s) ? l.on("crystal") || l.on("frost_crystals") || l.on("cinder_flames") : "core".equals(l.part("upg_chest"));
+    }
+
+    /** Sufijo de las lineas del visor ("" = clasico, "_h_1_1"...), o null si no hay lineas. */
+    private static String visor(GeoRenderState s) {
+        SuitLooks.Resolved l = look(s);
+        String v = l.part("visor_lines");
+        if ("none".equals(v) || ("classic".equals(v) && !l.on("stripes"))) return null;
+        if ("classic".equals(v)) return "";
+        return "_" + v.charAt(0) + "_" + ("thick".equals(l.part("visor_thick")) ? 2 : 1) + "_" + ("wide".equals(l.part("visor_gap")) ? 3 : 1);
+    }
+
+    private static String eyesLayer(GeoRenderState s) {
+        if (!isDex(s)) return "eyes";
+        String v = visor(s);
+        return v == null ? "eyes_plain" : "eyes" + v;
     }
 
     private static boolean isHalf(GeoRenderState state) {
@@ -180,6 +209,22 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
         hide(snapshots, "spikesBody", !look.on("spikes_body"));
         hide(snapshots, "spikesRArm", !look.on("spikes_arms"));
         hide(snapshots, "spikesLArm", !look.on("spikes_arms"));
+        // etapa 3: Upgrade y Form Rides
+        String uh = look.part("upg_horns"), us = look.part("upg_shoulders"), uc = look.part("upg_chest"), cape = look.part("upg_cape");
+        hidePart(snapshots, "upgHornsBlade", !"blade".equals(uh));
+        hidePart(snapshots, "upgHornsTwin", !"twin".equals(uh));
+        hidePart(snapshots, "upgShouldersCap", !"cap".equals(us));
+        hidePart(snapshots, "upgShouldersBlades", !"blades".equals(us));
+        hidePart(snapshots, "upgChestPlate", !"plate".equals(uc));
+        hidePart(snapshots, "upgChestCore", !"core".equals(uc));
+        hidePart(snapshots, "upgCape", !"cape".equals(cape));
+        hidePart(snapshots, "upgScarf", !"scarf".equals(cape));
+        hidePart(snapshots, "hydroFins", !look.on("fins"));
+        hidePart(snapshots, "frostCrystals", !look.on("frost_crystals"));
+        hidePart(snapshots, "cinderFlames", !look.on("cinder_flames"));
+        hidePart(snapshots, "speedSpoiler", !look.on("spoiler"));
+        hidePart(snapshots, "gasDucts", !look.on("ducts"));
+        hidePart(snapshots, "terraPlates", !look.on("terra_plates"));
         // Alas de Sky
         int sky = look.on("wings") ? intData(state, SKY, 0) : 0;
         hide(snapshots, "skyWings", sky == 0);
@@ -195,6 +240,13 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
             float sc = sky == 1 ? 0.85F : sky == 2 ? 1.0F : 1.15F;
             snapshots.get("skyWings").ifPresent(s -> s.setScale(sc, sc, sc));
         }
+    }
+
+    /** Una pieza puede tener huesos extra en los brazos (nombre_1, nombre_2). */
+    private static void hidePart(BoneSnapshots snapshots, String bone, boolean hidden) {
+        hide(snapshots, bone, hidden);
+        hide(snapshots, bone + "_1", hidden);
+        hide(snapshots, bone + "_2", hidden);
     }
 
     private static void hide(BoneSnapshots snapshots, String bone, boolean hidden) {

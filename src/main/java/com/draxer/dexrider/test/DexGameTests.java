@@ -630,6 +630,14 @@ public final class DexGameTests {
         if (sky.color("helmet") != com.draxer.dexrider.rider.FormRide.SKY.suitColor() || sky.color("accent") != 0x00FF00) { fail(h, t, "la Form Ride no tomo su color y tus acentos"); return; }
         var upg = com.draxer.dexrider.item.SuitLooks.resolve(prof, "upgrade");
         if (upg.color("accent") == 0x00FF00) { fail(h, t, "la Upgrade hereda colores que no debe"); return; }
+        // 2b) etapa 3: cada forma trae su pieza puesta (y solo la suya); la Upgrade guarda las suyas
+        var hydro = com.draxer.dexrider.item.SuitLooks.resolve(prof, "form_hydro");
+        if (!hydro.on("fins") || hydro.on("spoiler") || com.draxer.dexrider.item.SuitLooks.resolve(prof, "base").on("fins")) { fail(h, t, "piezas de forma mal"); return; }
+        var prof3 = prof.withLook("form_hydro", com.draxer.dexrider.item.SuitLook.EMPTY.withPart("fins", "off"))
+                .withLook("upgrade", com.draxer.dexrider.item.SuitLook.EMPTY.withPart("upg_cape", "cape"));
+        if (com.draxer.dexrider.item.SuitLooks.resolve(prof3, "form_hydro").on("fins")) { fail(h, t, "no se pudo quitar las aletas"); return; }
+        if (!"cape".equals(com.draxer.dexrider.item.SuitLooks.resolve(prof3, "upgrade").part("upg_cape"))) { fail(h, t, "la Upgrade perdio su capa"); return; }
+        if (com.draxer.dexrider.item.SuitLooks.resolve(prof3, "base").color("visor_lines") != 0x1C1C24) { fail(h, t, "color de las lineas del visor"); return; }
         // 3) codigo para compartir (ida y vuelta; lo invalido se descarta)
         var named = prof.withName("Prueba");
         var back = com.draxer.dexrider.item.SuitProfile.fromCode(named.toCode());

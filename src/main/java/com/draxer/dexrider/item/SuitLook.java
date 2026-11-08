@@ -21,9 +21,9 @@ public record SuitLook(Map<String, Integer> colors, Map<String, String> parts) {
     // ---- zonas de color
     public static final String HELMET = "helmet", CHEST = "chest", ARMS = "arms", LEGS = "legs", BOOTS = "boots",
             ACCENT = "accent", EYES = "eyes", SILVER = "silver", INNER = "inner", CRYSTAL = "crystal", SCARF = "scarf",
-            HALF_RIGHT = "half_right", HALF_LEFT = "half_left";
+            HALF_RIGHT = "half_right", HALF_LEFT = "half_left", VISOR = "visor_lines";
     public static final List<String> COLOR_KEYS = List.of(HELMET, CHEST, ARMS, LEGS, BOOTS, ACCENT, EYES, SILVER, INNER,
-            CRYSTAL, SCARF, HALF_RIGHT, HALF_LEFT);
+            CRYSTAL, SCARF, HALF_RIGHT, HALF_LEFT, VISOR);
 
     // ---- piezas y opciones: clave -> variantes posibles (la primera es la de fabrica en la forma base)
     public static final Map<String, List<String>> PART_VALUES = new java.util.LinkedHashMap<>();
@@ -44,7 +44,39 @@ public record SuitLook(Map<String, Integer> colors, Map<String, String> parts) {
         PART_VALUES.put("glow_accent", List.of("off", "on"));
         PART_VALUES.put("glow_main", List.of("off", "on"));
         PART_VALUES.put("finish", List.of("normal", "matte", "metal"));
+        // etapa 3: lineas del visor (Dex)
+        PART_VALUES.put("visor_lines", List.of("classic", "horizontal", "vertical", "diagonal", "none"));
+        PART_VALUES.put("visor_thick", List.of("thin", "thick"));
+        PART_VALUES.put("visor_gap", List.of("tight", "wide"));
+        // etapa 3: Upgrade Form
+        PART_VALUES.put("upg_horns", List.of("none", "blade", "twin"));
+        PART_VALUES.put("upg_shoulders", List.of("none", "cap", "blades"));
+        PART_VALUES.put("upg_chest", List.of("none", "plate", "core"));
+        PART_VALUES.put("upg_cape", List.of("none", "cape", "scarf"));
+        // etapa 3: piezas propias de cada Form Ride (encendidas por defecto en su forma, ver SuitLooks)
+        PART_VALUES.put("fins", List.of("off", "on"));
+        PART_VALUES.put("frost_crystals", List.of("off", "on"));
+        PART_VALUES.put("cinder_flames", List.of("off", "on"));
+        PART_VALUES.put("spoiler", List.of("off", "on"));
+        PART_VALUES.put("ducts", List.of("off", "on"));
+        PART_VALUES.put("terra_plates", List.of("off", "on"));
     }
+
+    /** Pieza propia de una Form Ride (id de la forma), o null. */
+    public static String formOfPart(String key) {
+        return switch (key) {
+            case "wings" -> "sky";
+            case "fins" -> "hydro";
+            case "frost_crystals" -> "frost";
+            case "cinder_flames" -> "cinder";
+            case "spoiler" -> "speed";
+            case "ducts" -> "gas";
+            case "terra_plates" -> "terra";
+            default -> null;
+        };
+    }
+
+    public static boolean upgradePart(String key) { return key.startsWith("upg_"); }
 
     public static final SuitLook EMPTY = new SuitLook(Map.of(), Map.of());
 

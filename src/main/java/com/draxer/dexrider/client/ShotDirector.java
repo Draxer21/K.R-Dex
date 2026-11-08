@@ -300,6 +300,48 @@ public final class ShotDirector {
                 if (a != null) a.getItemBySlot(EquipmentSlot.CHEST).set(DexComponents.FORM.get(), forms[i]);
             }
         }, 0, 1.4, 0.2, 0);
+        // 5g: editor etapa 3 - piezas de las Form Rides, de frente y de espaldas
+        String[] e3forms = {"speed", "gas", "terra", "frost", "cinder", "hydro"};
+        for (int back = 0; back < 2; back++) {
+            final float yaw = back == 0 ? 180F : 0F;
+            t = scene(s, t + 2, back == 0 ? "e3_formas" : "e3_formas_espalda", lvl -> {
+                for (int i = 0; i < 6; i++) {
+                    ArmorStand a = stand(lvl, -3.5 + i * 1.4, null, null, false);
+                    if (a == null) continue;
+                    a.getItemBySlot(EquipmentSlot.CHEST).set(DexComponents.FORM.get(), e3forms[i]);
+                    a.setYRot(yaw); a.yBodyRot = yaw; a.yHeadRot = yaw;
+                }
+            }, 0, 1.4, 0.2, 0);
+        }
+        // 5h: Upgrade con piezas (dos combinaciones, de frente y de espaldas)
+        t = scene(s, t + 2, "e3_upgrade", lvl -> {
+            String[][] cfg = {{"blade", "cap", "plate", "cape"}, {"twin", "blades", "core", "scarf"}};
+            for (int i = 0; i < 4; i++) {
+                ArmorStand a = stand(lvl, -3.6 + i * 2.4, null, null, true);
+                if (a == null) continue;
+                String[] c = cfg[i / 2];
+                com.draxer.dexrider.item.SuitLook up = com.draxer.dexrider.item.SuitLook.EMPTY.withPart("upg_horns", c[0])
+                        .withPart("upg_shoulders", c[1]).withPart("upg_chest", c[2]).withPart("upg_cape", c[3]).withColor("scarf", 0xCD1C28);
+                a.getItemBySlot(EquipmentSlot.CHEST).set(DexComponents.SUIT_PROFILE.get(),
+                        com.draxer.dexrider.item.SuitProfile.DEFAULT.withLook("upgrade", up));
+                float yaw = i % 2 == 0 ? 180F : 0F;
+                a.setYRot(yaw); a.yBodyRot = yaw; a.yHeadRot = yaw;
+            }
+        }, 0, 1.4, 0.2, 0);
+        // 5i: lineas del visor de cerca (clasico, horizontal gruesas, vertical, diagonal separadas) con su color
+        t = scene(s, t + 2, "e3_visor", lvl -> {
+            String[][] cfg = {{"classic", "thin", "tight"}, {"horizontal", "thick", "tight"}, {"vertical", "thin", "wide"}, {"diagonal", "thin", "tight"}};
+            for (int i = 0; i < 4; i++) {
+                ArmorStand a = (ArmorStand) spawnStill(lvl, net.minecraft.world.entity.EntityTypes.ARMOR_STAND, -1.5 + i * 1.0, 2.0);
+                if (a == null) continue;
+                ItemStack chest = new ItemStack(DexItems.DEX_CHESTPLATE.get());
+                com.draxer.dexrider.item.SuitLook base = com.draxer.dexrider.item.SuitLook.EMPTY.withPart("visor_lines", cfg[i][0])
+                        .withPart("visor_thick", cfg[i][1]).withPart("visor_gap", cfg[i][2]).withColor("visor_lines", i == 0 ? 0x1C1C24 : 0xE8B630);
+                chest.set(DexComponents.SUIT_PROFILE.get(), com.draxer.dexrider.item.SuitProfile.DEFAULT.withLook("base", base));
+                a.setItemSlot(EquipmentSlot.HEAD, new ItemStack(DexItems.DEX_HELMET.get()));
+                a.setItemSlot(EquipmentSlot.CHEST, chest);
+            }
+        }, 0, 0.1, 0.0, 0);
         // Complete Form normal y Nv.2 (de frente y de espaldas para ver la capa)
         t = scene(s, t + 2, "complete_nv2", lvl -> {
             stand(lvl, -1.2, null, "complete", false);

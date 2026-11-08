@@ -31,7 +31,7 @@ public final class SuitLooks {
             Map.entry(SuitLook.LEGS, 0xCD1C28), Map.entry(SuitLook.BOOTS, 0xCD1C28),
             Map.entry(SuitLook.ACCENT, 0xE8B630), Map.entry(SuitLook.EYES, 0x28D250),
             Map.entry(SuitLook.SILVER, 0xFFFFFF), Map.entry(SuitLook.INNER, 0x51545D), Map.entry(SuitLook.SCARF, 0xFFFFFF),
-            Map.entry(SuitLook.CRYSTAL, 0x28D250),
+            Map.entry(SuitLook.CRYSTAL, 0x28D250), Map.entry(SuitLook.VISOR, 0x1C1C24),
             Map.entry(SuitLook.HALF_RIGHT, FormRide.HALF.suitColor()), Map.entry(SuitLook.HALF_LEFT, FormRide.HALF_FIRE_COLOR));
     private static final Map<String, Integer> UPGRADE_COLORS = Map.of(
             SuitLook.SILVER, 0xF4F4FA, SuitLook.INNER, 0x504F5E);
@@ -78,6 +78,8 @@ public final class SuitLooks {
                 } else if (state.startsWith("form_")) {
                     FormRide f = FormRide.byId(state.substring(5));
                     if (f != null && f != FormRide.HALF) for (String z : MAIN_ZONES) colors.put(z, f.suitColor());
+                    // la pieza propia de la forma viene puesta (se puede quitar en el editor)
+                    if (f != null) SuitLook.PART_VALUES.keySet().forEach(k -> { if (f.id().equals(SuitLook.formOfPart(k)) && !"wings".equals(k)) parts.put(k, "on"); });
                 }
             }
         }
@@ -87,7 +89,13 @@ public final class SuitLooks {
             parts.putAll(own.parts());
             crystalSet |= own.colors().containsKey(SuitLook.CRYSTAL);
         }
-        if (!crystalSet) colors.put(SuitLook.CRYSTAL, colors.get(SuitLook.EYES));
+        if (!crystalSet) {
+            // Frost y Cinder: sus cristales y llamas tienen un tono propio si no elegiste color de cristal
+            int c = colors.get(SuitLook.EYES);
+            if (state != null && state.equals(SuitProfile.form(FormRide.FROST))) c = 0xA8E8FF;
+            if (state != null && state.equals(SuitProfile.form(FormRide.CINDER))) c = 0xFF7A1E;
+            colors.put(SuitLook.CRYSTAL, c);
+        }
         return new Resolved(Map.copyOf(colors), Map.copyOf(parts));
     }
 }

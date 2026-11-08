@@ -142,8 +142,8 @@ public class SuitScreen extends Screen {
         List<String> z = new ArrayList<>();
         if (st.equals(SuitProfile.form(FormRide.HALF))) z.addAll(List.of(SuitLook.HALF_RIGHT, SuitLook.HALF_LEFT));
         else z.addAll(SuitLooks.MAIN_ZONES);
-        z.addAll(List.of(SuitLook.ACCENT, SuitLook.EYES, SuitLook.SILVER, SuitLook.INNER));
-        if (!st.equals(SuitProfile.UPGRADE)) z.addAll(List.of(SuitLook.CRYSTAL, SuitLook.SCARF));
+        z.addAll(List.of(SuitLook.ACCENT, SuitLook.EYES, SuitLook.SILVER, SuitLook.INNER, SuitLook.CRYSTAL, SuitLook.SCARF));
+        if (!st.equals(SuitProfile.UPGRADE)) z.add(SuitLook.VISOR);
         return z;
     }
 
@@ -187,8 +187,14 @@ public class SuitScreen extends Screen {
         boolean upgrade = state.equals(SuitProfile.UPGRADE);
         List<String> keys = new ArrayList<>();
         for (String k : SuitLook.PART_VALUES.keySet()) {
-            if (upgrade && !(k.startsWith("glow_") && !k.equals("glow_crystal") || k.equals("finish"))) continue;
-            if (k.equals("wings") && !state.equals(SuitProfile.form(FormRide.SKY))) continue;
+            if (upgrade) {
+                if (!(k.startsWith("glow_") || k.equals("finish") || SuitLook.upgradePart(k))) continue;
+            } else {
+                if (SuitLook.upgradePart(k) || k.equals("stripes")) continue;      // las rayas ahora son "lineas del visor"
+                String f = SuitLook.formOfPart(k);
+                if (f != null && !state.equals("form_" + f)) continue;
+                if ((k.equals("visor_thick") || k.equals("visor_gap")) && !patterned()) continue;
+            }
             keys.add(k);
         }
         SuitLooks.Resolved r = resolved();
@@ -206,6 +212,12 @@ public class SuitScreen extends Screen {
             }).bounds(left + 104 + (i % 2) * 148, top + 58 + (i / 2) * 16, 144, 14).build());
         }
         if (upgrade) status = Component.translatable("screen.dexrider.suit.upgrade_note");
+    }
+
+    /** Grosor y separacion solo valen para los patrones nuevos del visor. */
+    private boolean patterned() {
+        String v = resolved().part("visor_lines");
+        return !v.equals("classic") && !v.equals("none");
     }
 
     private void initDesigns() {
