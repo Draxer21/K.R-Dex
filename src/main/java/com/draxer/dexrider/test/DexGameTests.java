@@ -1039,8 +1039,8 @@ public final class DexGameTests {
     static void allyFish(GameTestHelper h) {
         String t = "ally_fish";
         var lvl = h.getLevel();
-        h.setBlock(new BlockPos(12, -1, 8), net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
-        h.setBlock(new BlockPos(12, 0, 8), net.minecraft.world.level.block.Blocks.WATER.defaultBlockState());
+        h.setBlock(new BlockPos(10, -1, 8), net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+        h.setBlock(new BlockPos(10, 0, 8), net.minecraft.world.level.block.Blocks.WATER.defaultBlockState());
         BlockPos chestPos = new BlockPos(8, 1, 10);
         h.setBlock(chestPos, net.minecraft.world.level.block.Blocks.CHEST.defaultBlockState());
         if (!(lvl.getBlockEntity(h.absolutePos(chestPos)) instanceof net.minecraft.world.Container chest)) { fail(h, t, "no hay cofre"); return; }
