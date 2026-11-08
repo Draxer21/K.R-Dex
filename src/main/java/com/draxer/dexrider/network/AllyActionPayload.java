@@ -15,7 +15,8 @@ public record AllyActionPayload(int entityId, int action) implements CustomPacke
 
     public static final int CHAT = 0, TOGGLE = 1, LIVE_HERE = 2, JOB_MINE = 3, JOB_CHOP = 4, JOB_FARM = 5, JOB_CRAFT = 6,
             JOB_FLATTEN = 7, JOB_STOP = 8, ZONE_MARK = 9, ZONE_CLEAR = 10, FILTER_HAND = 11, FILTER_CLEAR = 12, TAKE_BAG = 13,
-            TOPIC_BASE = 15, GIFT = 20, BACK = 21;   // conversacion: TOPIC_BASE + tema (0-4)
+            TOPIC_BASE = 15, GIFT = 20, BACK = 21,   // conversacion: TOPIC_BASE + tema (0-4)
+            JOB_FISH = 22, JOB_BREED = 23, JOB_SMELT = 24, JOB_GUARD = 25;
 
     public static final CustomPacketPayload.Type<AllyActionPayload> TYPE = new CustomPacketPayload.Type<>(DexRider.id("ally_action"));
 

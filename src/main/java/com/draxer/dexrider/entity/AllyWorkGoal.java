@@ -34,6 +34,7 @@ public class AllyWorkGoal extends Goal {
     private int progress, needed, stuck, scanCooldown, craftCooldown, fullCooldown;
     private boolean placing;      // aplanar: el objetivo es un hueco que rellenar
     private final Set<Long> blacklist = new HashSet<>();
+    private final AllyChores.State chore = new AllyChores.State();
 
     public AllyWorkGoal(RiderAllyEntity ally) {
         this.ally = ally;
@@ -58,6 +59,7 @@ public class AllyWorkGoal extends Goal {
     @Override
     public void stop() {
         clearTarget();
+        chore.reset();
         ally.getNavigation().stop();
     }
 
@@ -86,6 +88,10 @@ public class AllyWorkGoal extends Goal {
 
         if (job == Job.CRAFT) {
             craft(level, center, xp);
+            return;
+        }
+        if (job.chore()) {
+            AllyChores.tick(ally, level, job, center, xp, chore);
             return;
         }
 
@@ -136,7 +142,7 @@ public class AllyWorkGoal extends Goal {
             case MINE -> ally.workZone() != null ? AllyWork.zoneMineable(level, p, s) : AllyWork.isNaturalMineable(s);
             case CHOP -> s.is(net.minecraft.tags.BlockTags.LOGS);
             case FARM -> AllyWork.isRipeCrop(s);
-            case CRAFT -> false;
+            case CRAFT, FISH, BREED, SMELT, GUARD -> false;
             case FLATTEN -> placing ? AllyWork.needsFill(level, p, s) : AllyWork.zoneMineable(level, p, s);
         };
     }

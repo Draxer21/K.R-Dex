@@ -2467,5 +2467,14 @@
   "moment.dexrider.garden.1": "Nagisa-san, ¿plantamos setas junto a tus flores, noko?",
   "moment.dexrider.garden.1.r": "Claro, Kinoko-chan. A ver cuáles crecen primero.",
   "moment.dexrider.garden.2": "Nagisa-san, regué tus flores. Y saludé a las setas, noko.",
-  "moment.dexrider.garden.2.r": "Qué bien, Kinoko-chan. Ven, te enseño a podarlas."
+  "moment.dexrider.garden.2.r": "Qué bien, Kinoko-chan. Ven, te enseño a podarlas.",
+  "job.dexrider.fish": "pescar",
+  "job.dexrider.breed": "criar",
+  "job.dexrider.smelt": "usar hornos",
+  "job.dexrider.guard": "vigilar",
+  "screen.dexrider.ally_menu.chore.fish": "Pesca en el agua más cercana a su casa y guarda lo que saca en el cofre. También: dale una caña de pescar.",
+  "screen.dexrider.ally_menu.chore.breed": "Junta parejas de animales con la comida que haya en el cofre (hasta 10 por especie). También: dale una rienda.",
+  "screen.dexrider.ally_menu.chore.smelt": "Usa los hornos, ahumadores y altos hornos a 6 bloques de su casa: mete lo del cofre, pone combustible y guarda lo que sale. También: dale un horno.",
+  "screen.dexrider.ally_menu.chore.guard": "De noche patrulla alrededor de su casa y ve a los monstruos desde más lejos (no duerme). También: dale una espada.",
+  "message.dexrider.ally_no_water": "%s no encuentra agua cerca de su casa para pescar."
 }

@@ -18,7 +18,7 @@ import net.neoforged.neoforge.client.network.ClientPacketDistributor;
  */
 public class AllyMenuScreen extends Screen {
 
-    private static final int W = 320, H = 214;
+    private static final int W = 320, H = 254;
     private static final String[] SKILLS = {"mine", "chop", "farm", "craft"};
     private AllyMenuPayload data;
     private int left, top;
@@ -74,30 +74,34 @@ public class AllyMenuScreen extends Screen {
 
         // trabajos
         y += 26;
-        String[] jobs = {"mine", "chop", "farm", "craft", "flatten"};
-        int[] acts = {AllyActionPayload.JOB_MINE, AllyActionPayload.JOB_CHOP, AllyActionPayload.JOB_FARM, AllyActionPayload.JOB_CRAFT, AllyActionPayload.JOB_FLATTEN};
+        String[] jobs = {"mine", "chop", "farm", "craft", "flatten", "fish", "breed", "smelt", "guard"};
+        int[] acts = {AllyActionPayload.JOB_MINE, AllyActionPayload.JOB_CHOP, AllyActionPayload.JOB_FARM, AllyActionPayload.JOB_CRAFT, AllyActionPayload.JOB_FLATTEN,
+                AllyActionPayload.JOB_FISH, AllyActionPayload.JOB_BREED, AllyActionPayload.JOB_SMELT, AllyActionPayload.JOB_GUARD};
         for (int i = 0; i < jobs.length; i++) {
             String skill = jobs[i].equals("flatten") ? "mine" : jobs[i];
             int x = bx + (i % 2) * (bw + gap), yy = y + (i / 2) * 20;
             final int act = acts[i];
             Button b = addRenderableWidget(Button.builder(cap(Component.translatable("job.dexrider." + jobs[i])), c -> send(act))
                     .bounds(x, yy, bw, 16).build());
-            boolean knows = xp(skill) >= AllySkills.LEARNED;
+            boolean chore = i >= 5;      // quehaceres: no se aprenden
+            boolean knows = chore || xp(skill) >= AllySkills.LEARNED;
             boolean current = jobs[i].equals(data.job());
             b.active = knows && !current;
             if (!knows) {
                 int pct = Math.min(99, xp(skill) * 100 / AllySkills.LEARNED);
                 b.setTooltip(Tooltip.create(Component.translatable("screen.dexrider.ally_menu.not_yet", pct)));
+            } else if (chore) {
+                b.setTooltip(Tooltip.create(Component.translatable("screen.dexrider.ally_menu.chore." + jobs[i])));
             } else if (jobs[i].equals("flatten") && data.zoneX() == 0) {
                 b.setTooltip(Tooltip.create(Component.translatable("screen.dexrider.ally_menu.needs_zone")));
             }
         }
         Button stop = addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.ally_menu.rest"), c -> send(AllyActionPayload.JOB_STOP))
-                .bounds(bx + bw + gap, y + 40, bw, 16).build());
+                .bounds(bx + bw + gap, y + 80, bw, 16).build());
         stop.active = !data.job().isEmpty();
 
         // zona y filtro
-        y += 66;
+        y += 106;
         addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.ally_menu.zone_mark"), c -> send(AllyActionPayload.ZONE_MARK))
                 .bounds(bx, y, bw, 16).build());
         Button zc = addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.ally_menu.zone_clear"), c -> send(AllyActionPayload.ZONE_CLEAR))
@@ -168,7 +172,7 @@ public class AllyMenuScreen extends Screen {
 
         // titulos de la columna de botones
         g.text(font, Component.translatable("screen.dexrider.ally_menu.work"), left + 168, top + 60, 0xFFF2C230, false);
-        g.text(font, Component.translatable("screen.dexrider.ally_menu.zone_filter"), left + 168, top + 126, 0xFFF2C230, false);
+        g.text(font, Component.translatable("screen.dexrider.ally_menu.zone_filter"), left + 168, top + 166, 0xFFF2C230, false);
         super.extractRenderState(g, mouseX, mouseY, partialTick);
     }
 
