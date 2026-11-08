@@ -344,7 +344,8 @@ public class RiderAllyEntity extends RiderMob {
                 getId(), rider.id(), mode == Mode.SUMMONED, home != null, skills.job(),
                 skills.xp("mine"), skills.xp("chop"), skills.xp("farm"), skills.xp("craft"), filterName,
                 z == null ? 0 : z[1].getX() - z[0].getX() + 1, z == null ? 0 : z[1].getY() - z[0].getY() + 1, z == null ? 0 : z[1].getZ() - z[0].getZ() + 1,
-                bagCount, skills.patterns().size(), skills.blocks().size(), skills.trust()));
+                bagCount, skills.patterns().size(), skills.blocks().size(), skills.trust(),
+                com.draxer.dexrider.rider.AllyBlueprint.blockCount(skills)));
     }
 
     /** Un boton del menu. Despues refresca el menu del jugador (salvo los que lo cierran). */
@@ -404,6 +405,24 @@ public class RiderAllyEntity extends RiderMob {
                 com.draxer.dexrider.rider.AllyWork.pickForZone(sp, rider);
                 sp.sendSystemMessage(Component.translatable("message.dexrider.ally_zone_select_menu", rider.displayName()), false);
                 return;     // el cliente cierra el menu para marcar
+            }
+            case com.draxer.dexrider.network.AllyActionPayload.PLAN_COPY -> {
+                com.draxer.dexrider.rider.AllyBlueprint.Capture c = com.draxer.dexrider.rider.AllyBlueprint.capture(level, skills);
+                if (c.entry() != null) {
+                    skills = c.entry();
+                    com.draxer.dexrider.rider.AllyWork.save(sp, rider, skills);
+                    com.draxer.dexrider.rider.RiderDialogue.force(level, this, rider, com.draxer.dexrider.rider.RiderDialogue.Line.LEARN);
+                }
+                sp.sendSystemMessage(Component.translatable(c.message(), rider.displayName(), c.count(),
+                        com.draxer.dexrider.rider.AllyBlueprint.MAX_SIDE, com.draxer.dexrider.rider.AllyBlueprint.MAX_BLOCKS), false);
+            }
+            case com.draxer.dexrider.network.AllyActionPayload.BUILD_PICK -> {
+                if (!skills.hasPlan()) sp.sendSystemMessage(Component.translatable("message.dexrider.ally_plan_none", rider.displayName()), false);
+                else {
+                    com.draxer.dexrider.rider.AllyBlueprint.pickBuildSpot(sp, rider);
+                    sp.sendSystemMessage(Component.translatable("message.dexrider.ally_build_pick", rider.displayName()), false);
+                }
+                return;     // el cliente cierra el menu para elegir el sitio
             }
             case com.draxer.dexrider.network.AllyActionPayload.ZONE_CLEAR -> {
                 skills = skills.withZone(java.util.List.of(), "");
@@ -538,6 +557,39 @@ public class RiderAllyEntity extends RiderMob {
                     ? "message.dexrider.ally_job_nochest" : "message.dexrider.ally_job", rider.displayName(), j.displayName()), true);
         }
         com.draxer.dexrider.rider.AllyWork.save(o, rider, skills);
+    }
+
+    public com.draxer.dexrider.item.AllySkills.Entry skillsEntry() { return skills; }
+
+    /** Termino (o ya no puede seguir) la copia: deja el encargo. */
+    public void finishBuild(ServerLevel level, boolean done) {
+        ServerPlayer o = ownerPlayer();
+        if (o == null) return;
+        refreshSkills(o);
+        skills = skills.withJob("").withBuild(java.util.List.of(), "");
+        job = null;
+        com.draxer.dexrider.rider.AllyWork.save(o, rider, skills);
+        if (done) {
+            FX.particle(level, net.minecraft.core.particles.ParticleTypes.HAPPY_VILLAGER, getEyePosition(), 10, 0.5, 0.0);
+            com.draxer.dexrider.rider.RiderDialogue.force(level, this, rider, com.draxer.dexrider.rider.RiderDialogue.Line.JOB_STOP);
+            o.sendSystemMessage(Component.translatable("message.dexrider.ally_build_done", rider.displayName()), false);
+        }
+    }
+
+    public boolean bagHas(net.minecraft.world.item.Item it) {
+        for (net.minecraft.world.item.ItemStack s : bag) if (s.is(it)) return true;
+        return false;
+    }
+
+    public boolean bagTake(net.minecraft.world.item.Item it) {
+        for (int i = 0; i < bag.size(); i++) {
+            net.minecraft.world.item.ItemStack s = bag.get(i);
+            if (!s.is(it)) continue;
+            s.shrink(1);
+            if (s.isEmpty()) bag.remove(i);
+            return true;
+        }
+        return false;
     }
 
     public boolean bagEmpty() { return bag.isEmpty(); }

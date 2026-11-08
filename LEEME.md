@@ -440,6 +440,15 @@ Además de lo que aprenden mirándote, se les pueden encargar cuatro quehaceres 
 
 Todo lo que consiguen va al cofre de su casa.
 
+### Construir copiando
+Enséñale a un amigo una construcción pequeña y levantará copias:
+1. Márcale una zona alrededor de la construcción (Shift + clic derecho con un pico en dos esquinas, o **Marcar zona** en el menú).
+2. En su menú, **Copiar plano**: memoriza lo que hay dentro (hasta 12×12×12 y 600 bloques; la zona se borra).
+3. **Construir** y luego Shift + clic derecho en un bloque: la copia empieza encima de él (esa es la esquina).
+4. Construye de abajo hacia arriba con los materiales del cofre de su casa; si le falta algo, te dice qué. No rompe lo que
+   ya haya en medio. Las puertas y camas gastan un solo objeto. En creativo no gasta nada. Con el pico en la mano ves el
+   recuadro de la copia.
+
 ### La vida en casa
 Cuando un amigo vive en su casa y no tiene trabajo, tiene su propio día:
 - **De noche duerme**: busca una cama libre a 8 bloques de su casa y se acuesta (si no hay, descansa junto a ella). Al
@@ -760,6 +769,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.47.0** — Construir copiando: el amigo memoriza lo que hay en su zona (**Copiar plano**) y levanta una copia donde le digas (**Construir** + Shift + clic derecho), con los materiales del cofre.
 - **0.46.0** — Quehaceres nuevos para los amigos (no hace falta enseñarlos): pescar, criar animales, usar los hornos y vigilar la casa de noche. Se encargan desde el menú o con caña, rienda, horno o espada.
 - **0.45.0** — La vida en casa: los amigos duermen de noche en una cama libre cerca de su casa y se levantan al amanecer, comen del cofre y tienen momentos entre ellos (10 parejas con dos escenas cada una). 80 frases nuevas.
 - **0.44.0** — Confianza con cada amigo (cuatro niveles; sube charlando, regalando, peleando juntos y trabajando; trabajan más rápido) y conversaciones con temas: cómo estás, de ti, un consejo, y con más confianza su historia y algo personal. Regalos con favoritos por personaje. 180 frases nuevas.

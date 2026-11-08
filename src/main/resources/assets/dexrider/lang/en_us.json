@@ -2476,5 +2476,21 @@
   "screen.dexrider.ally_menu.chore.breed": "Pairs up animals using the food in the chest (up to 10 per species). Also: hand them a lead.",
   "screen.dexrider.ally_menu.chore.smelt": "Runs the furnaces, smokers and blast furnaces within 6 blocks of their house: loads what's in the chest, adds fuel and stores the output. Also: hand them a furnace.",
   "screen.dexrider.ally_menu.chore.guard": "Patrols around their house at night and spots monsters from farther away (doesn't sleep). Also: hand them a sword.",
-  "message.dexrider.ally_no_water": "%s can't find any water near their house to fish in."
+  "message.dexrider.ally_no_water": "%s can't find any water near their house to fish in.",
+  "job.dexrider.build": "build",
+  "screen.dexrider.ally_menu.plan": "Blueprint:",
+  "screen.dexrider.ally_menu.plan_blocks": "%s blocks",
+  "screen.dexrider.ally_menu.plan_copy": "Copy blueprint",
+  "screen.dexrider.ally_menu.plan_copy.tip": "Memorizes what's inside the marked area (up to 12×12×12 and 600 blocks). The area is cleared afterwards.",
+  "screen.dexrider.ally_menu.build": "Build",
+  "screen.dexrider.ally_menu.build.tip": "Then Shift + right-click a block: the copy starts on top of it (that's the corner). Uses the materials in their house chest.",
+  "message.dexrider.ally_plan_nozone": "%s needs an area marked around what you want copied (Shift + right-click two corners with a pickaxe).",
+  "message.dexrider.ally_plan_big": "That's too big for %s: at most %3$s blocks per side and %4$s blocks in total.",
+  "message.dexrider.ally_plan_empty": "%s doesn't see anything to copy in that area.",
+  "message.dexrider.ally_plan_ok": "%s memorized the blueprint: %s blocks. Press Build to choose where to put the copy.",
+  "message.dexrider.ally_plan_none": "%s doesn't have a blueprint yet: mark an area and press Copy blueprint.",
+  "message.dexrider.ally_build_pick": "Shift + right-click a block: %s will build the copy on top of it (that's the corner).",
+  "message.dexrider.ally_build_start": "%s starts building the copy (%s blocks).",
+  "message.dexrider.ally_build_missing": "%s needs %s in their house chest to keep building.",
+  "message.dexrider.ally_build_done": "%s finished the copy."
 }

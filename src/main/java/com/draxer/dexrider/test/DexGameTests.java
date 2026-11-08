@@ -80,6 +80,7 @@ public final class DexGameTests {
         FUNCTIONS.register("ally_routine", () -> DexGameTests::allyRoutine);
         FUNCTIONS.register("ally_smelt", () -> DexGameTests::allySmelt);
         FUNCTIONS.register("ally_fish", () -> DexGameTests::allyFish);
+        FUNCTIONS.register("ally_build", () -> DexGameTests::allyBuild);
     }
 
     // ------------------------------------------------------------------ utilidades
@@ -1059,6 +1060,55 @@ public final class DexGameTests {
             } else if (lvl.getGameTime() - t0 > 560) {
                 done[0] = true;
                 String msg = "no pesco nada (esta en " + ally.blockPosition().toShortString() + ", trabajo " + ally.workJob() + ")";
+                ally.discard();
+                fail(h, t, msg);
+            }
+        });
+    }
+
+    /** Construir copiando: memoriza una "L" de tablones y la levanta en otro sitio con los tablones del cofre. */
+    static void allyBuild(GameTestHelper h) {
+        String t = "ally_build";
+        ServerPlayer p = player(h);
+        var lvl = h.getLevel();
+        var plank = net.minecraft.world.level.block.Blocks.OAK_PLANKS.defaultBlockState();
+        BlockPos a = h.absolutePos(new BlockPos(2, 1, 2)), b = h.absolutePos(new BlockPos(3, 2, 2));
+        lvl.setBlockAndUpdate(a, plank);
+        lvl.setBlockAndUpdate(a.east(), plank);
+        lvl.setBlockAndUpdate(a.above(), plank);
+        var e = com.draxer.dexrider.rider.AllyWork.entry(p, KamenRide.FORGE)
+                .withZone(java.util.List.of(a.asLong(), b.asLong()), lvl.dimension().identifier().toString());
+        var cap = com.draxer.dexrider.rider.AllyBlueprint.capture(lvl, e);
+        if (cap.entry() == null || cap.count() != 3) { fail(h, t, "copia mal: " + cap.message() + " " + cap.count()); return; }
+        BlockPos o = h.absolutePos(new BlockPos(11, 1, 11));
+        e = cap.entry().withBuild(java.util.List.of(o.asLong()), lvl.dimension().identifier().toString()).withJob("build");
+        com.draxer.dexrider.rider.AllyWork.save(p, KamenRide.FORGE, e);
+        h.setBlock(new BlockPos(6, 1, 8), net.minecraft.world.level.block.Blocks.CHEST.defaultBlockState());
+        if (lvl.getBlockEntity(h.absolutePos(new BlockPos(6, 1, 8))) instanceof net.minecraft.world.Container chest)
+            chest.setItem(0, new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 3));
+        var ally = com.draxer.dexrider.registry.DexEntities.ally(KamenRide.FORGE).get().create(lvl, net.minecraft.world.entity.EntitySpawnReason.MOB_SUMMONED);
+        if (ally == null) { fail(h, t, "no aparecio el amigo"); return; }
+        BlockPos at = h.absolutePos(new BlockPos(8, 1, 8));
+        ally.setPos(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
+        ally.setup(p.getUUID(), 0, com.draxer.dexrider.entity.RiderAllyEntity.Mode.WANDER, at);
+        lvl.addFreshEntity(ally);
+        final long t0 = lvl.getGameTime();
+        final boolean[] done = {false};
+        h.onEachTick(() -> {
+            if (done[0]) return;
+            boolean built = lvl.getBlockState(o).is(net.minecraft.world.level.block.Blocks.OAK_PLANKS)
+                    && lvl.getBlockState(o.east()).is(net.minecraft.world.level.block.Blocks.OAK_PLANKS)
+                    && lvl.getBlockState(o.above()).is(net.minecraft.world.level.block.Blocks.OAK_PLANKS)
+                    && lvl.getBlockState(o.above().east()).isAir();
+            boolean finished = com.draxer.dexrider.rider.AllyWork.entry(p, KamenRide.FORGE).job().isEmpty();
+            if (built && finished) {
+                done[0] = true;
+                log(t, "ok: copio la L y la construyo en " + (lvl.getGameTime() - t0) + " ticks");
+                ally.discard();
+                h.succeed();
+            } else if (lvl.getGameTime() - t0 > 460) {
+                done[0] = true;
+                String msg = "construida=" + built + " terminada=" + finished + " trabajo=" + ally.workJob();
                 ally.discard();
                 fail(h, t, msg);
             }

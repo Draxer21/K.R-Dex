@@ -142,7 +142,7 @@ public class AllyWorkGoal extends Goal {
             case MINE -> ally.workZone() != null ? AllyWork.zoneMineable(level, p, s) : AllyWork.isNaturalMineable(s);
             case CHOP -> s.is(net.minecraft.tags.BlockTags.LOGS);
             case FARM -> AllyWork.isRipeCrop(s);
-            case CRAFT, FISH, BREED, SMELT, GUARD -> false;
+            case CRAFT, FISH, BREED, SMELT, GUARD, BUILD -> false;
             case FLATTEN -> placing ? AllyWork.needsFill(level, p, s) : AllyWork.zoneMineable(level, p, s);
         };
     }

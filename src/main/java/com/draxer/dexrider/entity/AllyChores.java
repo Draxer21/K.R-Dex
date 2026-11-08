@@ -51,7 +51,10 @@ public final class AllyChores {
         @Nullable BlockPos water, stand;
         @Nullable Animal feedA, feedB;
         int progress, cooldown, stuck;
-        void reset() { water = null; stand = null; feedA = null; feedB = null; progress = 0; stuck = 0; }
+        @Nullable BlockPos buildPos;
+        @Nullable BlockState buildState;
+        long missingSaid;
+        void reset() { water = null; stand = null; feedA = null; feedB = null; buildPos = null; buildState = null; progress = 0; stuck = 0; }
     }
 
     public static void tick(RiderAllyEntity ally, ServerLevel level, Job job, BlockPos center, int xp, State st) {
@@ -61,6 +64,7 @@ public final class AllyChores {
             case BREED -> breed(ally, level, center, st);
             case SMELT -> smelt(ally, level, center, speed, st);
             case GUARD -> guard(ally, level, center, st);
+            case BUILD -> build(ally, level, speed, st);
             default -> {}
         }
     }
@@ -313,5 +317,100 @@ public final class AllyChores {
             st.cooldown = 200;
             if (ally.distanceToSqr(Vec3.atCenterOf(home)) > 9) ally.getNavigation().moveTo(home.getX() + 0.5, home.getY(), home.getZ() + 0.5, 0.8);
         }
+    }
+
+    // ------------------------------------------------------------------ construir copiando
+
+    private static boolean creative(RiderAllyEntity ally) {
+        var o = ally.ownerPlayer();
+        return o != null && o.isCreative();
+    }
+
+    private static boolean chestHas(@Nullable Container chest, net.minecraft.world.item.Item it) {
+        if (chest == null) return false;
+        for (int i = 0; i < chest.getContainerSize(); i++) if (chest.getItem(i).is(it)) return true;
+        return false;
+    }
+
+    private static boolean chestTake(@Nullable Container chest, net.minecraft.world.item.Item it) {
+        if (chest == null) return false;
+        for (int i = 0; i < chest.getContainerSize(); i++) {
+            ItemStack s = chest.getItem(i);
+            if (!s.is(it)) continue;
+            s.shrink(1);
+            if (s.isEmpty()) chest.setItem(i, ItemStack.EMPTY);
+            chest.setChanged();
+            return true;
+        }
+        return false;
+    }
+
+    private static boolean occupied(ServerLevel level, BlockPos p) {
+        return !level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class, new net.minecraft.world.phys.AABB(p)).isEmpty();
+    }
+
+    private static void build(RiderAllyEntity ally, ServerLevel level, float speed, State st) {
+        var e = ally.skillsEntry();
+        if (!e.hasPlan() || !e.hasBuild()) { ally.finishBuild(level, false); return; }
+        if (!level.dimension().identifier().toString().equals(e.buildDim())) return;
+        Container chest = AllyWork.chestNear(level, ally.home());
+        boolean free = creative(ally);
+        if (st.buildPos == null) {
+            if (st.cooldown-- > 0) return;
+            st.cooldown = 8;
+            int pending = 0;
+            ItemStack missing = ItemStack.EMPTY;
+            for (com.draxer.dexrider.rider.AllyBlueprint.Cell c : com.draxer.dexrider.rider.AllyBlueprint.cells(e)) {
+                BlockState now = level.getBlockState(c.pos());
+                if (now.equals(c.state())) continue;
+                if (!now.canBeReplaced()) continue;          // algo tuyo en medio: no lo rompe
+                pending++;
+                if (!c.state().canSurvive(level, c.pos()) || occupied(level, c.pos())) continue;
+                ItemStack cost = com.draxer.dexrider.rider.AllyBlueprint.cost(c.state());
+                if (!cost.isEmpty() && !free && !ally.bagHas(cost.getItem()) && !chestHas(chest, cost.getItem())) {
+                    if (missing.isEmpty()) missing = cost;
+                    continue;
+                }
+                st.buildPos = c.pos();
+                st.buildState = c.state();
+                st.progress = 0;
+                st.stuck = 0;
+                return;
+            }
+            if (pending == 0) { ally.finishBuild(level, true); return; }
+            st.cooldown = 100;
+            var o = ally.ownerPlayer();
+            if (!missing.isEmpty() && o != null && level.getGameTime() - st.missingSaid > 1200) {
+                st.missingSaid = level.getGameTime();
+                o.sendSystemMessage(net.minecraft.network.chat.Component.translatable("message.dexrider.ally_build_missing",
+                        ally.rider().displayName(), missing.getHoverName()), true);
+                AllyWork.react(level, ally, RiderDialogue.Line.FULL, 3000, 0.5F);
+            }
+            return;
+        }
+        BlockPos p = st.buildPos;
+        Vec3 c = Vec3.atCenterOf(p);
+        ally.getLookControl().setLookAt(c.x, c.y, c.z);
+        double hx = c.x - ally.getX(), hz = c.z - ally.getZ(), dy = p.getY() - ally.getY();
+        boolean reach = hx * hx + hz * hz <= 16 && dy >= -4 && dy <= 6;
+        if (!reach && ++st.stuck < 200) {
+            if (ally.tickCount % 10 == 0) ally.getNavigation().moveTo(c.x, p.getY(), c.z, 1.0);
+            return;
+        }
+        ally.getNavigation().stop();
+        if (++st.progress < Math.max(3, Math.round(10 / speed))) {
+            if (st.progress % 4 == 0) ally.swing(InteractionHand.MAIN_HAND);
+            return;
+        }
+        BlockState want = st.buildState;
+        st.buildPos = null;
+        st.buildState = null;
+        if (want == null || !level.getBlockState(p).canBeReplaced() || occupied(level, p)) return;
+        ItemStack cost = com.draxer.dexrider.rider.AllyBlueprint.cost(want);
+        if (!cost.isEmpty() && !free && !ally.bagTake(cost.getItem()) && !chestTake(chest, cost.getItem())) return;
+        level.setBlock(p, want, 3);
+        level.playSound(null, p, want.getSoundType().getPlaceSound(), SoundSource.BLOCKS, 0.8F, 1.0F);
+        ally.swing(InteractionHand.MAIN_HAND);
+        ally.gainWorkXp(Job.BUILD, 1);
     }
 }
