@@ -374,7 +374,12 @@ public final class ShotDirector {
         s.add(new Step(t + 182, () -> shoot("booker_espada_1p")));
         s.add(new Step(t + 184, () -> server(srv -> srv.getPlayerList().getPlayers().get(0)
                 .setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, ItemStack.EMPTY))));
-        t += 76;
+        // menu de un amigo Rider (datos de ejemplo)
+        s.add(new Step(t + 186, () -> Minecraft.getInstance().gui.setScreen(new AllyMenuScreen(new com.draxer.dexrider.network.AllyMenuPayload(
+                -1, "spore", false, true, "farm", 40, 130, 260, 0, "Piedra", 7, 4, 7, 12, 2, 4)))));
+        s.add(new Step(t + 192, () -> shoot("ally_menu")));
+        s.add(new Step(t + 194, () -> Minecraft.getInstance().gui.setScreen(null)));
+        t += 86;
         // 8: la Lectura del Driver (primera persona, frente a un golem que ya intercambio golpes contigo)
         s.add(new Step(t + 112, () -> {
             Minecraft.getInstance().options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON);

@@ -81,6 +81,14 @@ public class DexRider {
                 com.draxer.dexrider.network.OpenBookerPayload.TYPE,
                 com.draxer.dexrider.network.OpenBookerPayload.STREAM_CODEC,
                 com.draxer.dexrider.network.OpenBookerPayload::handleOnServer);
+        event.registrar("1").playToServer(
+                com.draxer.dexrider.network.AllyActionPayload.TYPE,
+                com.draxer.dexrider.network.AllyActionPayload.STREAM_CODEC,
+                com.draxer.dexrider.network.AllyActionPayload::handleOnServer);
+        event.registrar("1").playToClient(
+                com.draxer.dexrider.network.AllyMenuPayload.TYPE,
+                com.draxer.dexrider.network.AllyMenuPayload.STREAM_CODEC,
+                com.draxer.dexrider.network.AllyMenuPayload::handleOnClient);
         event.registrar("1").playToClient(
                 com.draxer.dexrider.network.PosePayload.TYPE,
                 com.draxer.dexrider.network.PosePayload.STREAM_CODEC,

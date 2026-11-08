@@ -289,6 +289,7 @@ public class RiderAllyEntity extends RiderMob {
             return super.mobInteract(player, hand);
         }
         net.minecraft.world.item.ItemStack held = sp.getItemInHand(hand);
+        if (held.getItem() instanceof com.draxer.dexrider.item.DexDriverItem) return super.mobInteract(player, hand);
         com.draxer.dexrider.rider.AllyWork.Job tool = com.draxer.dexrider.rider.AllyWork.Job.forTool(held);
         if (tool == com.draxer.dexrider.rider.AllyWork.Job.MINE && sp.isShiftKeyDown() && level() instanceof ServerLevel) {
             // Shift + pico: borrar zona y filtro y marcar una zona nueva
@@ -316,9 +317,77 @@ public class RiderAllyEntity extends RiderMob {
         if (sp.isShiftKeyDown()) {
             AllyManager.setHome(sp, this, blockPosition());
         } else {
-            AllyManager.toggle(sp, rider);
+            openMenu(sp);
         }
         return InteractionResult.SUCCESS;
+    }
+
+    // ================================================================== menu (clic derecho con la mano vacia)
+
+    public void openMenu(ServerPlayer sp) {
+        refreshSkills(sp);
+        BlockPos[] z = skills.hasZone() ? new BlockPos[]{com.draxer.dexrider.rider.AllyWork.zoneMin(skills), com.draxer.dexrider.rider.AllyWork.zoneMax(skills)} : null;
+        int bagCount = 0;
+        for (net.minecraft.world.item.ItemStack s : bag) bagCount += s.getCount();
+        String filterName = skills.filter().isEmpty() ? "" : com.draxer.dexrider.rider.AllyWork.filterName(skills.filter()).getString();
+        com.draxer.dexrider.network.AllyMenuPayload.send(sp, new com.draxer.dexrider.network.AllyMenuPayload(
+                getId(), rider.id(), mode == Mode.SUMMONED, home != null, skills.job(),
+                skills.xp("mine"), skills.xp("chop"), skills.xp("farm"), skills.xp("craft"), filterName,
+                z == null ? 0 : z[1].getX() - z[0].getX() + 1, z == null ? 0 : z[1].getY() - z[0].getY() + 1, z == null ? 0 : z[1].getZ() - z[0].getZ() + 1,
+                bagCount, skills.patterns().size(), skills.blocks().size()));
+    }
+
+    /** Un boton del menu. Despues refresca el menu del jugador (salvo los que lo cierran). */
+    public void menuAction(ServerPlayer sp, int action) {
+        if (owner == null || !owner.equals(sp.getUUID()) || !(level() instanceof ServerLevel level)) return;
+        refreshSkills(sp);
+        com.draxer.dexrider.rider.AllyWork.Job J = null;
+        switch (action) {
+            case com.draxer.dexrider.network.AllyActionPayload.CHAT -> {
+                com.draxer.dexrider.rider.RiderDialogue.forget(this);
+                com.draxer.dexrider.rider.RiderDialogue.force(level, this, rider, com.draxer.dexrider.rider.RiderDialogue.Line.TALK);
+                getLookControl().setLookAt(sp);
+            }
+            case com.draxer.dexrider.network.AllyActionPayload.TOGGLE -> AllyManager.toggle(sp, rider);
+            case com.draxer.dexrider.network.AllyActionPayload.LIVE_HERE -> AllyManager.setHome(sp, this, blockPosition());
+            case com.draxer.dexrider.network.AllyActionPayload.JOB_MINE -> J = com.draxer.dexrider.rider.AllyWork.Job.MINE;
+            case com.draxer.dexrider.network.AllyActionPayload.JOB_CHOP -> J = com.draxer.dexrider.rider.AllyWork.Job.CHOP;
+            case com.draxer.dexrider.network.AllyActionPayload.JOB_FARM -> J = com.draxer.dexrider.rider.AllyWork.Job.FARM;
+            case com.draxer.dexrider.network.AllyActionPayload.JOB_CRAFT -> J = com.draxer.dexrider.rider.AllyWork.Job.CRAFT;
+            case com.draxer.dexrider.network.AllyActionPayload.JOB_FLATTEN -> J = com.draxer.dexrider.rider.AllyWork.Job.FLATTEN;
+            case com.draxer.dexrider.network.AllyActionPayload.JOB_STOP -> {
+                if (job != null) assignJob(level, sp, job);     // mismo trabajo = parar
+            }
+            case com.draxer.dexrider.network.AllyActionPayload.ZONE_MARK -> {
+                skills = skills.withZone(java.util.List.of(), "");
+                com.draxer.dexrider.rider.AllyWork.save(sp, rider, skills);
+                com.draxer.dexrider.rider.AllyWork.pickForZone(sp, rider);
+                sp.sendSystemMessage(Component.translatable("message.dexrider.ally_zone_select_menu", rider.displayName()), false);
+                return;     // el cliente cierra el menu para marcar
+            }
+            case com.draxer.dexrider.network.AllyActionPayload.ZONE_CLEAR -> {
+                skills = skills.withZone(java.util.List.of(), "");
+                com.draxer.dexrider.rider.AllyWork.save(sp, rider, skills);
+            }
+            case com.draxer.dexrider.network.AllyActionPayload.FILTER_HAND -> {
+                java.util.List<String> f = com.draxer.dexrider.rider.AllyWork.filterFor(sp.getMainHandItem());
+                if (f.isEmpty()) sp.sendSystemMessage(Component.translatable("message.dexrider.ally_filter_none"), true);
+                else {
+                    skills = skills.withFilter(f);
+                    com.draxer.dexrider.rider.AllyWork.save(sp, rider, skills);
+                }
+            }
+            case com.draxer.dexrider.network.AllyActionPayload.FILTER_CLEAR -> {
+                skills = skills.withFilter(java.util.List.of());
+                com.draxer.dexrider.rider.AllyWork.save(sp, rider, skills);
+            }
+            case com.draxer.dexrider.network.AllyActionPayload.TAKE_BAG -> {
+                for (net.minecraft.world.item.ItemStack s : bagTakeAll()) com.draxer.dexrider.rider.AllyWork.give(sp, s);
+            }
+            default -> { }
+        }
+        if (J != null && J != job) assignJob(level, sp, J);
+        if (isAlive()) openMenu(sp);
     }
 
     // ================================================================== trabajo (AllyWork)
