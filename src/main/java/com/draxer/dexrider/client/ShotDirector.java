@@ -489,6 +489,32 @@ public final class ShotDirector {
         })));
         s.add(new Step(t + 132, () -> shoot("hud_lectura")));
         t += 140;
+        // 9: movesets (tercera persona de frente con la espada) y el HUD del aguante y la cadena
+        s.add(new Step(t, () -> {
+            Minecraft.getInstance().options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_FRONT);
+            hudHidden(true);
+            server(srv -> {
+                cmd(srv, "kill @e[type=!minecraft:player]");
+                cmd(srv, String.format(java.util.Locale.ROOT, "tp @a %.2f %.2f %.2f 180 0", bx, by, bz + 3));
+                srv.getPlayerList().getPlayers().get(0).setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(DexItems.DEX_SWORD.get()));
+            });
+        }));
+        String[][] moves = {{"m_slash_r", "4", "move_corte"}, {"m_heavy", "8", "move_pesado"}, {"m_spin", "6", "move_giro"}, {"m_thrust", "4", "move_estocada"}, {"dodge_l", "4", "move_esquiva"}};
+        int mt = t + 20;
+        for (String[] mv : moves) {
+            final String anim = mv[0];
+            s.add(new Step(mt, () -> server(srv -> com.draxer.dexrider.network.PosePayload.send(srv.getPlayerList().getPlayers().get(0), anim))));
+            s.add(new Step(mt + Integer.parseInt(mv[1]), () -> shoot(mv[2])));
+            mt += 20;
+        }
+        s.add(new Step(mt, () -> {
+            Minecraft.getInstance().options.setCameraType(net.minecraft.client.CameraType.FIRST_PERSON);
+            hudHidden(false);
+            com.draxer.dexrider.network.CombatSyncPayload.last = new com.draxer.dexrider.network.CombatSyncPayload(55, 100, "move.dexrider.sword.cross_slash", 4, 4);
+            com.draxer.dexrider.network.CombatSyncPayload.receivedAt = System.currentTimeMillis();
+        }));
+        s.add(new Step(mt + 6, () -> shoot("hud_moveset")));
+        t = mt + 12;
         s.add(new Step(t + 10, () -> {
             DexRider.LOGGER.info("SHOTS: terminado");
             Minecraft.getInstance().stop();

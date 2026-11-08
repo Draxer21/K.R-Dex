@@ -170,6 +170,30 @@ Transformado, cuando intercambias golpes con algo, el Driver lo lee y aparece un
 El daño se mide de verdad, con armaduras, encantamientos, Form Ride, Emotion y la adaptación del Arquitecto incluidas.
 Se apaga tras 10 s sin golpes, o si el objetivo cae o se aleja. Se puede desactivar en la configuración (`dex.targetRead`).
 
+### Movesets: cada arma pelea distinto
+Transformado, cada arma (y Dex sin arma) tiene un juego entero de golpes. Lo que hagas decide qué golpe sale:
+- **Cadena ligera**: clic izquierdo con el golpe cargado. Son 3 a 5 golpes distintos según el arma (cortes en arco,
+  estocadas, ganchos, latigazos); el último es el remate de la cadena. Si tardas o atacas sin cargar, vuelve a empezar.
+- **Golpe pesado**: atacar con **Shift** pulsado (25 de aguante).
+- **En carrera**: atacar corriendo, con avance (15).
+- **Aéreo**: atacar mientras caes; picas contra el suelo y golpeas alrededor (15).
+- **Tras esquiva**: el primer golpe después de esquivar.
+- **Contraataque**: el golpe después de una parada perfecta.
+
+Cada movimiento tiene su forma (un objetivo, arco, estocada en línea, anillo a tu alrededor o golpe contra el suelo) y
+sus efectos (descarga, aturdir, lanzar al aire, atraer, cegar, esporas, segundo golpe, disparo a quemarropa...). Los
+golpes de área solo alcanzan a enemigos: nunca a jugadores, amigos ni aldeanos. Bajo la mira se ve el nombre del
+movimiento y los pasos de la cadena. El Ride Booker en pistola, el Blast Shot y el Kaixa Gunblade mezclan golpes y
+disparos (kata de pistola).
+
+**Esquiva** (botón lateral del ratón; se cambia en Controles): salto corto hacia donde te mueves (hacia atrás si estás
+quieto), con un instante de invulnerabilidad. Gasta 30 de aguante. Si un golpe te llega justo en ese instante es una
+**esquiva perfecta**: recuperas parte del aguante y tienes más tiempo para el golpe tras esquiva.
+
+**Aguante**: barra bajo la mira (solo aparece si no está llena). Se recupera solo, más rápido quieto; en la Upgrade Form
+el máximo sube a 130. Las animaciones (Player Animation Library, opcional) son propias: sin ella, todo funciona igual.
+Herramienta: `tools/moveset_anims.py` genera las 21 animaciones.
+
 ### Parada y contraataque
 - **Parada**: pulsa **Shift** justo antes de que te llegue un golpe de frente (en la Upgrade Form tienes un poco más de margen).
   El golpe se anula, el atacante queda aturdido y tu siguiente golpe en 2 s es un **contraataque** (+60 %).
@@ -847,6 +871,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.56.0** — Movesets por arma: cada arma y Dex sin arma tienen cadena ligera con remate, golpe pesado (Shift), en carrera, aéreo, tras esquiva y contraataque, con formas de golpe (arco, estocada, anillo, picada) y efectos propios. Esquiva con invulnerabilidad y esquiva perfecta, barra de aguante bajo la mira, 21 animaciones nuevas y 2 logros.
 - **0.55.0** — Diario de Yusuke: un cuaderno que cuenta con su voz lo que vas haciendo (logros, Kamen Ride, cartas escaneadas, amigos, confianza, kaijin, jefes y caídas), con 80 entradas escritas y un aviso que se puede apagar.
 - **0.54.0** — La casa de la montaña crece: tres plantas (porche, sala con chimenea, cocina, garaje de Tetsuya, cuartos de Nagisa, Genzo y Tetsuya, estudio) y un sótano con el taller de Takumi, el equipo Blaster y una zona de entrenamiento. Nuevo: el Cuaderno de Takumi en el cofre del taller.
 - **0.53.0** — Encargos de los amigos de U.A.: Izuku, Momo, Kinoko, Toru y Mei tienen tres encargos cada uno (botón *Encargo* en su menú), con diálogos propios, recompensas, confianza y un logro por amigo.

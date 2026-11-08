@@ -33,6 +33,7 @@ public final class RiderHud {
     static void register(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.HOTBAR, DexRider.id("rider_hud"), RiderHud::draw);
         event.registerAbove(VanillaGuiLayers.HOTBAR, DexRider.id("target_read"), RiderHud::drawTarget);
+        event.registerAbove(VanillaGuiLayers.CROSSHAIR, DexRider.id("combat"), RiderHud::drawCombat);
     }
 
     private static void draw(GuiGraphicsExtractor g, DeltaTracker delta) {
@@ -165,6 +166,41 @@ public final class RiderHud {
                     ? Component.translatable("hud.dexrider.it_hits_survive", hearts(s.taken()), s.survive())
                     : Component.translatable("hud.dexrider.it_hits", hearts(s.taken()));
             g.text(font, Component.literal(clip(font, line.getString(), w - 8)), x + 4, ty, s.survive() > 0 && s.survive() <= 2 ? 0xFFFF6A6A : 0xFFFFC8A0, true);
+        }
+    }
+
+    /**
+     * Aguante y moveset, bajo la mira: la barra solo aparece si no esta llena; debajo, el ultimo movimiento y los
+     * pasos de la cadena ligera.
+     */
+    private static void drawCombat(GuiGraphicsExtractor g, DeltaTracker delta) {
+        Minecraft mc = Minecraft.getInstance();
+        var s = com.draxer.dexrider.network.CombatSyncPayload.last;
+        if (mc.player == null || s.stamina() < 0 || !DexConfig.hud()) return;
+        if (System.currentTimeMillis() - com.draxer.dexrider.network.CombatSyncPayload.receivedAt > 4000) return;
+        Font font = mc.font;
+        int cx = mc.getWindow().getGuiScaledWidth() / 2, cy = mc.getWindow().getGuiScaledHeight() / 2;
+        int y = cy + 12;
+        if (s.stamina() < s.max()) {
+            float t = s.stamina() / (float) s.max();
+            int col = t > 0.5F ? 0xFF7FE8FF : t >= 0.3F ? 0xFFF2C230 : 0xFFE8343C;
+            g.fill(cx - 31, y - 1, cx + 31, y + 4, 0x90101018);
+            bar(g, cx - 30, y, 60, t, col);
+            g.fill(cx - 30 + 18, y, cx - 30 + 19, y + 4, 0x80FFFFFF);   // marca de una esquiva (30)
+            y += 7;
+        }
+        if (!s.move().isEmpty()) {
+            Component name = Component.translatable(s.move());
+            int w = font.width(name);
+            g.text(font, name, cx - w / 2, y, 0xFFFFE9A8, true);
+            y += 10;
+            if (s.step() > 0 && s.chain() > 0) {
+                int dots = s.chain(), dw = dots * 6 - 2;
+                for (int i = 0; i < dots; i++) {
+                    int dx = cx - dw / 2 + i * 6;
+                    g.fill(dx, y, dx + 4, y + 4, i < s.step() ? (i == dots - 1 ? 0xFFF2C230 : 0xFFFF2BD6) : 0x60FFFFFF);
+                }
+            }
         }
     }
 
