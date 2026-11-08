@@ -198,6 +198,12 @@ public final class Scanner {
         return to.dot(player.getLookAngle()) >= 0.3;
     }
 
+    /** Los ojos de Dex se ven escaneando (cambian de color) hasta ese tick; negativo = destello de escaneo completado. */
+    private static void scanEyes(ServerPlayer player, long until) {
+        ItemStack chest = player.getItemBySlot(net.minecraft.world.entity.EquipmentSlot.CHEST);
+        if (chest.getItem() instanceof com.draxer.dexrider.item.DexArmorItem) chest.set(com.draxer.dexrider.registry.DexComponents.SCAN_FX.get(), until);
+    }
+
     private static void sample(ServerLevel level, ServerPlayer player, DexCard card) {
         ItemStack driver = DexDriverItem.findDriver(player);
         if (driver.isEmpty() || LentDriver.isLent(driver)) return;   // el portador no escanea
@@ -218,12 +224,14 @@ public final class Scanner {
         int needed = deck.has(card) ? deck.samplesForNextLevel(card) : card.samplesToScan();
 
         if (samples < needed) {
+            scanEyes(player, now + 50);
             DexDriverItem.setDeck(driver, deck.withSamples(card, samples));
             DexSounds.play(level, player, DexSounds.SCAN_SAMPLE, 0.8F, 1.0F);
             player.sendSystemMessage(Component.translatable("message.dexrider.scan_vibrate", samples, needed), true);
             return;
         }
 
+        scanEyes(player, -(now + 30));
         Vec3 front = player.getEyePosition().add(player.getLookAngle().scale(1.2));
         FX.card(level, front, player.getLookAngle(), FX.MAGENTA);
         DexSounds.play(level, player, DexSounds.SCAN_COMPLETE, 1.2F, 1.0F);

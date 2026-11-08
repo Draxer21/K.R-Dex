@@ -112,6 +112,29 @@ public final class ShotDirector {
                 }
             }, 0, 1.6, 0.4, 0);
         }
+        // 2a: relieve de los trajes (0.49): de cerca en soportes, de frente y de espaldas, y de noche (brillos)
+        String[][] relief = {{"nine", "forge", "cipher", "warden"}, {"spore", "mirage", "proto"}};
+        for (int part = 0; part < 2; part++) {
+            final String[] ids = relief[part];
+            for (int back = 0; back < 2; back++) {
+                final float yaw = back == 0 ? 180F : 0F;
+                t = scene(s, t + 2, "relieve_" + (part + 1) + (back == 0 ? "" : "_espalda"), lvl -> {
+                    for (int i = 0; i < ids.length; i++) {
+                        ArmorStand a = stand(lvl, (i - (ids.length - 1) / 2.0) * 1.5, null, ids[i], false);
+                        if (a == null) continue;
+                        a.setPos(a.getX(), a.getY(), bz + 3.0);
+                        a.setYRot(yaw); a.yBodyRot = yaw; a.yHeadRot = yaw;
+                    }
+                }, 0, 0.0, 0.3, 0);
+            }
+        }
+        s.add(new Step(t, () -> server(srv -> cmd(srv, "time set midnight"))));
+        t = scene(s, t + 2, "relieve_noche", lvl -> {
+            String[] ids = {"nine", "forge", "cipher", "warden", "spore", "mirage", "proto"};
+            for (int i = 0; i < ids.length; i++) stand(lvl, (i - 3) * 1.3, null, ids[i], false);
+        }, 0, 0.6, 0.3, 0);
+        s.add(new Step(t, () -> server(srv -> cmd(srv, "time set noon"))));
+        t += 2;
         // 2b: Nagisa de perfil (civil a la izquierda, Psyga a la derecha): para revisar el busto
         s.add(new Step(t, () -> server(srv -> {
             for (Entity e : SCENE) e.discard();

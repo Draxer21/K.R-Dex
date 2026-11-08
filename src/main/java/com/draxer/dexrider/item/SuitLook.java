@@ -45,7 +45,7 @@ public record SuitLook(Map<String, Integer> colors, Map<String, String> parts) {
         PART_VALUES.put("glow_main", List.of("off", "on"));
         PART_VALUES.put("finish", List.of("normal", "matte", "metal"));
         // etapa 3: lineas del visor (Dex)
-        PART_VALUES.put("visor_lines", List.of("classic", "horizontal", "vertical", "diagonal", "none"));
+        PART_VALUES.put("visor_lines", List.of("classic", "horizontal", "vertical", "diagonal", "waves", "none"));
         PART_VALUES.put("visor_thick", List.of("thin", "thick"));
         PART_VALUES.put("visor_gap", List.of("tight", "wide"));
         // etapa 3: Upgrade Form

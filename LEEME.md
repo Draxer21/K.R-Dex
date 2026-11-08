@@ -585,7 +585,7 @@ Los trajes guardados antes de la 0.33 pasan solos a la primera ranura.
 
 
 **Etapa 3 del editor (0.48.0):**
-- **Líneas del visor**: clásico, horizontal, vertical o diagonal; finas o gruesas; juntas o separadas; y su propio
+- **Líneas del visor**: clásico, horizontal, vertical, diagonal u ondas; finas o gruesas; juntas o separadas; y su propio
   color (zona *Líneas visor*). "Ninguna" deja el lente liso.
 - **Upgrade Form**: cuernos (hoja o dobles), hombros (tapa o cuchillas), pecho (placa o núcleo de cristal que brilla) y
   espalda (capa o bufanda). Usan tus colores de acento, plata, cristal y bufanda.
@@ -750,6 +750,28 @@ Archivos (en `src/main/resources/assets/dexrider/`):
    `armorRightBoot`, `armorLeftBoot`).
 4. *File → Export → Export GeckoLib Model* encima del mismo archivo, y guarda la textura.
 
+### Relieve de los otros trajes (0.49.0)
+Nine, Forge, Cipher, Warden, Spore, Mirage y Proto ganaron piezas 3D nuevas, con diseño propio y guiadas por las
+descripciones del fanfic (Psyga, Kaixa y Orga quedan como estaban):
+- **Nine**: quijadas, pectorales, abdomen por placas, espina y omóplatos, hombreras con cresta, guardas en antebrazos,
+  muslos y espinillas.
+- **Forge**: cejas y quijadas, peto con marco y núcleo ámbar, núcleo en la espalda, y el brazo derecho con placas
+  desmontables (pasadores ámbar y asa).
+- **Cipher**: ceja sobre el visor, mejillas, módulo de radio, marco del peto con cartuchos, riel y celdas en la espalda,
+  anclajes en los hombros y porta-cartuchos en el muslo.
+- **Warden**: gorra con visera, cinta e insignia; placa y galón en relieve; charreteras con dos barras; cinturón de
+  servicio con bolsillos; porra en el muslo.
+- **Spore**: sombrero de seta con ala ancha, borde caído y laminillas por debajo; hombreras de cúpula; anillo del tallo;
+  setas de repisa en la espalda.
+- **Mirage**: puntas de cristal en casco, hombros y espalda; hojas en los antebrazos; prisma en el pecho (brilla).
+- **Proto**: aro en el visor, cúpula y diales en el casco; puertos en relieve en antebrazos, espinillas y pecho; mochila
+  con tubos de módulos.
+
+Las formas de Nine y de Forge y los modos de Cipher llevan las mismas piezas, con los colores de cada forma.
+
+Herramientas: `tools/rider_relief.py` genera las piezas y pinta su textura en los huecos libres de cada hoja (`--clean`
+las quita), y `tools/geo_preview.py <modelo>` dibuja un modelo con su textura desde varios ángulos sin esperar al CI.
+
 Las texturas de los ítems siguen en `textures/item/` (32×32). La textura plana antigua de
 armadura (`textures/entity/equipment/`) queda como respaldo.
 
@@ -779,6 +801,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.49.0** — Escanear se ve: mientras el Driver toma muestras, los ojos de Dex brillan y pasan por magenta, dorado, verde, rojo y azul; al completar, parpadean en blanco (lo ven todos). Visor nuevo: **ondas** (líneas onduladas paralelas, sin centro). Más relieve en los trajes de Nine, Forge, Cipher, Warden, Spore, Mirage y Proto: piezas 3D nuevas con diseño propio (sombrero de seta de Spore, cristales de Mirage, puertos y aro del visor de Proto, placas desmontables de Forge, gorra y placa de Warden, rieles y cartuchos de Cipher, espina y guardas de Nine). Herramientas `tools/rider_relief.py` y `tools/geo_preview.py`.
 - **0.48.0** — Editor del traje, etapa 3: líneas del visor (orientación, grosor, separación y color), piezas para la Upgrade Form (cuernos, hombros, pecho, capa o bufanda) y una pieza propia para cada Form Ride (alerón, tanques, placas, cristales, llamas, aletas).
 - **0.47.0** — Construir copiando: el amigo memoriza lo que hay en su zona (**Copiar plano**) y levanta una copia donde le digas (**Construir** + Shift + clic derecho), con los materiales del cofre.
 - **0.46.0** — Quehaceres nuevos para los amigos (no hace falta enseñarlos): pescar, criar animales, usar los hornos y vigilar la casa de noche. Se encargan desde el menú o con caña, rienda, horno o espada.

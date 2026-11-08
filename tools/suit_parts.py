@@ -17,6 +17,7 @@ Piezas extra del editor del traje (etapa 3) y lineas del visor.
 Todo es original (formas simples de bloques); no copia disenos de juguetes.
 """
 import json
+import math
 import os
 from PIL import Image
 
@@ -248,14 +249,15 @@ def visor():
 
     # clasico: las lineas son los huecos del visor original
     write('dex_armor_lines.png', [(x, y) for (x, y) in mask | center if not op(x, y)])
-    for o in 'hvd':
+    for o in 'hvdw':
         for t in (1, 2):
             for gap in (1, 3):
-                per = t + gap
+                per = t + gap + (1 if o == 'w' else 0)      # las ondas necesitan aire entre lineas
                 lens, lines = [], []
                 for (x, y) in mask:
                     dx = x if x < 16 else W - 1 - x            # simetrico
-                    k = {'h': y - y0, 'v': 15 - dx, 'd': (15 - dx) + (y - y0)}[o]
+                    k = {'h': y - y0, 'v': 15 - dx, 'd': (15 - dx) + (y - y0),
+                         'w': (y - y0) + int(round(1.0 * math.sin(2 * math.pi * dx / 8)))}[o]   # ondas paralelas, sin centro
                     (lines if k % per < t else lens).append((x, y))
                 lines += list(center)
                 write(f'dex_armor_eyes_{o}_{t}_{gap}.png', lens, eyes)
