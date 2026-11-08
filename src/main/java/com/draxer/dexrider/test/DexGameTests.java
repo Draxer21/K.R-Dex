@@ -77,6 +77,7 @@ public final class DexGameTests {
         FUNCTIONS.register("ally_zone", () -> DexGameTests::allyZone);
         FUNCTIONS.register("ally_flatten", () -> DexGameTests::allyFlatten);
         FUNCTIONS.register("ally_trust", () -> DexGameTests::allyTrust);
+        FUNCTIONS.register("ally_routine", () -> DexGameTests::allyRoutine);
     }
 
     // ------------------------------------------------------------------ utilidades
@@ -934,5 +935,47 @@ public final class DexGameTests {
         if ((low & 8) != 0 || (mid & 8) == 0 || (mid & 16) != 0 || (top & 16) == 0) { fail(h, t, "temas por nivel mal"); return; }
         log(t, "ok: charla diaria, regalo favorito y temas por confianza");
         h.succeed();
+    }
+
+    /** Rutina: de noche el amigo en casa busca la cama libre y duerme; de dia se levanta. Y los momentos existen. */
+    static void allyRoutine(GameTestHelper h) {
+        String t = "ally_routine";
+        ServerPlayer p = player(h);
+        var lvl = h.getLevel();
+        if (com.draxer.dexrider.entity.AllyRoutine.momentFor(KamenRide.ORGA, KamenRide.PSYGA) == null
+                || com.draxer.dexrider.entity.AllyRoutine.momentFor(KamenRide.ORGA, KamenRide.NINE) != null) { fail(h, t, "momentos mal"); return; }
+        var bed = net.minecraft.world.level.block.Blocks.RED_BED.defaultBlockState()
+                .setValue(net.minecraft.world.level.block.BedBlock.FACING, net.minecraft.core.Direction.NORTH);
+        h.setBlock(new BlockPos(4, 1, 8), bed.setValue(net.minecraft.world.level.block.BedBlock.PART, net.minecraft.world.level.block.state.properties.BedPart.FOOT));
+        h.setBlock(new BlockPos(4, 1, 7), bed.setValue(net.minecraft.world.level.block.BedBlock.PART, net.minecraft.world.level.block.state.properties.BedPart.HEAD));
+        var ally = com.draxer.dexrider.registry.DexEntities.ally(KamenRide.PSYGA).get().create(lvl, net.minecraft.world.entity.EntitySpawnReason.MOB_SUMMONED);
+        if (ally == null) { fail(h, t, "no aparecio el amigo"); return; }
+        BlockPos at = h.absolutePos(new BlockPos(8, 1, 8));
+        ally.setPos(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
+        ally.setup(p.getUUID(), 0, com.draxer.dexrider.entity.RiderAllyEntity.Mode.WANDER, at);
+        lvl.addFreshEntity(ally);
+        com.draxer.dexrider.entity.AllyRoutine.testNight = true;
+        final int[] phase = {0};
+        final long[] t0 = {lvl.getGameTime()};
+        h.onEachTick(() -> {
+            if (phase[0] == 0 && ally.isSleeping()) {
+                phase[0] = 1;
+                log(t, "duerme tras " + (lvl.getGameTime() - t0[0]) + " ticks");
+                com.draxer.dexrider.entity.AllyRoutine.testNight = false;
+            } else if (phase[0] == 1 && !ally.isSleeping()) {
+                phase[0] = 2;
+                com.draxer.dexrider.entity.AllyRoutine.testNight = null;
+                ally.discard();
+                log(t, "ok: de noche busca la cama y duerme, de dia se levanta");
+                h.succeed();
+            } else if (lvl.getGameTime() - t0[0] > 380 && phase[0] < 2) {
+                boolean slept = phase[0] == 1;
+                phase[0] = 3;
+                com.draxer.dexrider.entity.AllyRoutine.testNight = null;
+                String where = ally.blockPosition().toShortString();
+                ally.discard();
+                fail(h, t, !slept ? "no se acosto (esta en " + where + ")" : "no desperto");
+            }
+        });
     }
 }
