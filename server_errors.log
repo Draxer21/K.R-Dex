@@ -1,0 +1,9 @@
+63:[18:34:05] [main/INFO] [ne.ne.fm.lo.mo.lo.InDevFolderLocator/CORE]: Got mod coordinates dexrider%%/home/runner/work/K.R-Dex/K.R-Dex/build/classes/java/main:dexrider%%/home/runner/work/K.R-Dex/K.R-Dex/build/resources/main from env
+93:		Kamen Rider Dex 0.48.0+26.2 (dexrider)
+13145: - dexrider (composite(folder(/home/runner/work/K.R-Dex/K.R-Dex/build/classes/java/main), folder(/home/runner/work/K.R-Dex/K.R-Dex/build/resources/main)))
+22489:[18:34:14] [main/ERROR] [minecraft/Settings]: Failed to load properties from file: server.properties
+22490:java.nio.file.NoSuchFileException: server.properties
+22491:	at java.base/sun.nio.fs.UnixException.translateToIOException(UnixException.java:92) ~[?:?] {}
+22492:	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:106) ~[?:?] {}
+22493:	at java.base/sun.nio.fs.UnixException.rethrowAsIOException(UnixException.java:111) ~[?:?] {}
+22583:java.lang.IllegalStateException: Shutdown in progress
