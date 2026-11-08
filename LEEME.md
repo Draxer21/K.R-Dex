@@ -583,6 +583,16 @@ portapapeles como texto (`DEX1-…`) para pasárselo a otro jugador; **Pegar có
 Si cambias algo estando transformado, se ve al instante. El Driver (cinturón) no se tiñe: siempre conserva su diseño.
 Los trajes guardados antes de la 0.33 pasan solos a la primera ranura.
 
+
+**Etapa 3 del editor (0.48.0):**
+- **Líneas del visor**: clásico, horizontal, vertical o diagonal; finas o gruesas; juntas o separadas; y su propio
+  color (zona *Líneas visor*). "Ninguna" deja el lente liso.
+- **Upgrade Form**: cuernos (hoja o dobles), hombros (tapa o cuchillas), pecho (placa o núcleo de cristal que brilla) y
+  espalda (capa o bufanda). Usan tus colores de acento, plata, cristal y bufanda.
+- **Piezas de cada Form Ride** (vienen puestas en su forma; se pueden quitar): Speed con alerón, Gas con tanques, Terra
+  con placas en los brazos, Frost con cristales, Cinder con llamas (las dos brillan con el color del cristal) e Hydro
+  con aletas. Sky sigue con sus alas.
+- Herramienta: `tools/suit_parts.py` genera las piezas, las muestras de color y las variantes del visor.
 ### Cómo empezar en supervivencia
 La primera vez que entras a un mundo recibes **una carta de Genzo** (en el chat), la **Guía del Rider System** y la
 **Brújula de los Kagami**: clic derecho y la aguja apunta a la **casa de la montaña** más cercana (biomas de montaña)
@@ -769,6 +779,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.48.0** — Editor del traje, etapa 3: líneas del visor (orientación, grosor, separación y color), piezas para la Upgrade Form (cuernos, hombros, pecho, capa o bufanda) y una pieza propia para cada Form Ride (alerón, tanques, placas, cristales, llamas, aletas).
 - **0.47.0** — Construir copiando: el amigo memoriza lo que hay en su zona (**Copiar plano**) y levanta una copia donde le digas (**Construir** + Shift + clic derecho), con los materiales del cofre.
 - **0.46.0** — Quehaceres nuevos para los amigos (no hace falta enseñarlos): pescar, criar animales, usar los hornos y vigilar la casa de noche. Se encargan desde el menú o con caña, rienda, horno o espada.
 - **0.45.0** — La vida en casa: los amigos duermen de noche en una cama libre cerca de su casa y se levantan al amanecer, comen del cofre y tienen momentos entre ellos (10 parejas con dos escenas cada una). 80 frases nuevas.
