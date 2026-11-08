@@ -14,7 +14,9 @@ public final class Voices {
     private static final int AFTER_KAMEN_RIDE = 24;
 
     public static void say(ServerLevel level, ServerPlayer p, DeferredHolder<SoundEvent, SoundEvent> voice) {
-        DexSounds.play(level, p, voice, 1.0F, 1.0F);
+        float vol = com.draxer.dexrider.config.DexConfig.voiceVolume();
+        if (vol <= 0.0F) return;
+        DexSounds.play(level, p, voice, vol, 1.0F);
     }
 
     public static void sayLater(ServerPlayer p, int ticks, DeferredHolder<SoundEvent, SoundEvent> voice) {

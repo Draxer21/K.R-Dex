@@ -594,7 +594,7 @@ Si ya habías hecho algo de esto antes de la 0.36, se cumplen solas al entrar, u
 Transformado y con el Driver encima, el Driver registra lo que **ve en uso real** a 20 bloques o
 menos (con línea de visión y mirando hacia ahí). Lo que te hacen a ti no cuenta.
 
-**Archivo del Driver** (tecla **K**, o el botón *Archivo* del Ride Booker): todas las cartas del juego por familia,
+**Archivo del Driver** (tecla **H**, o el botón *Archivo* del Ride Booker): todas las cartas del juego por familia,
 como un álbum. Las que tienes se ven a color con su nivel (puntos dorados); las que no, en silueta, con las muestras
 que llevas y una **pista de dónde conseguirla**. Al sumar una muestra, generar una carta o subirla de nivel aparece
 un aviso arriba de la pantalla con la carta y su barra de muestras.
@@ -728,6 +728,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.43.1** — El Archivo del Driver pasa a la tecla **H** (la K chocaba con otros mods; si ya la tenías guardada, cámbiala en Controles). Botón **Configuración** en la lista de mods con todas las opciones, y opciones nuevas: volumen de las voces del Driver, cuánto hablan los Riders solos, si comentan lo que haces y ver las zonas con el pico. Guía con 3 páginas nuevas sobre los amigos (menú, aprender, zonas).
 - **0.43.0** — Menú del amigo Rider (clic derecho con la mano vacía): charlar, acompañarte o volver a casa, vivir aquí, encargar trabajos, zona y filtro y recoger lo que lleva; muestra lo que sabe. 80 frases nuevas para charlar.
 - **0.42.2** — Aplanar: márcale una zona y dale una pala; deja el suelo a la altura de la esquina más baja (quita lo que sobra y rellena hoyos con tierra o piedra).
 - **0.42.1** — Picar con exactitud: dale a tu amigo el bloque o mineral que quieres (solo picará eso) y márcale una zona con el pico (Shift + clic derecho en dos esquinas): excava dentro, de arriba hacia abajo.

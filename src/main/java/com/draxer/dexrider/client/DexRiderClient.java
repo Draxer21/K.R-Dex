@@ -33,6 +33,12 @@ public class DexRiderClient {
 
     public static final KeyMapping.Category CATEGORY = new KeyMapping.Category(DexRider.id("dexrider"));
 
+    /** Boton "Configuracion" en la lista de mods: la pantalla de opciones de NeoForge con el archivo de config. */
+    public DexRiderClient(net.neoforged.fml.ModContainer container) {
+        container.registerExtensionPoint(net.neoforged.neoforge.client.gui.IConfigScreenFactory.class,
+                net.neoforged.neoforge.client.gui.ConfigurationScreen::new);
+    }
+
     public static final Lazy<KeyMapping> TRANSFORM_KEY = Lazy.of(() -> new KeyMapping(
             "key.dexrider.transform",
             InputConstants.Type.KEYSYM,
@@ -67,7 +73,7 @@ public class DexRiderClient {
             "key.dexrider.card_wheel", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_C, CATEGORY));
     /** K: Archivo del Driver (todas las cartas, pistas y muestras). */
     public static final Lazy<KeyMapping> ARCHIVE_KEY = Lazy.of(() -> new KeyMapping(
-            "key.dexrider.archive", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_K, CATEGORY));
+            "key.dexrider.archive", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_H, CATEGORY));
     /** Rueda del raton mantenida: selector rapido de cartas favoritas. */
     public static final Lazy<KeyMapping> QUICK_SELECT_KEY = Lazy.of(() -> new KeyMapping(
             "key.dexrider.quick_select", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_MIDDLE, CATEGORY));
