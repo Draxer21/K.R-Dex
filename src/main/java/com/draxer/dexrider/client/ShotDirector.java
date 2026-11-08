@@ -372,7 +372,7 @@ public final class ShotDirector {
                 .setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, ItemStack.EMPTY))));
         // menu de un amigo Rider (datos de ejemplo)
         s.add(new Step(t + 186, () -> Minecraft.getInstance().setScreen(new AllyMenuScreen(new com.draxer.dexrider.network.AllyMenuPayload(
-                -1, "spore", false, true, "farm", 40, 130, 260, 0, "Piedra", 7, 4, 7, 12, 2, 4, 55)))));
+                -1, "spore", false, true, "farm", 40, 130, 260, 0, "Piedra", 7, 4, 7, 12, 2, 4, 55, 24)))));
         s.add(new Step(t + 195, () -> Minecraft.getInstance().setScreen(new AllyTalkScreen(new com.draxer.dexrider.network.AllyTalkPayload(
                 -1, "spore", 55, 0b01111, "dialog.dexrider.spore.topic_deep.1")))));
         s.add(new Step(t + 199, () -> shoot("ally_talk")));
