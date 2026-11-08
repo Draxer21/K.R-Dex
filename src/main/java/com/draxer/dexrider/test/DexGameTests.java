@@ -919,7 +919,10 @@ public final class DexGameTests {
         com.draxer.dexrider.rider.AllyTrust.onTalk(lvl, p, ally);
         com.draxer.dexrider.rider.AllyTrust.onTalk(lvl, p, ally);
         int afterTalk = com.draxer.dexrider.rider.AllyWork.entry(p, KamenRide.SPORE).trust();
+        // el Driver (donde se guarda la confianza) pasa al inventario para dejar la mano libre
+        ItemStack drv = com.draxer.dexrider.item.DexDriverItem.findDriver(p).copy();
         p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(net.minecraft.world.item.Items.BROWN_MUSHROOM, 3));
+        if (com.draxer.dexrider.item.DexDriverItem.findDriver(p).isEmpty()) p.getInventory().setItem(20, drv);
         String key = com.draxer.dexrider.rider.AllyTrust.onGift(lvl, p, ally);
         int afterGift = com.draxer.dexrider.rider.AllyWork.entry(p, KamenRide.SPORE).trust();
         boolean consumed = p.getMainHandItem().getCount() == 2 || p.isCreative();
