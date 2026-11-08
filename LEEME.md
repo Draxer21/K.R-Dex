@@ -696,6 +696,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.41.4** — Nagisa (civil y Psyga): busto con volumen al estilo MCA, inclinado hacia abajo desde el pecho en vez de una placa plana (`tools/bust.py`; solo personajes adultos).
 - **0.41.3** — Ride Booker: el libro en espada va a 45° (más cuadrado, 11×9), así la hoja y la empuñadura lo cruzan de esquina a esquina. `tools/ride_booker_model.py --tilt=22|35|45` genera las otras variantes.
 - **0.41.2** — Ride Booker: en espada el libro va inclinado y la hoja y la empuñadura lo cruzan en diagonal, de esquina a esquina (la guarda queda pareja).
 - **0.41.1** — Ride Booker con forma de libro de cartas: tapas con el emblema Dex, lomo rojo y cantos de páginas; en espada la hoja sale por una esquina, en pistola se despliega la empuñadura y la boca asoma por la esquina delantera.
