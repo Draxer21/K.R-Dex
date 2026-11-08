@@ -202,15 +202,31 @@ public class AllyWorkGoal extends Goal {
         }
         // rellenar: el hueco mas bajo que tenga algo solido debajo
         if (!hasFiller(level)) return null;
+        BlockPos occupied = null;
         for (BlockPos p : BlockPos.betweenClosed(new BlockPos(min.getX(), ground - AllyWork.FLATTEN_DOWN, min.getZ()), new BlockPos(max.getX(), ground, max.getZ()))) {
             if (blacklist.contains(p.asLong())) continue;
             BlockState s = level.getBlockState(p);
             if (!AllyWork.needsFill(level, p, s)) continue;
             BlockState below = level.getBlockState(p.below());
             if (AllyWork.needsFill(level, p.below(), below) && p.getY() > ground - AllyWork.FLATTEN_DOWN) continue;
-            if (!level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class, new net.minecraft.world.phys.AABB(p)).isEmpty()) continue;
+            if (!level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class, new net.minecraft.world.phys.AABB(p)).isEmpty()) {
+                if (ally.getBoundingBox().intersects(new net.minecraft.world.phys.AABB(p))) occupied = p.immutable();
+                continue;
+            }
             double score = p.getY() * 1000.0 + p.distToCenterSqr(ally.position());
             if (score < bestScore) { bestScore = score; best = p.immutable(); }
+        }
+        if (best == null && occupied != null) {
+            // esta parado justo en el hoyo: se sube al suelo de al lado para poder rellenarlo
+            for (BlockPos q : BlockPos.betweenClosed(new BlockPos(min.getX() - 1, ground + 1, min.getZ() - 1), new BlockPos(max.getX() + 1, ground + 1, max.getZ() + 1))) {
+                if (q.getX() == occupied.getX() && q.getZ() == occupied.getZ()) continue;
+                if (level.getBlockState(q).isAir() && level.getBlockState(q.above()).isAir()
+                        && !AllyWork.needsFill(level, q.below(), level.getBlockState(q.below()))) {
+                    ally.teleportTo(q.getX() + 0.5, q.getY(), q.getZ() + 0.5);
+                    break;
+                }
+            }
+            best = occupied;
         }
         placing = best != null;
         return best;
