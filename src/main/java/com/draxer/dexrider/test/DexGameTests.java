@@ -74,6 +74,7 @@ public final class DexGameTests {
         FUNCTIONS.register("booker_morph", () -> DexGameTests::bookerMorph);
         FUNCTIONS.register("ally_learning", () -> DexGameTests::allyLearning);
         FUNCTIONS.register("ally_mining", () -> DexGameTests::allyMining);
+        FUNCTIONS.register("ally_zone", () -> DexGameTests::allyZone);
     }
 
     // ------------------------------------------------------------------ utilidades
@@ -825,6 +826,43 @@ public final class DexGameTests {
             if (!broken) { fail(h, t, "no pico el granito"); return; }
             if (!got) { fail(h, t, "pico pero no guardo lo que solto"); return; }
             log(t, "ok: pico el granito y guardo el bloque");
+            h.succeed();
+        });
+    }
+
+    /** Zona y filtro: dentro de la zona pica aunque no sea natural; fuera, nada aunque lo haya aprendido. */
+    static void allyZone(GameTestHelper h) {
+        String t = "ally_zone";
+        ServerPlayer p = player(h);
+        var lvl = h.getLevel();
+        BlockPos a = h.absolutePos(new BlockPos(10, 1, 7)), b = h.absolutePos(new BlockPos(10, 1, 9)), out = h.absolutePos(new BlockPos(5, 1, 8));
+        BlockPos keep = h.absolutePos(new BlockPos(10, 1, 8));
+        lvl.setBlockAndUpdate(a, net.minecraft.world.level.block.Blocks.STONE_BRICKS.defaultBlockState());
+        lvl.setBlockAndUpdate(b, net.minecraft.world.level.block.Blocks.STONE_BRICKS.defaultBlockState());
+        lvl.setBlockAndUpdate(keep, net.minecraft.world.level.block.Blocks.OAK_PLANKS.defaultBlockState());   // fuera del filtro
+        lvl.setBlockAndUpdate(out, net.minecraft.world.level.block.Blocks.GRANITE.defaultBlockState());
+        if (!com.draxer.dexrider.rider.AllyWork.filterFor(new ItemStack(net.minecraft.world.item.Items.RAW_IRON)).contains("minecraft:deepslate_iron_ore")) {
+            fail(h, t, "el hierro crudo no apunta a la mena"); return;
+        }
+        var e = com.draxer.dexrider.rider.AllyWork.entry(p, KamenRide.ORGA).withXp("mine", 300).withBlock("minecraft:granite").withJob("mine")
+                .withFilter(java.util.List.of("minecraft:stone_bricks"))
+                .withZone(java.util.List.of(a.asLong(), b.asLong()), lvl.dimension().identifier().toString());
+        com.draxer.dexrider.rider.AllyWork.save(p, KamenRide.ORGA, e);
+        var ally = com.draxer.dexrider.registry.DexEntities.ally(KamenRide.ORGA).get().create(lvl, net.minecraft.world.entity.EntitySpawnReason.MOB_SUMMONED);
+        if (ally == null) { fail(h, t, "no aparecio el amigo"); return; }
+        BlockPos at = h.absolutePos(new BlockPos(8, 1, 8));
+        ally.setPos(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
+        ally.setup(p.getUUID(), 0, com.draxer.dexrider.entity.RiderAllyEntity.Mode.WANDER, at);
+        lvl.addFreshEntity(ally);
+        h.runAfterDelay(300, () -> {
+            boolean zoneDone = lvl.getBlockState(a).isAir() && lvl.getBlockState(b).isAir();
+            boolean keptPlank = lvl.getBlockState(keep).is(net.minecraft.world.level.block.Blocks.OAK_PLANKS);
+            boolean keptOut = lvl.getBlockState(out).is(net.minecraft.world.level.block.Blocks.GRANITE);
+            ally.discard();
+            if (!zoneDone) { fail(h, t, "no excavo la zona"); return; }
+            if (!keptPlank) { fail(h, t, "pico algo fuera del filtro"); return; }
+            if (!keptOut) { fail(h, t, "pico fuera de la zona"); return; }
+            log(t, "ok: zona y filtro respetados");
             h.succeed();
         });
     }

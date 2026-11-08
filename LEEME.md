@@ -442,6 +442,12 @@ Para probarlos: `/summon dexrider:echo_nine` (o `echo_cipher`, `echo_spore`, `ec
   (cosechar y resembrar) o **mesa de crafteo** (fabricar). Trabaja alrededor de su casa y guarda todo en un
   **cofre o barril a 6 bloques de su casa** (fabricar usa los materiales de ese cofre). Otra vez con lo mismo: para.
   Si todavía no sabe, te dice cuánto le falta.
+- **Qué picar exactamente:** clic derecho sobre tu amigo con el bloque o mineral en la mano (piedra o roca,
+  hierro / oro / cobre crudo, carbón, diamante, esmeralda, redstone, lapislázuli, cuarzo, pedernal = grava...) y
+  solo picará eso. Otra vez con lo mismo: quita el filtro.
+- **Dónde picar:** **Shift + clic derecho** sobre tu amigo con el pico y luego **Shift + clic derecho con el pico en
+  dos esquinas**. Dentro de esa zona excava todo (o solo lo del filtro) de arriba hacia abajo, aunque no sea natural,
+  y no toca nada fuera de ella. Máximo 32 bloques por lado. Con un pico en la mano ves el borde de las zonas.
 - **Reaccionan** a lo que haces: al verte picar, talar, cultivar, construir o fabricar, al aprender, al encontrar
   algo raro o si se les llenan las manos (cinco frases distintas por situación y por Rider).
 
@@ -712,6 +718,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.42.1** — Picar con exactitud: dale a tu amigo el bloque o mineral que quieres (solo picará eso) y márcale una zona con el pico (Shift + clic derecho en dos esquinas): excava dentro, de arriba hacia abajo.
 - **0.42.0** — Los amigos Rider aprenden mirándote: picar, talar, cultivar y fabricar (cada uno según su personalidad), te ayudan cuando te ven hacerlo y aceptan encargos con clic derecho y una herramienta; guardan todo en un cofre junto a su casa. 600 frases nuevas: reacciones al verte trabajar o construir, al aprender, al encontrar algo raro...
 - **0.41.4** — Nagisa (civil y Psyga): busto con volumen al estilo MCA, inclinado hacia abajo desde el pecho en vez de una placa plana (`tools/bust.py`; solo personajes adultos).
 - **0.41.3** — Ride Booker: el libro en espada va a 45° (más cuadrado, 11×9), así la hoja y la empuñadura lo cruzan de esquina a esquina. `tools/ride_booker_model.py --tilt=22|35|45` genera las otras variantes.

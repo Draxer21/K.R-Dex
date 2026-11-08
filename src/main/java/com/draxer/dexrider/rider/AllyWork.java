@@ -49,6 +49,10 @@ import java.util.UUID;
  *  Ayudar   : si ya sabe hacerlo y te ve hacerlo, se pone a tu lado un rato haciendo lo mismo (lo que saca te lo da).
  *  Encargo  : clic derecho sobre el con un pico / hacha / azada / mesa de crafteo = trabaja junto a su casa
  *             (otra vez con lo mismo = para). Lo que saca va a un cofre a 6 bloques de su casa.
+ *  Exacto   : clic derecho con un bloque o mineral en la mano (piedra, hierro crudo, carbon...) = solo pica eso
+ *             (otra vez lo mismo = quita el filtro). Shift + clic derecho sobre el con el pico = marcar zona:
+ *             Shift + clic derecho con el pico en dos esquinas; dentro de la zona excava todo (o solo el filtro)
+ *             de arriba hacia abajo, aunque no sea natural. Maximo 32 bloques por lado.
  */
 public final class AllyWork {
     private AllyWork() {}
@@ -285,6 +289,125 @@ public final class AllyWork {
             ids.add(s.isEmpty() ? "" : BuiltInRegistries.ITEM.getKey(s.getItem()).toString());
         }
         return new AllySkills.Pattern(in.width(), in.height(), ids);
+    }
+
+    // ------------------------------------------------------------------ que picar exactamente y donde
+
+    public static final int MAX_ZONE = 32;
+
+    /** Bloques que corresponden a lo que tiene en la mano (bloque, mineral crudo, gema...). Vacio = no sirve de filtro. */
+    public static List<String> filterFor(ItemStack stack) {
+        Item item = stack.getItem();
+        String id = BuiltInRegistries.ITEM.getKey(item).getPath();
+        List<String> out = new ArrayList<>();
+        switch (id) {
+            case "cobblestone" -> out.add("minecraft:stone");
+            case "cobbled_deepslate" -> out.add("minecraft:deepslate");
+            case "raw_iron" -> { out.add("minecraft:iron_ore"); out.add("minecraft:deepslate_iron_ore"); }
+            case "raw_copper" -> { out.add("minecraft:copper_ore"); out.add("minecraft:deepslate_copper_ore"); }
+            case "raw_gold" -> { out.add("minecraft:gold_ore"); out.add("minecraft:deepslate_gold_ore"); out.add("minecraft:nether_gold_ore"); }
+            case "coal" -> { out.add("minecraft:coal_ore"); out.add("minecraft:deepslate_coal_ore"); }
+            case "diamond" -> { out.add("minecraft:diamond_ore"); out.add("minecraft:deepslate_diamond_ore"); }
+            case "emerald" -> { out.add("minecraft:emerald_ore"); out.add("minecraft:deepslate_emerald_ore"); }
+            case "redstone" -> { out.add("minecraft:redstone_ore"); out.add("minecraft:deepslate_redstone_ore"); }
+            case "lapis_lazuli" -> { out.add("minecraft:lapis_ore"); out.add("minecraft:deepslate_lapis_ore"); }
+            case "quartz" -> out.add("minecraft:nether_quartz_ore");
+            case "netherite_scrap" -> out.add("minecraft:ancient_debris");
+            case "flint" -> out.add("minecraft:gravel");
+            case "clay_ball" -> out.add("minecraft:clay");
+            default -> {
+                if (item instanceof net.minecraft.world.item.BlockItem bi && !bi.getBlock().defaultBlockState().isAir()
+                        && !(bi.getBlock() instanceof CropBlock)) {
+                    out.add(BuiltInRegistries.BLOCK.getKey(bi.getBlock()).toString());
+                }
+            }
+        }
+        return out;
+    }
+
+    /** Nombre bonito del primer bloque del filtro. */
+    public static Component filterName(List<String> filter) {
+        if (filter.isEmpty()) return Component.literal("-");
+        Optional<Block> b = BuiltInRegistries.BLOCK.getOptional(Identifier.parse(filter.get(0)));
+        return b.map(Block::getName).orElse(Component.literal(filter.get(0)));
+    }
+
+    /** Se puede picar dentro de una zona marcada (cualquier bloque solido rompible que no guarde cosas). */
+    public static boolean zoneMineable(ServerLevel level, BlockPos p, BlockState s) {
+        return !s.isAir() && s.getFluidState().isEmpty() && s.getDestroySpeed(level, p) >= 0
+                && level.getBlockEntity(p) == null && !s.is(Blocks.BEDROCK);
+    }
+
+    @Nullable
+    public static BlockPos zoneMin(AllySkills.Entry e) { return e.hasZone() ? BlockPos.of(e.zone().get(0)) : null; }
+    @Nullable
+    public static BlockPos zoneMax(AllySkills.Entry e) { return e.hasZone() ? BlockPos.of(e.zone().get(1)) : null; }
+
+    /** Amigo elegido para marcarle la zona (por jugador): id del Rider, hasta cuando y la primera esquina. */
+    private record ZonePick(KamenRide rider, long until, @Nullable BlockPos first) {}
+    private static final Map<UUID, ZonePick> PICKS = new HashMap<>();
+
+    public static void pickForZone(ServerPlayer owner, KamenRide rider) {
+        PICKS.put(owner.getUUID(), new ZonePick(rider, owner.level().getGameTime() + 2400, null));
+    }
+
+    /** Shift + clic derecho con el pico en un bloque: esquinas de la zona. Devuelve true si lo uso. */
+    public static boolean markCorner(ServerPlayer owner, BlockPos pos) {
+        ZonePick pick = PICKS.get(owner.getUUID());
+        if (pick == null || owner.level().getGameTime() > pick.until()) { PICKS.remove(owner.getUUID()); return false; }
+        if (!(owner.level() instanceof ServerLevel level)) return false;
+        if (pick.first() == null) {
+            PICKS.put(owner.getUUID(), new ZonePick(pick.rider(), pick.until(), pos.immutable()));
+            owner.sendSystemMessage(Component.translatable("message.dexrider.ally_zone_corner1"), true);
+            FX.dust(level, 0xF0C020, 1.4F, net.minecraft.world.phys.Vec3.atCenterOf(pos), 12, 0.4);
+            return true;
+        }
+        BlockPos a = pick.first(), b = pos;
+        BlockPos min = new BlockPos(Math.min(a.getX(), b.getX()), Math.min(a.getY(), b.getY()), Math.min(a.getZ(), b.getZ()));
+        BlockPos max = new BlockPos(Math.max(a.getX(), b.getX()), Math.max(a.getY(), b.getY()), Math.max(a.getZ(), b.getZ()));
+        int dx = max.getX() - min.getX() + 1, dy = max.getY() - min.getY() + 1, dz = max.getZ() - min.getZ() + 1;
+        if (dx > MAX_ZONE || dy > MAX_ZONE || dz > MAX_ZONE) {
+            owner.sendSystemMessage(Component.translatable("message.dexrider.ally_zone_too_big", MAX_ZONE).withStyle(ChatFormatting.RED), true);
+            PICKS.put(owner.getUUID(), new ZonePick(pick.rider(), pick.until(), null));
+            return true;
+        }
+        AllySkills.Entry e = entry(owner, pick.rider()).withZone(List.of(min.asLong(), max.asLong()), level.dimension().identifier().toString());
+        save(owner, pick.rider(), e);
+        PICKS.remove(owner.getUUID());
+        owner.sendSystemMessage(Component.translatable("message.dexrider.ally_zone_set", pick.rider().displayName(), dx, dy, dz)
+                .withStyle(ChatFormatting.AQUA));
+        outline(level, min, max);
+        return true;
+    }
+
+    /** Dibuja el borde de la zona con chispas doradas. */
+    public static void outline(ServerLevel level, BlockPos min, BlockPos max) {
+        double x0 = min.getX(), y0 = min.getY(), z0 = min.getZ(), x1 = max.getX() + 1, y1 = max.getY() + 1, z1 = max.getZ() + 1;
+        double[][] c = {{x0, y0, z0}, {x1, y0, z0}, {x1, y0, z1}, {x0, y0, z1}, {x0, y1, z0}, {x1, y1, z0}, {x1, y1, z1}, {x0, y1, z1}};
+        int[][] edges = {{0, 1}, {1, 2}, {2, 3}, {3, 0}, {4, 5}, {5, 6}, {6, 7}, {7, 4}, {0, 4}, {1, 5}, {2, 6}, {3, 7}};
+        for (int[] ed : edges) {
+            double[] a = c[ed[0]], b = c[ed[1]];
+            double len = Math.max(Math.abs(b[0] - a[0]), Math.max(Math.abs(b[1] - a[1]), Math.abs(b[2] - a[2])));
+            int steps = Math.max(1, (int) Math.ceil(len));
+            for (int i = 0; i <= steps; i++) {
+                double t = i / (double) steps;
+                level.sendParticles(new net.minecraft.core.particles.DustParticleOptions(0xF0C020, 1.0F),
+                        a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t, 1, 0, 0, 0, 0);
+            }
+        }
+    }
+
+    /** Con un pico en la mano ves las zonas de tus amigos (cada medio segundo). */
+    public static void showZones(ServerPlayer owner) {
+        if (!(owner.level() instanceof ServerLevel level) || owner.tickCount % 10 != 0) return;
+        if (!owner.getMainHandItem().is(net.minecraft.tags.ItemTags.PICKAXES)) return;
+        String dim = level.dimension().identifier().toString();
+        for (AllySkills.Entry e : skills(owner).riders().values()) {
+            if (!e.hasZone() || !dim.equals(e.zoneDim())) continue;
+            BlockPos min = zoneMin(e), max = zoneMax(e);
+            if (min.getCenter().distanceTo(owner.position()) > 64) continue;
+            outline(level, min, max);
+        }
     }
 
     // ------------------------------------------------------------------ cofres

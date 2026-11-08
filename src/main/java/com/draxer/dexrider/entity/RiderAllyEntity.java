@@ -288,9 +288,29 @@ public class RiderAllyEntity extends RiderMob {
         if (!(player instanceof ServerPlayer sp) || owner == null || !owner.equals(player.getUUID()) || mode == Mode.DOUBLE || mode == Mode.PROJECTION) {
             return super.mobInteract(player, hand);
         }
-        com.draxer.dexrider.rider.AllyWork.Job tool = com.draxer.dexrider.rider.AllyWork.Job.forTool(sp.getItemInHand(hand));
+        net.minecraft.world.item.ItemStack held = sp.getItemInHand(hand);
+        com.draxer.dexrider.rider.AllyWork.Job tool = com.draxer.dexrider.rider.AllyWork.Job.forTool(held);
+        if (tool == com.draxer.dexrider.rider.AllyWork.Job.MINE && sp.isShiftKeyDown() && level() instanceof ServerLevel) {
+            // Shift + pico: borrar zona y filtro y marcar una zona nueva
+            refreshSkills(sp);
+            skills = skills.withZone(java.util.List.of(), "").withFilter(java.util.List.of());
+            com.draxer.dexrider.rider.AllyWork.save(sp, rider, skills);
+            com.draxer.dexrider.rider.AllyWork.pickForZone(sp, rider);
+            sp.sendSystemMessage(Component.translatable("message.dexrider.ally_zone_select", rider.displayName()), false);
+            return InteractionResult.SUCCESS;
+        }
         if (tool != null && level() instanceof ServerLevel level) {
             assignJob(level, sp, tool);
+            return InteractionResult.SUCCESS;
+        }
+        java.util.List<String> filter = com.draxer.dexrider.rider.AllyWork.filterFor(held);
+        if (!filter.isEmpty() && !sp.isShiftKeyDown()) {
+            refreshSkills(sp);
+            boolean same = skills.filter().equals(filter);
+            skills = skills.withFilter(same ? java.util.List.of() : filter);
+            com.draxer.dexrider.rider.AllyWork.save(sp, rider, skills);
+            sp.sendSystemMessage(same ? Component.translatable("message.dexrider.ally_filter_clear", rider.displayName())
+                    : Component.translatable("message.dexrider.ally_filter_set", rider.displayName(), com.draxer.dexrider.rider.AllyWork.filterName(filter)), true);
             return InteractionResult.SUCCESS;
         }
         if (sp.isShiftKeyDown()) {
@@ -344,8 +364,22 @@ public class RiderAllyEntity extends RiderMob {
             ServerPlayer o = ownerPlayer();
             return o != null && o.level() == level() ? o.blockPosition() : helpPos;
         }
+        BlockPos[] z = workZone();
+        if (z != null && job == com.draxer.dexrider.rider.AllyWork.Job.MINE) {
+            return new BlockPos((z[0].getX() + z[1].getX()) / 2, z[1].getY() + 1, (z[0].getZ() + z[1].getZ()) / 2);
+        }
         return home;
     }
+
+    /** Zona marcada para picar ([min, max]) si esta en esta dimension y no esta ayudandote. */
+    @Nullable
+    public BlockPos[] workZone() {
+        if (helpJob != null || !skills.hasZone() || !(level() instanceof ServerLevel level)) return null;
+        if (!level.dimension().identifier().toString().equals(skills.zoneDim())) return null;
+        return new BlockPos[]{com.draxer.dexrider.rider.AllyWork.zoneMin(skills), com.draxer.dexrider.rider.AllyWork.zoneMax(skills)};
+    }
+
+    public java.util.List<String> workFilter() { return skills.filter(); }
 
     public int workXp(com.draxer.dexrider.rider.AllyWork.Job j) { return skills.xp(j.id()); }
     public java.util.List<String> workBlocks() { return skills.blocks(); }
