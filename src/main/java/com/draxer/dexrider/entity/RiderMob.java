@@ -360,7 +360,8 @@ public abstract class RiderMob extends PathfinderMob implements GeoEntity {
                 setCivilian(true);
                 setWeaponOut(false);
                 FX.particle(level, ParticleTypes.END_ROD, FX.center(this), 15, 0.4, 0.05);
-                RiderDialogue.say(level, this, rider, RiderDialogue.Line.RELAX, 100);
+                if (getRandom().nextDouble() < com.draxer.dexrider.config.DexConfig.allyChatter())
+                    RiderDialogue.say(level, this, rider, RiderDialogue.Line.RELAX, 100);
             }
             if (fighting) calmTicks = 0;
         }
@@ -390,6 +391,7 @@ public abstract class RiderMob extends PathfinderMob implements GeoEntity {
 
     /** Charla cuando no pasa nada (las subclases deciden). */
     protected void idleChat(ServerLevel level) {
+        if (getRandom().nextDouble() >= com.draxer.dexrider.config.DexConfig.allyChatter()) return;
         RiderMob other = nearbyRider(level, 12);
         if (other != null && level.getNearestPlayer(this, 32) != null) {
             // Los que se conocen bien tienen sus propias conversaciones (y se llaman por su nombre)

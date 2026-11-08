@@ -212,7 +212,8 @@ public final class AllyWork {
         long now = level.getGameTime();
         Long last = LAST_REACTION.get(k);
         if (last != null && now - last < gap) return;
-        if (level.getRandom().nextFloat() > chance) return;
+        if (!com.draxer.dexrider.config.DexConfig.allyReactions() && line.name().startsWith("SEE_")) return;
+        if (level.getRandom().nextFloat() > chance * com.draxer.dexrider.config.DexConfig.allyChatter()) return;
         if (RiderDialogue.say(level, ally, ally.rider(), line, 60, args)) LAST_REACTION.put(k, now);
     }
 
@@ -442,7 +443,7 @@ public final class AllyWork {
     /** Con un pico en la mano ves las zonas de tus amigos (cada medio segundo). */
     public static void showZones(ServerPlayer owner) {
         if (!(owner.level() instanceof ServerLevel level) || owner.tickCount % 10 != 0) return;
-        if (!owner.getMainHandItem().is(net.minecraft.tags.ItemTags.PICKAXES)) return;
+        if (!owner.getMainHandItem().is(net.minecraft.tags.ItemTags.PICKAXES) || !com.draxer.dexrider.config.DexConfig.showZones()) return;
         String dim = level.dimension().identifier().toString();
         for (AllySkills.Entry e : skills(owner).riders().values()) {
             if (!e.hasZone() || !dim.equals(e.zoneDim())) continue;
