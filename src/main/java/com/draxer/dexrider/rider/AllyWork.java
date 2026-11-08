@@ -344,7 +344,7 @@ public final class AllyWork {
         CraftingInput input = CraftingInput.of(pattern.width(), pattern.height(), grid);
         Optional<RecipeHolder<CraftingRecipe>> recipe = level.getServer().getRecipeManager().getRecipeFor(RecipeType.CRAFTING, input, level);
         if (recipe.isEmpty()) return false;
-        ItemStack result = recipe.get().value().assemble(input, level.registryAccess());
+        ItemStack result = recipe.get().value().assemble(input);
         if (result.isEmpty() || !fits(chest, result)) return false;
         NonNullList<ItemStack> remain = recipe.get().value().getRemainingItems(input);
         for (Map.Entry<Item, Integer> n : need.entrySet()) take(chest, n.getKey(), n.getValue());
