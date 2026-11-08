@@ -944,7 +944,11 @@ public final class DexGameTests {
         var lvl = h.getLevel();
         if (com.draxer.dexrider.entity.AllyRoutine.momentFor(KamenRide.ORGA, KamenRide.PSYGA) == null
                 || com.draxer.dexrider.entity.AllyRoutine.momentFor(KamenRide.ORGA, KamenRide.NINE) != null) { fail(h, t, "momentos mal"); return; }
-        var bed = net.minecraft.world.level.block.Blocks.RED_BED.defaultBlockState()
+        net.minecraft.world.level.block.Block bedBlock = null;   // cualquier cama (en 26.2 cambian los nombres)
+        for (net.minecraft.world.level.block.Block b : net.minecraft.core.registries.BuiltInRegistries.BLOCK)
+            if (b instanceof net.minecraft.world.level.block.BedBlock) { bedBlock = b; break; }
+        if (bedBlock == null) { fail(h, t, "no hay camas"); return; }
+        var bed = bedBlock.defaultBlockState()
                 .setValue(net.minecraft.world.level.block.BedBlock.FACING, net.minecraft.core.Direction.NORTH);
         h.setBlock(new BlockPos(4, 1, 8), bed.setValue(net.minecraft.world.level.block.BedBlock.PART, net.minecraft.world.level.block.state.properties.BedPart.FOOT));
         h.setBlock(new BlockPos(4, 1, 7), bed.setValue(net.minecraft.world.level.block.BedBlock.PART, net.minecraft.world.level.block.state.properties.BedPart.HEAD));
