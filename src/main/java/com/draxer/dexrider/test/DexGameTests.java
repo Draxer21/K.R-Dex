@@ -78,6 +78,8 @@ public final class DexGameTests {
         FUNCTIONS.register("ally_flatten", () -> DexGameTests::allyFlatten);
         FUNCTIONS.register("ally_trust", () -> DexGameTests::allyTrust);
         FUNCTIONS.register("ally_routine", () -> DexGameTests::allyRoutine);
+        FUNCTIONS.register("ally_smelt", () -> DexGameTests::allySmelt);
+        FUNCTIONS.register("ally_fish", () -> DexGameTests::allyFish);
     }
 
     // ------------------------------------------------------------------ utilidades
@@ -979,6 +981,86 @@ public final class DexGameTests {
                 String where = ally.blockPosition().toShortString();
                 ally.discard();
                 fail(h, t, !slept ? "no se acosto (esta en " + where + ")" : "no desperto");
+            }
+        });
+    }
+
+    /** Amigo con un quehacer encargado (sin aprenderlo), viviendo en (8,1,8) con un cofre al lado. */
+    private static com.draxer.dexrider.entity.RiderAllyEntity choreAlly(GameTestHelper h, String job, KamenRide r) {
+        ServerPlayer p = player(h);
+        var lvl = h.getLevel();
+        var e = com.draxer.dexrider.rider.AllyWork.entry(p, r).withJob(job);
+        com.draxer.dexrider.rider.AllyWork.save(p, r, e);
+        var ally = com.draxer.dexrider.registry.DexEntities.ally(r).get().create(lvl, net.minecraft.world.entity.EntitySpawnReason.MOB_SUMMONED);
+        if (ally == null) return null;
+        BlockPos at = h.absolutePos(new BlockPos(8, 1, 8));
+        ally.setPos(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
+        ally.setup(p.getUUID(), 0, com.draxer.dexrider.entity.RiderAllyEntity.Mode.WANDER, at);
+        lvl.addFreshEntity(ally);
+        return ally;
+    }
+
+    /** Hornos: saca del cofre lo que se funde y el combustible y los mete en el horno de al lado. */
+    static void allySmelt(GameTestHelper h) {
+        String t = "ally_smelt";
+        var lvl = h.getLevel();
+        BlockPos chestPos = new BlockPos(9, 1, 10), furnacePos = new BlockPos(7, 1, 10);
+        h.setBlock(chestPos, net.minecraft.world.level.block.Blocks.CHEST.defaultBlockState());
+        h.setBlock(furnacePos, net.minecraft.world.level.block.Blocks.FURNACE.defaultBlockState());
+        if (!(lvl.getBlockEntity(h.absolutePos(chestPos)) instanceof net.minecraft.world.Container chest)
+                || !(lvl.getBlockEntity(h.absolutePos(furnacePos)) instanceof net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity f)) {
+            fail(h, t, "no se pusieron el cofre o el horno"); return;
+        }
+        chest.setItem(0, new ItemStack(net.minecraft.world.item.Items.RAW_IRON, 4));
+        chest.setItem(1, new ItemStack(net.minecraft.world.item.Items.COAL, 2));
+        var ally = choreAlly(h, "smelt", KamenRide.PROTO);
+        if (ally == null) { fail(h, t, "no aparecio el amigo"); return; }
+        final long t0 = lvl.getGameTime();
+        final boolean[] done = {false};
+        h.onEachTick(() -> {
+            if (done[0]) return;
+            boolean loaded = f.getItem(0).is(net.minecraft.world.item.Items.RAW_IRON) && f.getItem(1).is(net.minecraft.world.item.Items.COAL);
+            if (loaded) {
+                done[0] = true;
+                log(t, "ok: cargo el horno tras " + (lvl.getGameTime() - t0) + " ticks");
+                ally.discard();
+                h.succeed();
+            } else if (lvl.getGameTime() - t0 > 360) {
+                done[0] = true;
+                String msg = "horno: " + f.getItem(0) + " / " + f.getItem(1) + ", trabajo " + ally.workJob();
+                ally.discard();
+                fail(h, t, msg);
+            }
+        });
+    }
+
+    /** Pescar: encuentra el agua cerca de casa, se para en la orilla y guarda lo que pesca en el cofre. */
+    static void allyFish(GameTestHelper h) {
+        String t = "ally_fish";
+        var lvl = h.getLevel();
+        h.setBlock(new BlockPos(12, -1, 8), net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+        h.setBlock(new BlockPos(12, 0, 8), net.minecraft.world.level.block.Blocks.WATER.defaultBlockState());
+        BlockPos chestPos = new BlockPos(8, 1, 10);
+        h.setBlock(chestPos, net.minecraft.world.level.block.Blocks.CHEST.defaultBlockState());
+        if (!(lvl.getBlockEntity(h.absolutePos(chestPos)) instanceof net.minecraft.world.Container chest)) { fail(h, t, "no hay cofre"); return; }
+        var ally = choreAlly(h, "fish", KamenRide.SPORE);
+        if (ally == null) { fail(h, t, "no aparecio el amigo"); return; }
+        final long t0 = lvl.getGameTime();
+        final boolean[] done = {false};
+        h.onEachTick(() -> {
+            if (done[0]) return;
+            if (!chest.isEmpty()) {
+                done[0] = true;
+                ItemStack got = ItemStack.EMPTY;
+                for (int i = 0; i < chest.getContainerSize(); i++) if (!chest.getItem(i).isEmpty()) got = chest.getItem(i);
+                log(t, "ok: pesco " + got + " tras " + (lvl.getGameTime() - t0) + " ticks");
+                ally.discard();
+                h.succeed();
+            } else if (lvl.getGameTime() - t0 > 560) {
+                done[0] = true;
+                String msg = "no pesco nada (esta en " + ally.blockPosition().toShortString() + ", trabajo " + ally.workJob() + ")";
+                ally.discard();
+                fail(h, t, msg);
             }
         });
     }

@@ -2467,5 +2467,14 @@
   "moment.dexrider.garden.1": "Nagisa-san, shall we plant mushrooms next to your flowers, noko?",
   "moment.dexrider.garden.1.r": "Sure, Kinoko-chan. Let's see which ones grow first.",
   "moment.dexrider.garden.2": "Nagisa-san, I watered your flowers. And said hi to the mushrooms, noko.",
-  "moment.dexrider.garden.2.r": "Lovely, Kinoko-chan. Come, I'll show you how to prune them."
+  "moment.dexrider.garden.2.r": "Lovely, Kinoko-chan. Come, I'll show you how to prune them.",
+  "job.dexrider.fish": "fish",
+  "job.dexrider.breed": "breed",
+  "job.dexrider.smelt": "use furnaces",
+  "job.dexrider.guard": "keep watch",
+  "screen.dexrider.ally_menu.chore.fish": "Fishes in the water closest to their house and stores the catch in the chest. Also: hand them a fishing rod.",
+  "screen.dexrider.ally_menu.chore.breed": "Pairs up animals using the food in the chest (up to 10 per species). Also: hand them a lead.",
+  "screen.dexrider.ally_menu.chore.smelt": "Runs the furnaces, smokers and blast furnaces within 6 blocks of their house: loads what's in the chest, adds fuel and stores the output. Also: hand them a furnace.",
+  "screen.dexrider.ally_menu.chore.guard": "Patrols around their house at night and spots monsters from farther away (doesn't sleep). Also: hand them a sword.",
+  "message.dexrider.ally_no_water": "%s can't find any water near their house to fish in."
 }

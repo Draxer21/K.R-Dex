@@ -232,7 +232,7 @@ public class RiderAllyEntity extends RiderMob {
             else if (valid(b) && o.tickCount - o.getLastHurtMobTimestamp() < 200) next = b;
         }
         if (next == null) {
-            double r = mode == Mode.WANDER ? 12 : 16;
+            double r = job == com.draxer.dexrider.rider.AllyWork.Job.GUARD && workJob() == job ? 20 : mode == Mode.WANDER ? 12 : 16;
             double best = Double.MAX_VALUE;
             for (LivingEntity e : level.getEntitiesOfClass(LivingEntity.class, getBoundingBox().inflate(r),
                     e -> e instanceof Enemy && e.isAlive() && !isFriendlyTo(e))) {
@@ -391,6 +391,10 @@ public class RiderAllyEntity extends RiderMob {
             case com.draxer.dexrider.network.AllyActionPayload.JOB_FARM -> J = com.draxer.dexrider.rider.AllyWork.Job.FARM;
             case com.draxer.dexrider.network.AllyActionPayload.JOB_CRAFT -> J = com.draxer.dexrider.rider.AllyWork.Job.CRAFT;
             case com.draxer.dexrider.network.AllyActionPayload.JOB_FLATTEN -> J = com.draxer.dexrider.rider.AllyWork.Job.FLATTEN;
+            case com.draxer.dexrider.network.AllyActionPayload.JOB_FISH -> J = com.draxer.dexrider.rider.AllyWork.Job.FISH;
+            case com.draxer.dexrider.network.AllyActionPayload.JOB_BREED -> J = com.draxer.dexrider.rider.AllyWork.Job.BREED;
+            case com.draxer.dexrider.network.AllyActionPayload.JOB_SMELT -> J = com.draxer.dexrider.rider.AllyWork.Job.SMELT;
+            case com.draxer.dexrider.network.AllyActionPayload.JOB_GUARD -> J = com.draxer.dexrider.rider.AllyWork.Job.GUARD;
             case com.draxer.dexrider.network.AllyActionPayload.JOB_STOP -> {
                 if (job != null) assignJob(level, sp, job);     // mismo trabajo = parar
             }
@@ -459,7 +463,7 @@ public class RiderAllyEntity extends RiderMob {
     @Nullable
     public com.draxer.dexrider.rider.AllyWork.Job workJob() {
         if (helpJob != null) return helpJob;
-        if (job != null && mode == Mode.WANDER && home != null && skills.knows(job.skill())) {
+        if (job != null && mode == Mode.WANDER && home != null && (job.chore() || skills.knows(job.skill()))) {
             if (job == com.draxer.dexrider.rider.AllyWork.Job.FLATTEN && workZone() == null) return null;
             return job;
         }
@@ -511,7 +515,7 @@ public class RiderAllyEntity extends RiderMob {
     private void assignJob(ServerLevel level, ServerPlayer o, com.draxer.dexrider.rider.AllyWork.Job j) {
         refreshSkills(o);
         com.draxer.dexrider.rider.RiderDialogue.forget(this);
-        if (!skills.knows(j.skill())) {
+        if (!j.chore() && !skills.knows(j.skill())) {
             com.draxer.dexrider.rider.RiderDialogue.force(level, this, rider, com.draxer.dexrider.rider.RiderDialogue.Line.NOT_YET, j.displayName());
             int pct = Math.min(99, skills.xp(j.skill()) * 100 / com.draxer.dexrider.item.AllySkills.LEARNED);
             o.sendSystemMessage(Component.translatable("message.dexrider.ally_job_learning", rider.displayName(), j.displayName(), pct), true);

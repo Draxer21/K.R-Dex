@@ -429,6 +429,17 @@ Para probarlos: `/summon dexrider:echo_nine` (o `echo_cipher`, `echo_spore`, `ec
 - **Shift + clic derecho** sobre tu amigo: "tu casa ahora es aquí" (sirve para juntarlos a todos).
 - Ni tú le haces daño a tus amigos ni ellos a ti.
 
+### Quehaceres (sin aprender)
+Además de lo que aprenden mirándote, se les pueden encargar cuatro quehaceres desde el menú (o dándoles el objeto):
+| Quehacer | Objeto | Qué hace |
+|---|---|---|
+| Pescar | caña de pescar | busca el agua más cercana a su casa, se para en la orilla y pesca (peces, a veces basura o un tesoro) |
+| Criar | rienda | junta parejas de animales de la misma especie con la comida del cofre, hasta 10 por especie |
+| Usar hornos | horno | hornos, ahumadores y altos hornos a 6 bloques de su casa: mete lo que se cocina o funde, pone combustible y guarda lo que sale |
+| Vigilar | espada | de noche patrulla alrededor de su casa y ve a los monstruos desde 20 bloques (no se va a dormir) |
+
+Todo lo que consiguen va al cofre de su casa.
+
 ### La vida en casa
 Cuando un amigo vive en su casa y no tiene trabajo, tiene su propio día:
 - **De noche duerme**: busca una cama libre a 8 bloques de su casa y se acuesta (si no hay, descansa junto a ella). Al
@@ -749,6 +760,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.46.0** — Quehaceres nuevos para los amigos (no hace falta enseñarlos): pescar, criar animales, usar los hornos y vigilar la casa de noche. Se encargan desde el menú o con caña, rienda, horno o espada.
 - **0.45.0** — La vida en casa: los amigos duermen de noche en una cama libre cerca de su casa y se levantan al amanecer, comen del cofre y tienen momentos entre ellos (10 parejas con dos escenas cada una). 80 frases nuevas.
 - **0.44.0** — Confianza con cada amigo (cuatro niveles; sube charlando, regalando, peleando juntos y trabajando; trabajan más rápido) y conversaciones con temas: cómo estás, de ti, un consejo, y con más confianza su historia y algo personal. Regalos con favoritos por personaje. 180 frases nuevas.
 - **0.43.1** — El Archivo del Driver pasa a la tecla **H** (la K chocaba con otros mods; si ya la tenías guardada, cámbiala en Controles). Botón **Configuración** en la lista de mods con todas las opciones, y opciones nuevas: volumen de las voces del Driver, cuánto hablan los Riders solos, si comentan lo que haces y ver las zonas con el pico. Guía con 3 páginas nuevas sobre los amigos (menú, aprender, zonas).

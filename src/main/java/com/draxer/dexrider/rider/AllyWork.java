@@ -63,12 +63,17 @@ public final class AllyWork {
     public enum Job {
         MINE, CHOP, FARM, CRAFT,
         /** Aplanar la zona marcada: quitar lo que sobresale y rellenar hoyos (usa lo aprendido al picar). */
-        FLATTEN;
+        FLATTEN,
+        /** Quehaceres (no se aprenden mirandote: se encargan y listo). Ver AllyChores. */
+        FISH, BREED, SMELT, GUARD;
 
         public String id() { return name().toLowerCase(Locale.ROOT); }
 
         /** Que experiencia usa (aplanar es picar). */
         public String skill() { return this == FLATTEN ? MINE.id() : id(); }
+
+        /** Pescar, criar, hornos y vigilar: no hace falta aprenderlos. */
+        public boolean chore() { return ordinal() >= FISH.ordinal(); }
 
         public Component displayName() { return Component.translatable("job.dexrider." + id()); }
 
@@ -86,6 +91,10 @@ public final class AllyWork {
             if (stack.is(net.minecraft.tags.ItemTags.HOES)) return FARM;
             if (stack.is(Items.CRAFTING_TABLE)) return CRAFT;
             if (stack.is(net.minecraft.tags.ItemTags.SHOVELS)) return FLATTEN;
+            if (stack.is(Items.FISHING_ROD)) return FISH;
+            if (stack.is(Items.LEAD)) return BREED;
+            if (stack.is(Items.FURNACE) || stack.is(Items.SMOKER) || stack.is(Items.BLAST_FURNACE)) return SMELT;
+            if (stack.is(net.minecraft.tags.ItemTags.SWORDS)) return GUARD;
             return null;
         }
     }
