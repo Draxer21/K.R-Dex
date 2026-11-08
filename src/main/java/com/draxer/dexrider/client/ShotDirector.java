@@ -337,7 +337,7 @@ public final class ShotDirector {
                 a.setItemSlot(EquipmentSlot.HEAD, new ItemStack(DexItems.DEX_HELMET.get()));
                 a.setItemSlot(EquipmentSlot.CHEST, chest);
             }
-        }, 0, 1.75, 0.15, 0);
+        }, 0, 0.1, 0.0, 0);
         // Complete Form normal y Nv.2 (de frente y de espaldas para ver la capa)
         t = scene(s, t + 2, "complete_nv2", lvl -> {
             stand(lvl, -1.2, null, "complete", false);

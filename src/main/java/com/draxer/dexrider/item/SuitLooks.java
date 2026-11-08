@@ -89,7 +89,13 @@ public final class SuitLooks {
             parts.putAll(own.parts());
             crystalSet |= own.colors().containsKey(SuitLook.CRYSTAL);
         }
-        if (!crystalSet) colors.put(SuitLook.CRYSTAL, colors.get(SuitLook.EYES));
+        if (!crystalSet) {
+            // Frost y Cinder: sus cristales y llamas tienen un tono propio si no elegiste color de cristal
+            int c = colors.get(SuitLook.EYES);
+            if (state != null && state.equals(SuitProfile.form(FormRide.FROST))) c = 0xA8E8FF;
+            if (state != null && state.equals(SuitProfile.form(FormRide.CINDER))) c = 0xFF7A1E;
+            colors.put(SuitLook.CRYSTAL, c);
+        }
         return new Resolved(Map.copyOf(colors), Map.copyOf(parts));
     }
 }
