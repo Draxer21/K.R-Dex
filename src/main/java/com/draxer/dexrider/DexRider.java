@@ -86,6 +86,10 @@ public class DexRider {
                 com.draxer.dexrider.network.AllyActionPayload.STREAM_CODEC,
                 com.draxer.dexrider.network.AllyActionPayload::handleOnServer);
         event.registrar("1").playToClient(
+                com.draxer.dexrider.network.AllyTalkPayload.TYPE,
+                com.draxer.dexrider.network.AllyTalkPayload.STREAM_CODEC,
+                com.draxer.dexrider.network.AllyTalkPayload::handleOnClient);
+        event.registrar("1").playToClient(
                 com.draxer.dexrider.network.AllyMenuPayload.TYPE,
                 com.draxer.dexrider.network.AllyMenuPayload.STREAM_CODEC,
                 com.draxer.dexrider.network.AllyMenuPayload::handleOnClient);

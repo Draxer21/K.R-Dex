@@ -429,6 +429,17 @@ Para probarlos: `/summon dexrider:echo_nine` (o `echo_cipher`, `echo_spore`, `ec
 - **Shift + clic derecho** sobre tu amigo: "tu casa ahora es aquí" (sirve para juntarlos a todos).
 - Ni tú le haces daño a tus amigos ni ellos a ti.
 
+### Confianza y conversaciones
+- Cada amigo tiene su **confianza** (0 a 100): **Conocido**, **Amigo** (20), **Buen amigo** (50) y **Confianza
+  total** (80). Sube al **charlar** (una vez por día de juego), al **regalarle** algo (una vez por día; sus favoritos
+  valen más), al **pelear a su lado** y cuando **trabaja para ti**. Cada nivel le hace trabajar un 10 % más rápido.
+- **Charlar** (en su menú) abre la conversación: *¿Cómo estás?*, *Cuéntame de ti* y *Dame un consejo*. Con **Buen
+  amigo** se abre un tema de su historia, y con **Confianza total**, algo que no le cuenta a cualquiera.
+- **Regalar:** con algo en la mano, el botón *Regalar*. Favoritos: Izuku (cerdo cocinado, libros), Takumi (hierro,
+  redstone, reloj), Kinoko (setas, estofado de setas), Momo (libros, pastel, vidrio), Toru (vidrio, bayas brillantes,
+  pastel, galletas), Mei (redstone, cobre, pistones, hierro), Isamu (filete, pan, escudo), Nagisa (pastel, galletas,
+  miel, flores), Genzo (salmón o bacalao cocinado, miel), Tetsuya (hierro, cobre, comparadores).
+
 ### Amigos que aprenden a trabajar
 - **Menú del amigo:** clic derecho sobre tu amigo **con la mano vacía** abre su menú: **Charlar** (ocho frases propias
   por personaje), **Acompáñame / Vuelve a casa**, **Vive aquí**, lo que sabe (barras de cada trabajo y cuánto le
@@ -728,6 +739,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.44.0** — Confianza con cada amigo (cuatro niveles; sube charlando, regalando, peleando juntos y trabajando; trabajan más rápido) y conversaciones con temas: cómo estás, de ti, un consejo, y con más confianza su historia y algo personal. Regalos con favoritos por personaje. 180 frases nuevas.
 - **0.43.1** — El Archivo del Driver pasa a la tecla **H** (la K chocaba con otros mods; si ya la tenías guardada, cámbiala en Controles). Botón **Configuración** en la lista de mods con todas las opciones, y opciones nuevas: volumen de las voces del Driver, cuánto hablan los Riders solos, si comentan lo que haces y ver las zonas con el pico. Guía con 3 páginas nuevas sobre los amigos (menú, aprender, zonas).
 - **0.43.0** — Menú del amigo Rider (clic derecho con la mano vacía): charlar, acompañarte o volver a casa, vivir aquí, encargar trabajos, zona y filtro y recoger lo que lleva; muestra lo que sabe. 80 frases nuevas para charlar.
 - **0.42.2** — Aplanar: márcale una zona y dale una pala; deja el suelo a la altura de la esquina más baja (quita lo que sobra y rellena hoyos con tierra o piedra).
