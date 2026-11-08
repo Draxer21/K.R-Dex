@@ -361,6 +361,11 @@ public class RiderAllyEntity extends RiderMob {
                 com.draxer.dexrider.rider.AllyTrust.sendTalk(sp, this, com.draxer.dexrider.rider.AllyTrust.answerKey(level, rider, -1));
                 return;
             }
+            case com.draxer.dexrider.network.AllyActionPayload.MISSION -> {
+                getLookControl().setLookAt(sp);
+                com.draxer.dexrider.rider.UaMissions.talk(level, sp, this);
+                return;
+            }
             case com.draxer.dexrider.network.AllyActionPayload.GIFT -> {
                 getLookControl().setLookAt(sp);
                 String k = com.draxer.dexrider.rider.AllyTrust.onGift(level, sp, this);
@@ -525,6 +530,7 @@ public class RiderAllyEntity extends RiderMob {
         skills = com.draxer.dexrider.rider.AllyWork.entry(o, rider);
         skills = skills.withXp(j.skill(), skills.xp(j.skill()) + amount);
         com.draxer.dexrider.rider.AllyWork.save(o, rider, skills);
+        com.draxer.dexrider.rider.UaMissions.onWork(o, rider);
         if (++workActions % 10 == 0) {     // cada tanto, trabajar para ti tambien une
             com.draxer.dexrider.rider.AllyTrust.onWork(o, this);
             skills = com.draxer.dexrider.rider.AllyWork.entry(o, rider);

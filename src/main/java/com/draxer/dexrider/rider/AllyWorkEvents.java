@@ -47,7 +47,12 @@ public final class AllyWorkEvents {
     /** Un amigo derriba a un enemigo: pelear juntos une. */
     @SubscribeEvent(priority = EventPriority.LOW)
     public static void onKill(net.neoforged.neoforge.event.entity.living.LivingDeathEvent event) {
-        if (event.isCanceled() || !(event.getSource().getEntity() instanceof com.draxer.dexrider.entity.RiderAllyEntity ally)) return;
+        if (event.isCanceled()) return;
+        // encargos de U.A.: cuenta lo que derribas tu o tus amigos
+        ServerPlayer killer = event.getSource().getEntity() instanceof ServerPlayer sp ? sp
+                : event.getSource().getEntity() instanceof com.draxer.dexrider.entity.RiderAllyEntity a ? a.ownerPlayer() : null;
+        if (killer != null) UaMissions.onKill(killer, event.getEntity());
+        if (!(event.getSource().getEntity() instanceof com.draxer.dexrider.entity.RiderAllyEntity ally)) return;
         if (!(event.getEntity() instanceof net.minecraft.world.entity.monster.Enemy)) return;
         ServerPlayer o = ally.ownerPlayer();
         if (o != null && ally.level() instanceof net.minecraft.server.level.ServerLevel level) AllyTrust.onFight(level, o, ally);
