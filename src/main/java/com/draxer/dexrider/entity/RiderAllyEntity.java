@@ -53,6 +53,16 @@ public class RiderAllyEntity extends RiderMob {
     private int suitLineIn = -1;
     private boolean visitor;      // ya volvio a su mundo: vino por un portal y se ira por otro
 
+    // trabajo (ver AllyWork): encargo junto a su casa, ayuda a tu lado y lo que lleva encima
+    @Nullable private com.draxer.dexrider.rider.AllyWork.Job job;
+    @Nullable private com.draxer.dexrider.rider.AllyWork.Job helpJob;
+    @Nullable private BlockPos helpPos;
+    private String helpBlock = "";
+    private long helpUntil;
+    private com.draxer.dexrider.item.AllySkills.Entry skills = com.draxer.dexrider.item.AllySkills.Entry.EMPTY;
+    private final java.util.List<net.minecraft.world.item.ItemStack> bag = new java.util.ArrayList<>();
+    public static final int BAG_SLOTS = 9;
+
     public RiderAllyEntity(EntityType<? extends PathfinderMob> type, Level level, KamenRide rider) {
         super(type, level, rider);
         setPersistenceRequired();
@@ -101,8 +111,9 @@ public class RiderAllyEntity extends RiderMob {
     protected void registerGoals() {
         this.goalSelector.addGoal(0, new FloatGoal(this));
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.25, true));
+        this.goalSelector.addGoal(3, new AllyWorkGoal(this));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7) {
-            @Override public boolean canUse() { return mode == Mode.WANDER && super.canUse(); }
+            @Override public boolean canUse() { return mode == Mode.WANDER && workJob() == null && super.canUse(); }
         });
         this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 10.0F));
         this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
@@ -190,8 +201,11 @@ public class RiderAllyEntity extends RiderMob {
                 return;
             }
             if (mode == Mode.WANDER && getHealth() < getMaxHealth() && tickCount % 40 == 0) heal(1.0F);
+            if (o != null && tickCount % 100 == 0) refreshSkills(o);
         }
         if (tickCount % 10 == 0) pickTarget(level);
+        if (helpJob != null && level.getGameTime() > helpUntil) { helpJob = null; helpPos = null; }
+        if (workJob() != null && getTarget() == null) return;   // trabajando: AllyWorkGoal manda
         if (mode == Mode.SUMMONED) followOwner(level);
         else stayNearHome(level);
     }
@@ -274,12 +288,124 @@ public class RiderAllyEntity extends RiderMob {
         if (!(player instanceof ServerPlayer sp) || owner == null || !owner.equals(player.getUUID()) || mode == Mode.DOUBLE || mode == Mode.PROJECTION) {
             return super.mobInteract(player, hand);
         }
+        com.draxer.dexrider.rider.AllyWork.Job tool = com.draxer.dexrider.rider.AllyWork.Job.forTool(sp.getItemInHand(hand));
+        if (tool != null && level() instanceof ServerLevel level) {
+            assignJob(level, sp, tool);
+            return InteractionResult.SUCCESS;
+        }
         if (sp.isShiftKeyDown()) {
             AllyManager.setHome(sp, this, blockPosition());
         } else {
             AllyManager.toggle(sp, rider);
         }
         return InteractionResult.SUCCESS;
+    }
+
+    // ================================================================== trabajo (AllyWork)
+
+    /** Puede aprender mirandote (no los duplicados ni las proyecciones). */
+    public boolean canLearn() {
+        return mode == Mode.WANDER || mode == Mode.SUMMONED;
+    }
+
+    private void refreshSkills(ServerPlayer o) {
+        skills = com.draxer.dexrider.rider.AllyWork.entry(o, rider);
+        job = com.draxer.dexrider.rider.AllyWork.Job.byId(skills.job());
+    }
+
+    /** Se pone a ayudarte un rato con lo que estas haciendo. False si ya estaba en eso o no puede. */
+    public boolean startHelping(com.draxer.dexrider.rider.AllyWork.Job j, BlockPos pos) {
+        if (!canLearn() || j == com.draxer.dexrider.rider.AllyWork.Job.CRAFT || getTarget() != null || !(level() instanceof ServerLevel level)) return false;
+        ServerPlayer o = ownerPlayer();
+        if (o != null) refreshSkills(o);
+        boolean already = helpJob == j;
+        helpJob = j;
+        helpPos = pos.immutable();
+        helpBlock = com.draxer.dexrider.rider.AllyWork.blockId(level.getBlockState(pos));
+        if (helpBlock.equals("minecraft:air") && j == com.draxer.dexrider.rider.AllyWork.Job.MINE) helpBlock = "";
+        helpUntil = level.getGameTime() + 600;
+        return !already;
+    }
+
+    public boolean isHelping() { return helpJob != null; }
+    public String helpBlock() { return helpBlock; }
+
+    /** Lo que esta haciendo ahora: ayudarte tiene prioridad sobre el encargo (que solo hace en casa). */
+    @Nullable
+    public com.draxer.dexrider.rider.AllyWork.Job workJob() {
+        if (helpJob != null) return helpJob;
+        if (job != null && mode == Mode.WANDER && home != null && skills.knows(job.id())) return job;
+        return null;
+    }
+
+    @Nullable
+    public BlockPos workCenter() {
+        if (helpJob != null) {
+            ServerPlayer o = ownerPlayer();
+            return o != null && o.level() == level() ? o.blockPosition() : helpPos;
+        }
+        return home;
+    }
+
+    public int workXp(com.draxer.dexrider.rider.AllyWork.Job j) { return skills.xp(j.id()); }
+    public java.util.List<String> workBlocks() { return skills.blocks(); }
+    public java.util.List<com.draxer.dexrider.item.AllySkills.Pattern> workPatterns() { return skills.patterns(); }
+
+    /** Practicar tambien ensenia (poco a poco hasta dominarlo). */
+    public void gainWorkXp(com.draxer.dexrider.rider.AllyWork.Job j, int amount) {
+        ServerPlayer o = ownerPlayer();
+        if (o == null || tickCount % 4 != 0) return;     // un punto cada pocos bloques
+        skills = com.draxer.dexrider.rider.AllyWork.entry(o, rider);
+        skills = skills.withXp(j.id(), skills.xp(j.id()) + amount);
+        com.draxer.dexrider.rider.AllyWork.save(o, rider, skills);
+    }
+
+    private void assignJob(ServerLevel level, ServerPlayer o, com.draxer.dexrider.rider.AllyWork.Job j) {
+        refreshSkills(o);
+        com.draxer.dexrider.rider.RiderDialogue.forget(this);
+        if (!skills.knows(j.id())) {
+            com.draxer.dexrider.rider.RiderDialogue.force(level, this, rider, com.draxer.dexrider.rider.RiderDialogue.Line.NOT_YET, j.displayName());
+            int pct = Math.min(99, skills.xp(j.id()) * 100 / com.draxer.dexrider.item.AllySkills.LEARNED);
+            o.sendSystemMessage(Component.translatable("message.dexrider.ally_job_learning", rider.displayName(), j.displayName(), pct), true);
+            return;
+        }
+        if (job == j) {
+            skills = skills.withJob("");
+            job = null;
+            com.draxer.dexrider.rider.RiderDialogue.force(level, this, rider, com.draxer.dexrider.rider.RiderDialogue.Line.JOB_STOP);
+            o.sendSystemMessage(Component.translatable("message.dexrider.ally_job_stop", rider.displayName()), true);
+        } else {
+            skills = skills.withJob(j.id());
+            job = j;
+            com.draxer.dexrider.rider.RiderDialogue.force(level, this, rider, com.draxer.dexrider.rider.RiderDialogue.Line.JOB, j.displayName());
+            o.sendSystemMessage(Component.translatable(home != null && com.draxer.dexrider.rider.AllyWork.chestNear(level, home) == null && j != null
+                    ? "message.dexrider.ally_job_nochest" : "message.dexrider.ally_job", rider.displayName(), j.displayName()), true);
+        }
+        com.draxer.dexrider.rider.AllyWork.save(o, rider, skills);
+    }
+
+    public boolean bagEmpty() { return bag.isEmpty(); }
+    public boolean bagFull() { return bag.size() >= BAG_SLOTS; }
+
+    public void bagAdd(net.minecraft.world.item.ItemStack s) {
+        net.minecraft.world.item.ItemStack rest = s.copy();
+        for (net.minecraft.world.item.ItemStack in : bag) {
+            if (rest.isEmpty()) break;
+            if (net.minecraft.world.item.ItemStack.isSameItemSameComponents(in, rest)) {
+                int move = Math.min(rest.getCount(), in.getMaxStackSize() - in.getCount());
+                in.grow(move);
+                rest.shrink(move);
+            }
+        }
+        if (rest.isEmpty()) return;
+        if (bag.size() < BAG_SLOTS) bag.add(rest);
+        else if (level() instanceof ServerLevel) spawnAtLocation((ServerLevel) level(), rest);
+    }
+
+    public java.util.List<net.minecraft.world.item.ItemStack> bagTakeAll() {
+        java.util.List<net.minecraft.world.item.ItemStack> out = new java.util.ArrayList<>(bag);
+        bag.clear();
+        return out;
     }
 
     // ================================================================== guardado
@@ -292,6 +418,7 @@ public class RiderAllyEntity extends RiderMob {
         out.putBoolean("dex_visitor", visitor);
         out.putString("dex_mode", mode.name());
         if (home != null) out.putLong("dex_home", home.asLong());
+        if (!bag.isEmpty()) out.store("dex_bag", net.minecraft.world.item.ItemStack.CODEC.listOf(), java.util.List.copyOf(bag));
     }
 
     @Override
@@ -304,5 +431,7 @@ public class RiderAllyEntity extends RiderMob {
         try { mode = Mode.valueOf(in.getStringOr("dex_mode", "WANDER")); } catch (IllegalArgumentException e) { mode = Mode.WANDER; }
         long h = in.getLongOr("dex_home", Long.MIN_VALUE);
         home = h == Long.MIN_VALUE ? null : BlockPos.of(h);
+        bag.clear();
+        in.read("dex_bag", net.minecraft.world.item.ItemStack.CODEC.listOf()).ifPresent(bag::addAll);
     }
 }

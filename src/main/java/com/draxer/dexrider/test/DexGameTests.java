@@ -72,6 +72,8 @@ public final class DexGameTests {
         FUNCTIONS.register("missions", () -> DexGameTests::missions);
         FUNCTIONS.register("quick_picks", () -> DexGameTests::quickPicks);
         FUNCTIONS.register("booker_morph", () -> DexGameTests::bookerMorph);
+        FUNCTIONS.register("ally_learning", () -> DexGameTests::allyLearning);
+        FUNCTIONS.register("ally_mining", () -> DexGameTests::allyMining);
     }
 
     // ------------------------------------------------------------------ utilidades
@@ -768,5 +770,62 @@ public final class DexGameTests {
         if (!p.getCooldowns().isOnCooldown(booker)) { fail(h, t, "sin espera durante la transformacion"); return; }
         log(t, "ok: espada -> pistola en " + com.draxer.dexrider.item.DexWeaponItem.MORPH_TICKS + " ticks");
         h.succeed();
+    }
+
+    /** Amigos que aprenden: personalidad, bloques naturales, guardar en el Driver y fabricar desde un cofre. */
+    static void allyLearning(GameTestHelper h) {
+        String t = "ally_learning";
+        com.draxer.dexrider.rider.AllyWork.Job MINE = com.draxer.dexrider.rider.AllyWork.Job.MINE;
+        com.draxer.dexrider.rider.AllyWork.Job FARM = com.draxer.dexrider.rider.AllyWork.Job.FARM;
+        com.draxer.dexrider.rider.AllyWork.Job CRAFT = com.draxer.dexrider.rider.AllyWork.Job.CRAFT;
+        if (com.draxer.dexrider.rider.AllyWork.gain(KamenRide.PROTO, CRAFT) <= com.draxer.dexrider.rider.AllyWork.gain(KamenRide.PROTO, FARM)) { fail(h, t, "Mei no fabrica mejor de lo que cultiva"); return; }
+        if (com.draxer.dexrider.rider.AllyWork.gain(KamenRide.SPORE, FARM) <= com.draxer.dexrider.rider.AllyWork.gain(KamenRide.SPORE, MINE)) { fail(h, t, "Kinoko no cultiva mejor de lo que pica"); return; }
+        if (!com.draxer.dexrider.rider.AllyWork.isNaturalMineable(net.minecraft.world.level.block.Blocks.STONE.defaultBlockState())
+                || com.draxer.dexrider.rider.AllyWork.isNaturalMineable(net.minecraft.world.level.block.Blocks.STONE_BRICKS.defaultBlockState())) {
+            fail(h, t, "clasifica mal la piedra natural / construida"); return;
+        }
+        ServerPlayer p = player(h);
+        var e = com.draxer.dexrider.rider.AllyWork.entry(p, KamenRide.ORGA).withXp("mine", 120).withBlock("minecraft:stone");
+        com.draxer.dexrider.rider.AllyWork.save(p, KamenRide.ORGA, e);
+        var back = com.draxer.dexrider.rider.AllyWork.entry(p, KamenRide.ORGA);
+        if (!back.knows("mine") || !back.blocks().contains("minecraft:stone")) { fail(h, t, "no se guardo en el Driver"); return; }
+        // fabricar: 4 tablones en forma 2x2 = mesa de crafteo
+        net.minecraft.world.SimpleContainer chest = new net.minecraft.world.SimpleContainer(27);
+        chest.setItem(0, new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 4));
+        var pattern = new com.draxer.dexrider.item.AllySkills.Pattern(2, 2, java.util.List.of(
+                "minecraft:oak_planks", "minecraft:oak_planks", "minecraft:oak_planks", "minecraft:oak_planks"));
+        if (!com.draxer.dexrider.rider.AllyWork.craftOnce(h.getLevel(), pattern, chest)) { fail(h, t, "no pudo fabricar"); return; }
+        if (com.draxer.dexrider.rider.AllyWork.count(chest, net.minecraft.world.item.Items.CRAFTING_TABLE) != 1
+                || com.draxer.dexrider.rider.AllyWork.count(chest, net.minecraft.world.item.Items.OAK_PLANKS) != 0) { fail(h, t, "el cofre quedo mal"); return; }
+        if (com.draxer.dexrider.rider.AllyWork.craftOnce(h.getLevel(), pattern, chest)) { fail(h, t, "fabrico sin materiales"); return; }
+        log(t, "ok: personalidad, clasificacion, Driver y mesa de crafteo desde el cofre");
+        h.succeed();
+    }
+
+    /** Un amigo que ya sabe picar te ayuda: rompe el granito que le enseniaste y se queda con lo que suelta. */
+    static void allyMining(GameTestHelper h) {
+        String t = "ally_mining";
+        ServerPlayer p = player(h);
+        var e = com.draxer.dexrider.rider.AllyWork.entry(p, KamenRide.ORGA).withXp("mine", 300).withBlock("minecraft:granite");
+        com.draxer.dexrider.rider.AllyWork.save(p, KamenRide.ORGA, e);
+        BlockPos rock = h.absolutePos(new BlockPos(10, 1, 8));
+        h.getLevel().setBlockAndUpdate(rock, net.minecraft.world.level.block.Blocks.GRANITE.defaultBlockState());
+        var type = com.draxer.dexrider.registry.DexEntities.ally(KamenRide.ORGA);
+        var ally = type.get().create(h.getLevel(), net.minecraft.world.entity.EntitySpawnReason.MOB_SUMMONED);
+        if (ally == null) { fail(h, t, "no aparecio el amigo"); return; }
+        BlockPos at = h.absolutePos(new BlockPos(8, 1, 8));
+        ally.setPos(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
+        ally.setup(p.getUUID(), 0, com.draxer.dexrider.entity.RiderAllyEntity.Mode.WANDER, null);
+        h.getLevel().addFreshEntity(ally);
+        if (!ally.startHelping(com.draxer.dexrider.rider.AllyWork.Job.MINE, rock)) { fail(h, t, "no quiso ayudar"); return; }
+        h.runAfterDelay(260, () -> {
+            boolean broken = !h.getLevel().getBlockState(rock).is(net.minecraft.world.level.block.Blocks.GRANITE);
+            boolean got = !ally.bagEmpty() || p.getInventory().countItem(net.minecraft.world.item.Items.GRANITE) > 0;
+            ally.discard();
+            if (!broken) { fail(h, t, "no pico el granito"); return; }
+            if (!got) { fail(h, t, "pico pero no guardo lo que solto"); return; }
+            log(t, "ok: pico el granito y guardo el bloque");
+            h.succeed();
+        });
     }
 }
