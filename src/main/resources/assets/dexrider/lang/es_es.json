@@ -2144,7 +2144,7 @@
   "screen.dexrider.ally_menu.zone_filter": "Zona y filtro",
   "screen.dexrider.ally_menu.zone_mark": "Marcar zona",
   "screen.dexrider.ally_menu.zone_clear": "Borrar zona",
-  "screen.dexrider.ally_menu.filter_hand": "Filtro: mi mano",
+  "screen.dexrider.ally_menu.filter_hand": "Filtro: mano",
   "screen.dexrider.ally_menu.filter_hand.tip": "Usa como filtro el bloque o mineral que tienes en la mano principal (solo picará eso).",
   "screen.dexrider.ally_menu.filter_clear": "Quitar filtro",
   "screen.dexrider.ally_menu.take_bag": "Dame lo que llevas (%s)",

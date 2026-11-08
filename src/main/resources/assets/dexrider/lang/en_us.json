@@ -2144,7 +2144,7 @@
   "screen.dexrider.ally_menu.zone_filter": "Area and filter",
   "screen.dexrider.ally_menu.zone_mark": "Mark area",
   "screen.dexrider.ally_menu.zone_clear": "Clear area",
-  "screen.dexrider.ally_menu.filter_hand": "Filter: my hand",
+  "screen.dexrider.ally_menu.filter_hand": "Use my hand",
   "screen.dexrider.ally_menu.filter_hand.tip": "Use the block or ore in your main hand as a filter (they will only mine that).",
   "screen.dexrider.ally_menu.filter_clear": "Clear filter",
   "screen.dexrider.ally_menu.take_bag": "Give me what you carry (%s)",

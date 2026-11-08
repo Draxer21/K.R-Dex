@@ -80,7 +80,7 @@ public class AllyMenuScreen extends Screen {
             String skill = jobs[i].equals("flatten") ? "mine" : jobs[i];
             int x = bx + (i % 2) * (bw + gap), yy = y + (i / 2) * 20;
             final int act = acts[i];
-            Button b = addRenderableWidget(Button.builder(Component.translatable("job.dexrider." + jobs[i]), c -> send(act))
+            Button b = addRenderableWidget(Button.builder(cap(Component.translatable("job.dexrider." + jobs[i])), c -> send(act))
                     .bounds(x, yy, bw, 16).build());
             boolean knows = xp(skill) >= AllySkills.LEARNED;
             boolean current = jobs[i].equals(data.job());
@@ -137,7 +137,7 @@ public class AllyMenuScreen extends Screen {
         for (String s : SKILLS) {
             int v = xp(s);
             boolean knows = v >= AllySkills.LEARNED;
-            g.text(font, Component.translatable("job.dexrider." + s), x, y, 0xFFE8E8EE, false);
+            g.text(font, cap(Component.translatable("job.dexrider." + s)), x, y, 0xFFE8E8EE, false);
             int bx = x + 56, bw = 92;
             g.fill(bx, y + 1, bx + bw, y + 8, 0xFF2A2A34);
             float f = knows ? (v - AllySkills.LEARNED) / (float) (AllySkills.MASTER - AllySkills.LEARNED) : v / (float) AllySkills.LEARNED;
@@ -148,7 +148,7 @@ public class AllyMenuScreen extends Screen {
             y += 13;
         }
         y += 6;
-        Component job = data.job().isEmpty() ? Component.translatable("screen.dexrider.ally_menu.free") : Component.translatable("job.dexrider." + data.job());
+        Component job = data.job().isEmpty() ? Component.translatable("screen.dexrider.ally_menu.free") : cap(Component.translatable("job.dexrider." + data.job()));
         line(g, x, y, "screen.dexrider.ally_menu.job", job); y += 12;
         line(g, x, y, "screen.dexrider.ally_menu.filter",
                 data.filter().isEmpty() ? Component.translatable("screen.dexrider.ally_menu.none") : Component.literal(data.filter())); y += 12;
@@ -166,6 +166,12 @@ public class AllyMenuScreen extends Screen {
         g.text(font, Component.translatable("screen.dexrider.ally_menu.work"), left + 168, top + 60, 0xFFF2C230, false);
         g.text(font, Component.translatable("screen.dexrider.ally_menu.zone_filter"), left + 168, top + 126, 0xFFF2C230, false);
         super.extractRenderState(g, mouseX, mouseY, partialTick);
+    }
+
+    /** "picar" -> "Picar". */
+    private static Component cap(Component c) {
+        String t = c.getString();
+        return t.isEmpty() ? c : Component.literal(Character.toUpperCase(t.charAt(0)) + t.substring(1));
     }
 
     private void line(GuiGraphicsExtractor g, int x, int y, String key, Component value) {
