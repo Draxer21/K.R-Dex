@@ -64,8 +64,12 @@ public final class AllyTrust {
         return f != null && f.contains(BuiltInRegistries.ITEM.getKey(s.getItem()).toString());
     }
 
+    /** Flores (por id de etiqueta: la constante cambia de nombre entre versiones). */
+    private static final net.minecraft.tags.TagKey<net.minecraft.world.item.Item> FLOWERS = net.minecraft.tags.TagKey.create(
+            net.minecraft.core.registries.Registries.ITEM, net.minecraft.resources.Identifier.withDefaultNamespace("small_flowers"));
+
     private static boolean isNice(ItemStack s) {
-        return s.has(net.minecraft.core.component.DataComponents.FOOD) || s.is(net.minecraft.tags.ItemTags.SMALL_FLOWERS);
+        return s.has(net.minecraft.core.component.DataComponents.FOOD) || s.is(FLOWERS);
     }
 
     /** Dia de juego (cada 24000 ticks). */
