@@ -362,7 +362,16 @@ public final class DexGameTests {
             var tpl = manager.get(DexRider.id(name));
             if (tpl.isEmpty()) { fail(h, t, name + " no carga"); return; }
             log(t, name + " ok, tamano " + tpl.get().getSize());
+            if (name.equals("mountain_house") && tpl.get().getSize().getY() < 20) { fail(h, t, "la casa de la montana no es la ampliada"); return; }
         }
+        var key = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.LOOT_TABLE, DexRider.id("chests/mountain_house_workshop"));
+        var table = h.getLevel().getServer().reloadableRegistries().getLootTable(key);
+        var params = new net.minecraft.world.level.storage.loot.LootParams.Builder(h.getLevel())
+                .withParameter(net.minecraft.world.level.storage.loot.parameters.LootContextParams.ORIGIN, net.minecraft.world.phys.Vec3.ZERO)
+                .create(net.minecraft.world.level.storage.loot.parameters.LootContextParamSets.CHEST);
+        var items = table.getRandomItems(params);
+        if (items.stream().noneMatch(s -> s.is(net.minecraft.world.item.Items.WRITTEN_BOOK))) { fail(h, t, "el taller no trae el cuaderno de Takumi"); return; }
+        log(t, "ok: taller con " + items.size() + " objetos y el cuaderno de Takumi");
         h.succeed();
     }
 
