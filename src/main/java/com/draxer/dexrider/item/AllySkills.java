@@ -14,6 +14,7 @@ import java.util.Map;
  *  blocks   : bloques que te vio picar (solo naturales), los que buscara al minar
  *  patterns : recetas que te vio fabricar, con la forma exacta de la mesa
  *  job      : trabajo encargado junto a su casa ("" = ninguno)
+ *  filter / zone : que picar exactamente y donde (se lo indicas tu)
  */
 public record AllySkills(Map<String, Entry> riders) {
 
@@ -41,29 +42,40 @@ public record AllySkills(Map<String, Entry> riders) {
         ).apply(i, Pattern::new));
     }
 
-    public record Entry(Map<String, Integer> xp, List<String> blocks, List<Pattern> patterns, String job) {
-        public static final Entry EMPTY = new Entry(Map.of(), List.of(), List.of(), "");
+    /**
+     * filter  : si no esta vacio, al picar solo toca estos bloques (se lo das en la mano)
+     * zone    : [min, max] empaquetados (BlockPos.asLong) de la zona donde pica; vacio = sin zona; zoneDim su dimension
+     */
+    public record Entry(Map<String, Integer> xp, List<String> blocks, List<Pattern> patterns, String job,
+                        List<String> filter, List<Long> zone, String zoneDim) {
+        public static final Entry EMPTY = new Entry(Map.of(), List.of(), List.of(), "", List.of(), List.of(), "");
 
         public Entry {
             xp = Map.copyOf(xp);
             blocks = List.copyOf(blocks);
             patterns = List.copyOf(patterns);
+            filter = List.copyOf(filter);
+            zone = List.copyOf(zone);
         }
 
         public static final Codec<Entry> CODEC = RecordCodecBuilder.create(i -> i.group(
                 Codec.unboundedMap(Codec.STRING, Codec.INT).optionalFieldOf("xp", Map.of()).forGetter(Entry::xp),
                 Codec.STRING.listOf().optionalFieldOf("blocks", List.of()).forGetter(Entry::blocks),
                 Pattern.CODEC.listOf().optionalFieldOf("patterns", List.of()).forGetter(Entry::patterns),
-                Codec.STRING.optionalFieldOf("job", "").forGetter(Entry::job)
+                Codec.STRING.optionalFieldOf("job", "").forGetter(Entry::job),
+                Codec.STRING.listOf().optionalFieldOf("filter", List.of()).forGetter(Entry::filter),
+                Codec.LONG.listOf().optionalFieldOf("zone", List.of()).forGetter(Entry::zone),
+                Codec.STRING.optionalFieldOf("zone_dim", "").forGetter(Entry::zoneDim)
         ).apply(i, Entry::new));
 
         public int xp(String skill) { return xp.getOrDefault(skill, 0); }
         public boolean knows(String skill) { return xp(skill) >= LEARNED; }
+        public boolean hasZone() { return zone.size() == 2; }
 
         public Entry withXp(String skill, int value) {
             Map<String, Integer> m = new HashMap<>(xp);
             m.put(skill, Math.min(MASTER, Math.max(0, value)));
-            return new Entry(m, blocks, patterns, job);
+            return new Entry(m, blocks, patterns, job, filter, zone, zoneDim);
         }
 
         public Entry withBlock(String id) {
@@ -71,7 +83,7 @@ public record AllySkills(Map<String, Entry> riders) {
             List<String> l = new ArrayList<>(blocks);
             l.add(id);
             while (l.size() > MAX_BLOCKS) l.remove(0);
-            return new Entry(xp, l, patterns, job);
+            return new Entry(xp, l, patterns, job, filter, zone, zoneDim);
         }
 
         public Entry withPattern(Pattern p) {
@@ -79,10 +91,12 @@ public record AllySkills(Map<String, Entry> riders) {
             List<Pattern> l = new ArrayList<>(patterns);
             l.add(p);
             while (l.size() > MAX_PATTERNS) l.remove(0);
-            return new Entry(xp, blocks, l, job);
+            return new Entry(xp, blocks, l, job, filter, zone, zoneDim);
         }
 
-        public Entry withJob(String j) { return new Entry(xp, blocks, patterns, j == null ? "" : j); }
+        public Entry withJob(String j) { return new Entry(xp, blocks, patterns, j == null ? "" : j, filter, zone, zoneDim); }
+        public Entry withFilter(List<String> f) { return new Entry(xp, blocks, patterns, job, f, zone, zoneDim); }
+        public Entry withZone(List<Long> z, String dim) { return new Entry(xp, blocks, patterns, job, filter, z, dim == null ? "" : dim); }
     }
 
     public static final Codec<AllySkills> CODEC = Codec.unboundedMap(Codec.STRING, Entry.CODEC)

@@ -2045,5 +2045,11 @@
   "message.dexrider.ally_job": "%s: se pone a %s junto a su casa.",
   "message.dexrider.ally_job_nochest": "%s: se pone a %s junto a su casa (pon un cofre cerca para que guarde lo que saque).",
   "message.dexrider.ally_job_stop": "%s deja su encargo.",
-  "message.dexrider.ally_job_learning": "%s todavía no sabe %s (%s%%). Hazlo cerca de él para enseñarle."
+  "message.dexrider.ally_job_learning": "%s todavía no sabe %s (%s%%). Hazlo cerca de él para enseñarle.",
+  "message.dexrider.ally_filter_set": "%s picará solo: %s.",
+  "message.dexrider.ally_filter_clear": "%s vuelve a picar lo que te vio picar.",
+  "message.dexrider.ally_zone_select": "%s: marca la zona de trabajo con Shift + clic derecho con el pico en dos esquinas (zona y filtro anteriores borrados).",
+  "message.dexrider.ally_zone_corner1": "Primera esquina marcada. Marca la esquina opuesta.",
+  "message.dexrider.ally_zone_set": "%s excavará dentro de la zona (%s×%s×%s), de arriba hacia abajo. Si no está picando, dale el pico con clic derecho.",
+  "message.dexrider.ally_zone_too_big": "La zona es demasiado grande (máximo %s bloques por lado). Marca otra vez la primera esquina."
 }

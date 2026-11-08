@@ -125,16 +125,46 @@ public class AllyWorkGoal extends Goal {
     private boolean stillValid(ServerLevel level, Job job, BlockPos p) {
         BlockState s = level.getBlockState(p);
         return switch (job) {
-            case MINE -> AllyWork.isNaturalMineable(s);
+            case MINE -> ally.workZone() != null ? AllyWork.zoneMineable(level, p, s) : AllyWork.isNaturalMineable(s);
             case CHOP -> s.is(net.minecraft.tags.BlockTags.LOGS);
             case FARM -> AllyWork.isRipeCrop(s);
             case CRAFT -> false;
         };
     }
 
+    /** Picar dentro de la zona marcada: de arriba hacia abajo, todo (o solo el filtro). */
+    @Nullable
+    private BlockPos findInZone(ServerLevel level, BlockPos min, BlockPos max) {
+        List<String> filter = ally.workFilter();
+        BlockPos best = null, stuckOne = null;
+        double bestScore = Double.MAX_VALUE;
+        for (BlockPos p : BlockPos.betweenClosed(min, max)) {
+            BlockState s = level.getBlockState(p);
+            if (!AllyWork.zoneMineable(level, p, s)) continue;
+            if (!filter.isEmpty() && !filter.contains(AllyWork.blockId(s))) continue;
+            if (!AllyWork.exposed(level, p)) continue;
+            if (blacklist.contains(p.asLong())) { if (stuckOne == null || p.getY() > stuckOne.getY()) stuckOne = p.immutable(); continue; }
+            double score = -p.getY() * 1000.0 + p.distToCenterSqr(ally.position());
+            if (score < bestScore) { bestScore = score; best = p.immutable(); }
+        }
+        if (best == null && stuckOne != null) {
+            // no llega a ninguno: salta encima del que quedo para seguir excavando
+            BlockPos up = stuckOne.above();
+            if (level.getBlockState(up).isAir() && level.getBlockState(up.above()).isAir()) {
+                ally.teleportTo(up.getX() + 0.5, up.getY(), up.getZ() + 0.5);
+                blacklist.clear();
+                return stuckOne;
+            }
+        }
+        return best;
+    }
+
     @Nullable
     private BlockPos find(ServerLevel level, Job job, BlockPos center) {
+        BlockPos[] zone = job == Job.MINE ? ally.workZone() : null;
+        if (zone != null) return findInZone(level, zone[0], zone[1]);
         boolean helping = ally.isHelping();
+        List<String> filter = job == Job.MINE ? ally.workFilter() : List.of();
         int r = helping ? 6 : AllyWork.WORK_RADIUS;
         int down = job == Job.MINE ? (helping ? 4 : 3) : 2;
         int up = job == Job.CHOP ? 9 : 3;
@@ -152,7 +182,9 @@ public class AllyWorkGoal extends Goal {
                     if (!AllyWork.isNaturalMineable(s) || !AllyWork.exposed(level, p)) continue;
                     String id = AllyWork.blockId(s);
                     boolean ore = AllyWork.isOre(s);
-                    if (!learned.contains(id) && !ore) continue;
+                    if (!filter.isEmpty()) {
+                        if (!filter.contains(id)) continue;      // solo lo que le pediste
+                    } else if (!learned.contains(id) && !ore) continue;
                     // no cavar donde vive ni bajo sus pies
                     if (!helping && Math.abs(p.getX() - center.getX()) <= 1 && Math.abs(p.getZ() - center.getZ()) <= 1) continue;
                     if (p.getX() == ally.blockPosition().getX() && p.getZ() == ally.blockPosition().getZ() && p.getY() < ally.getY()) continue;

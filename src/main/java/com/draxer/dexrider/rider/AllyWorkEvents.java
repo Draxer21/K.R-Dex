@@ -23,6 +23,22 @@ public final class AllyWorkEvents {
         AllyWork.onPlace(p, event.getPos(), event.getPlacedBlock());
     }
 
+    /** Shift + clic derecho con el pico en un bloque: esquinas de la zona del amigo elegido. */
+    @SubscribeEvent
+    public static void onRightClickBlock(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock event) {
+        if (!(event.getEntity() instanceof ServerPlayer p) || !p.isShiftKeyDown()
+                || !event.getItemStack().is(net.minecraft.tags.ItemTags.PICKAXES)) return;
+        if (AllyWork.markCorner(p, event.getPos())) {
+            event.setCanceled(true);
+            event.setCancellationResult(net.minecraft.world.InteractionResult.SUCCESS);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onPlayerTick(net.neoforged.neoforge.event.tick.PlayerTickEvent.Post event) {
+        if (event.getEntity() instanceof ServerPlayer p) AllyWork.showZones(p);
+    }
+
     @SubscribeEvent
     public static void onCraft(PlayerEvent.ItemCraftedEvent event) {
         if (!(event.getEntity() instanceof ServerPlayer p)) return;
