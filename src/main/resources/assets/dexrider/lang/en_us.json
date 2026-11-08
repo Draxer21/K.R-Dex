@@ -2051,5 +2051,7 @@
   "message.dexrider.ally_zone_select": "%s: mark the work area with Shift + right-click using the pickaxe on two corners (previous area and filter cleared).",
   "message.dexrider.ally_zone_corner1": "First corner marked. Mark the opposite corner.",
   "message.dexrider.ally_zone_set": "%s will dig out the area (%s×%s×%s), top to bottom. If they are not mining yet, right-click them with the pickaxe.",
-  "message.dexrider.ally_zone_too_big": "The area is too big (max %s blocks per side). Mark the first corner again."
+  "message.dexrider.ally_zone_too_big": "The area is too big (max %s blocks per side). Mark the first corner again.",
+  "job.dexrider.flatten": "flatten",
+  "message.dexrider.ally_flatten_nozone": "%s needs an area to flatten: Shift + right-click them with the pickaxe and mark two corners (the lower one sets the ground level). Then give them the shovel."
 }

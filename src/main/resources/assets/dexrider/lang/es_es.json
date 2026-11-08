@@ -2051,5 +2051,7 @@
   "message.dexrider.ally_zone_select": "%s: marca la zona de trabajo con Shift + clic derecho con el pico en dos esquinas (zona y filtro anteriores borrados).",
   "message.dexrider.ally_zone_corner1": "Primera esquina marcada. Marca la esquina opuesta.",
   "message.dexrider.ally_zone_set": "%s excavará dentro de la zona (%s×%s×%s), de arriba hacia abajo. Si no está picando, dale el pico con clic derecho.",
-  "message.dexrider.ally_zone_too_big": "La zona es demasiado grande (máximo %s bloques por lado). Marca otra vez la primera esquina."
+  "message.dexrider.ally_zone_too_big": "La zona es demasiado grande (máximo %s bloques por lado). Marca otra vez la primera esquina.",
+  "job.dexrider.flatten": "aplanar",
+  "message.dexrider.ally_flatten_nozone": "%s necesita una zona para aplanar: Shift + clic derecho sobre él con el pico y marca dos esquinas (la más baja es el nivel del suelo). Luego dale la pala."
 }

@@ -75,6 +75,7 @@ public final class DexGameTests {
         FUNCTIONS.register("ally_learning", () -> DexGameTests::allyLearning);
         FUNCTIONS.register("ally_mining", () -> DexGameTests::allyMining);
         FUNCTIONS.register("ally_zone", () -> DexGameTests::allyZone);
+        FUNCTIONS.register("ally_flatten", () -> DexGameTests::allyFlatten);
     }
 
     // ------------------------------------------------------------------ utilidades
@@ -863,6 +864,42 @@ public final class DexGameTests {
             if (!keptPlank) { fail(h, t, "pico algo fuera del filtro"); return; }
             if (!keptOut) { fail(h, t, "pico fuera de la zona"); return; }
             log(t, "ok: zona y filtro respetados");
+            h.succeed();
+        });
+    }
+
+    /** Aplanar: quita lo que sobresale del nivel del suelo y rellena los hoyos con lo del cofre. */
+    static void allyFlatten(GameTestHelper h) {
+        String t = "ally_flatten";
+        ServerPlayer p = player(h);
+        var lvl = h.getLevel();
+        BlockPos min = h.absolutePos(new BlockPos(10, 1, 7)), max = h.absolutePos(new BlockPos(11, 1, 9));
+        BlockPos pillarA = h.absolutePos(new BlockPos(11, 2, 8)), pillarB = h.absolutePos(new BlockPos(11, 3, 8));
+        // suelo en y=1 menos un hoyo en (10,1,8); encima, un pilar que sobra
+        for (BlockPos q : BlockPos.betweenClosed(min, max)) lvl.setBlockAndUpdate(q, net.minecraft.world.level.block.Blocks.DIRT.defaultBlockState());
+        BlockPos hole = h.absolutePos(new BlockPos(10, 1, 8));
+        lvl.setBlockAndUpdate(hole, net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+        lvl.setBlockAndUpdate(pillarA, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+        lvl.setBlockAndUpdate(pillarB, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+        BlockPos chestPos = h.absolutePos(new BlockPos(6, 1, 8));
+        lvl.setBlockAndUpdate(chestPos, net.minecraft.world.level.block.Blocks.CHEST.defaultBlockState());
+        if (lvl.getBlockEntity(chestPos) instanceof net.minecraft.world.Container c) c.setItem(0, new ItemStack(net.minecraft.world.item.Items.COBBLESTONE, 8));
+        var e = com.draxer.dexrider.rider.AllyWork.entry(p, KamenRide.ORGA).withXp("mine", 300).withJob("flatten")
+                .withZone(java.util.List.of(min.asLong(), max.asLong()), lvl.dimension().identifier().toString());
+        com.draxer.dexrider.rider.AllyWork.save(p, KamenRide.ORGA, e);
+        var ally = com.draxer.dexrider.registry.DexEntities.ally(KamenRide.ORGA).get().create(lvl, net.minecraft.world.entity.EntitySpawnReason.MOB_SUMMONED);
+        if (ally == null) { fail(h, t, "no aparecio el amigo"); return; }
+        BlockPos at = h.absolutePos(new BlockPos(8, 1, 8));
+        ally.setPos(at.getX() + 0.5, at.getY(), at.getZ() + 0.5);
+        ally.setup(p.getUUID(), 0, com.draxer.dexrider.entity.RiderAllyEntity.Mode.WANDER, at);
+        lvl.addFreshEntity(ally);
+        h.runAfterDelay(380, () -> {
+            boolean cleared = lvl.getBlockState(pillarA).isAir() && lvl.getBlockState(pillarB).isAir();
+            boolean filled = !lvl.getBlockState(hole).isAir();
+            ally.discard();
+            if (!cleared) { fail(h, t, "no quito el pilar"); return; }
+            if (!filled) { fail(h, t, "no relleno el hoyo"); return; }
+            log(t, "ok: quito el pilar y relleno el hoyo");
             h.succeed();
         });
     }

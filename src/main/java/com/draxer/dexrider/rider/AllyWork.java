@@ -53,14 +53,22 @@ import java.util.UUID;
  *             (otra vez lo mismo = quita el filtro). Shift + clic derecho sobre el con el pico = marcar zona:
  *             Shift + clic derecho con el pico en dos esquinas; dentro de la zona excava todo (o solo el filtro)
  *             de arriba hacia abajo, aunque no sea natural. Maximo 32 bloques por lado.
+ *  Aplanar  : con una zona marcada, clic derecho con una pala. El suelo queda a la altura de la esquina mas baja:
+ *             quita todo lo que sobresale (hasta 24 bloques por encima) y rellena los hoyos (hasta 3 de hondo)
+ *             con tierra o piedra de su bolsa o del cofre de su casa.
  */
 public final class AllyWork {
     private AllyWork() {}
 
     public enum Job {
-        MINE, CHOP, FARM, CRAFT;
+        MINE, CHOP, FARM, CRAFT,
+        /** Aplanar la zona marcada: quitar lo que sobresale y rellenar hoyos (usa lo aprendido al picar). */
+        FLATTEN;
 
         public String id() { return name().toLowerCase(Locale.ROOT); }
+
+        /** Que experiencia usa (aplanar es picar). */
+        public String skill() { return this == FLATTEN ? MINE.id() : id(); }
 
         public Component displayName() { return Component.translatable("job.dexrider." + id()); }
 
@@ -77,6 +85,7 @@ public final class AllyWork {
             if (stack.is(net.minecraft.tags.ItemTags.AXES)) return CHOP;
             if (stack.is(net.minecraft.tags.ItemTags.HOES)) return FARM;
             if (stack.is(Items.CRAFTING_TABLE)) return CRAFT;
+            if (stack.is(net.minecraft.tags.ItemTags.SHOVELS)) return FLATTEN;
             return null;
         }
     }
@@ -342,6 +351,39 @@ public final class AllyWork {
     public static BlockPos zoneMin(AllySkills.Entry e) { return e.hasZone() ? BlockPos.of(e.zone().get(0)) : null; }
     @Nullable
     public static BlockPos zoneMax(AllySkills.Entry e) { return e.hasZone() ? BlockPos.of(e.zone().get(1)) : null; }
+
+    public static final int FLATTEN_UP = 24, FLATTEN_DOWN = 3;
+
+    /** Hueco que hay que rellenar al aplanar (aire, agua, hierba alta...). */
+    public static boolean needsFill(ServerLevel level, BlockPos p, BlockState s) {
+        return s.isAir() || s.canBeReplaced() || !s.getFluidState().isEmpty();
+    }
+
+    /** Bloques que sirven para rellenar: tierra, piedra y parecidos. */
+    public static boolean isFiller(ItemStack stack) {
+        if (!(stack.getItem() instanceof net.minecraft.world.item.BlockItem bi)) return false;
+        BlockState s = bi.getBlock().defaultBlockState();
+        return s.is(BlockTags.DIRT) || s.is(Blocks.COBBLESTONE) || s.is(Blocks.COBBLED_DEEPSLATE)
+                || s.is(BlockTags.BASE_STONE_OVERWORLD) || s.is(BlockTags.BASE_STONE_NETHER)
+                || s.is(Blocks.GRAVEL) || s.is(Blocks.SAND) || s.is(Blocks.RED_SAND);
+    }
+
+    /** Saca un bloque de relleno del contenedor (o null). */
+    @Nullable
+    public static BlockState takeFiller(@Nullable Container c) {
+        if (c == null) return null;
+        for (int i = 0; i < c.getContainerSize(); i++) {
+            ItemStack st = c.getItem(i);
+            if (!st.isEmpty() && isFiller(st)) {
+                BlockState s = ((net.minecraft.world.item.BlockItem) st.getItem()).getBlock().defaultBlockState();
+                st.shrink(1);
+                if (st.isEmpty()) c.setItem(i, ItemStack.EMPTY);
+                c.setChanged();
+                return s;
+            }
+        }
+        return null;
+    }
 
     /** Amigo elegido para marcarle la zona (por jugador): id del Rider, hasta cuando y la primera esquina. */
     private record ZonePick(KamenRide rider, long until, @Nullable BlockPos first) {}
