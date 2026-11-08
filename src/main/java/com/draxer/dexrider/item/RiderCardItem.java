@@ -102,6 +102,8 @@ public class RiderCardItem extends Item {
                     sp.getCooldowns().addCooldown(stack, 300);
                     com.draxer.dexrider.rider.DexAdvancements.award(sp, "final_attack");
                     KamenRide identity = KamenRide.current(sp);
+                    // Shift: ataque combinado con el amigo Rider mas cercano (si no hay, sigue el normal)
+                    if (sp.isShiftKeyDown() && com.draxer.dexrider.rider.DoubleKick.tryStart(serverLevel, sp)) return InteractionResult.SUCCESS;
                     if (RiderPowers.hasFinisher(identity)) RiderPowers.finalAttack(serverLevel, sp, identity);
                     else ArmedRide.finalAttack(serverLevel, sp, hand);
                     com.draxer.dexrider.rider.Combos.onFinisher(serverLevel, sp);

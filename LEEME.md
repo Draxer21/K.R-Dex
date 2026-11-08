@@ -165,6 +165,12 @@ Se apaga tras 10 s sin golpes, o si el objetivo cae o se aleja. Se puede desacti
 - Usa el **Final Attack Ride** con tus Riders amigos cerca (invocados, dobles o proyecciones del K-Touch): lanzan su ataque
   especial a la vez contra tu objetivo y se suma un **golpe combinado** con nombre propio (Fuego Cruzado con Kaixa,
   Pilar del Monarca con Orga...). Con tres o más: **Diez Luces**.
+- **Ataque combinado (0.50.0)**: **Shift + clic derecho** con la carta Final Attack Ride, con un amigo Rider a 16 bloques
+  y mirando a un enemigo. El amigo se pone a tu lado y responde, aparece el título *FINAL ATTACK RIDE — Dex & ...*, saltan
+  juntos, se abren dos filas de cartas (una de cada color) que se cruzan en el objetivo y bajan en una **doble patada** con
+  las estelas trenzadas. El impacto hace mucho más daño que la patada sola (más por cada carta atravesada), golpea y
+  ralentiza en 5 bloques y explota con los dos colores. Cada amigo tiene su frase antes y después. Si no hay amigo u
+  objetivo, sale el Final Attack normal.
 - Dos jugadores transformados que usen su Final Attack Ride cerca, con menos de 3 s de diferencia, hacen un **Doble Final Attack**.
 
 ### Tonos de las cartas
@@ -801,6 +807,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.50.0** — Ataque combinado: Shift + Final Attack Ride con un amigo Rider cerca hace una doble Rider Kick coreografiada (llamada, salto juntos, dos filas de cartas, picada con estelas trenzadas, impacto con los dos colores) con frases propias de cada amigo.
 - **0.49.0** — Escanear se ve: mientras el Driver toma muestras, los ojos de Dex brillan y pasan por magenta, dorado, verde, rojo y azul; al completar, parpadean en blanco (lo ven todos). Visor nuevo: **ondas** (líneas onduladas paralelas, sin centro). Más relieve en los trajes de Nine, Forge, Cipher, Warden, Spore, Mirage y Proto: piezas 3D nuevas con diseño propio (sombrero de seta de Spore, cristales de Mirage, puertos y aro del visor de Proto, placas desmontables de Forge, gorra y placa de Warden, rieles y cartuchos de Cipher, espina y guardas de Nine). Herramientas `tools/rider_relief.py` y `tools/geo_preview.py`.
 - **0.48.0** — Editor del traje, etapa 3: líneas del visor (orientación, grosor, separación y color), piezas para la Upgrade Form (cuernos, hombros, pecho, capa o bufanda) y una pieza propia para cada Form Ride (alerón, tanques, placas, cristales, llamas, aletas).
 - **0.47.0** — Construir copiando: el amigo memoriza lo que hay en su zona (**Copiar plano**) y levanta una copia donde le digas (**Construir** + Shift + clic derecho), con los materiales del cofre.

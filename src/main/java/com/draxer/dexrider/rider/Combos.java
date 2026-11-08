@@ -111,7 +111,7 @@ public final class Combos {
         return best;
     }
 
-    private static boolean foe(ServerPlayer p, LivingEntity e) {
+    static boolean foe(ServerPlayer p, LivingEntity e) {
         if (e == p || !e.isAlive() || e instanceof Player) return false;
         if (e instanceof com.draxer.dexrider.entity.RiderMob rm && rm.isFriendlyTo(p)) return false;
         return e instanceof net.minecraft.world.entity.monster.Enemy || e instanceof com.draxer.dexrider.entity.RiderMob
