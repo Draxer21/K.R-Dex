@@ -209,6 +209,13 @@ public class AllyWorkGoal extends Goal {
             if (!AllyWork.needsFill(level, p, s)) continue;
             BlockState below = level.getBlockState(p.below());
             if (AllyWork.needsFill(level, p.below(), below) && p.getY() > ground - AllyWork.FLATTEN_DOWN) continue;
+            // solo hoyos abiertos hacia arriba (no cuevas bajo el suelo)
+            boolean open = true;
+            for (int y = p.getY() + 1; y <= ground && open; y++) {
+                BlockPos u = new BlockPos(p.getX(), y, p.getZ());
+                open = AllyWork.needsFill(level, u, level.getBlockState(u));
+            }
+            if (!open) continue;
             if (!level.getEntitiesOfClass(net.minecraft.world.entity.LivingEntity.class, new net.minecraft.world.phys.AABB(p)).isEmpty()) {
                 if (ally.getBoundingBox().intersects(new net.minecraft.world.phys.AABB(p))) occupied = p.immutable();
                 continue;
