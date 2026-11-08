@@ -115,8 +115,8 @@ public final class ShotDirector {
             cmd(srv, "kill @e[type=!minecraft:player]");
             ServerLevel lvl = srv.overworld();
             for (int i = 0; i < 2; i++) {
-                Entity e = spawnStill(lvl, DexEntities.ECHOES.get(KamenRide.PSYGA).get(), i == 0 ? -0.9 : 0.9, 3.4);
-                if (e instanceof Mob m) { m.setYRot(90); m.yBodyRot = 90; m.yHeadRot = 90; }
+                Entity e = spawnStill(lvl, DexEntities.ECHOES.get(KamenRide.PSYGA).get(), i == 0 ? -0.8 : 0.8, 2.7);
+                if (e instanceof Mob m) { m.setYRot(125); m.yBodyRot = 125; m.yHeadRot = 125; }
             }
             cmd(srv, String.format(java.util.Locale.ROOT, "tp @a %.2f %.2f %.2f 0 8", bx, by + 0.3, bz));
         })));
