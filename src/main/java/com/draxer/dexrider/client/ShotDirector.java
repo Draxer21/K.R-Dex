@@ -251,6 +251,27 @@ public final class ShotDirector {
         s.add(new Step(t + 20, () -> shoot("misiones")));
         s.add(new Step(t + 24, () -> { Minecraft.getInstance().gui.setScreen(null); hudHidden(true); }));
         t += 28;
+        // 5e1: el diario de Yusuke con algunas entradas
+        s.add(new Step(t, () -> server(srv -> {
+            ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+            ItemStack driver = new ItemStack(DexItems.DEX_DRIVER.get());
+            driver.set(DexComponents.DIARY.get(), java.util.List.of("1|diary.dexrider.start", "1|diary.dexrider.adv.henshin",
+                    "2|diary.dexrider.scan.1|#item.dexrider.card_attack_ride_slash", "3|diary.dexrider.friend.spore",
+                    "3|diary.dexrider.trust.1|#diary.dexrider.who.spore", "5|diary.dexrider.adv.mountain_house"));
+            p.getInventory().add(driver);
+        })));
+        s.add(new Step(t + 10, () -> {
+            hudHidden(false);
+            ClientHooks.openDiary();
+            if (Minecraft.getInstance().gui.screen() instanceof net.minecraft.client.gui.screens.inventory.BookViewScreen book) book.setPage(1);
+        }));
+        s.add(new Step(t + 24, () -> shoot("diario")));
+        s.add(new Step(t + 28, () -> {
+            Minecraft.getInstance().gui.setScreen(null);
+            hudHidden(true);
+            server(srv -> com.draxer.dexrider.item.DexDriverItem.findDriver(srv.getPlayerList().getPlayers().get(0)).setCount(0));
+        }));
+        t += 32;
         // 5e2: el Ride Booker abierto como libro, con cartas en los bolsillos
         s.add(new Step(t, () -> server(srv -> {
             ServerPlayer p = srv.getPlayerList().getPlayers().get(0);

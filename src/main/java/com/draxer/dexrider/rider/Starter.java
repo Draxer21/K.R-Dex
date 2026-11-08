@@ -19,6 +19,7 @@ public final class Starter {
         DexAdvancements.award(p, "starter");
         give(p, new ItemStack(DexItems.KAGAMI_COMPASS.get()));
         give(p, new ItemStack(DexItems.RIDER_GUIDE.get()));
+        give(p, new ItemStack(DexItems.DIARY.get()));
         p.sendSystemMessage(Component.translatable("message.dexrider.starter_title").withStyle(ChatFormatting.GOLD, ChatFormatting.BOLD));
         for (int i = 1; i <= 3; i++)
             p.sendSystemMessage(Component.translatable("message.dexrider.starter_" + i).withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));

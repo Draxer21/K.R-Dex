@@ -67,6 +67,7 @@ public final class AllyManager {
         if ((rider == KamenRide.ORGA && isFriend(player, KamenRide.CIPHER)) || (rider == KamenRide.CIPHER && isFriend(player, KamenRide.ORGA))) {
             CipherGifts.giveBlaster(level, rider == KamenRide.ORGA && ally != null ? ally : player, player);
         }
+        Diary.onFriend(player, rider);
         player.sendSystemMessage(Component.translatable("message.dexrider.ally_befriended", rider.displayName())
                 .withStyle(ChatFormatting.AQUA));
     }

@@ -90,6 +90,7 @@ public final class AllyTrust {
         if (level(after) > level(before)) {
             owner.sendSystemMessage(Component.translatable("message.dexrider.trust_up", ally.rider().displayName(), levelName(after))
                     .withStyle(ChatFormatting.GOLD));
+            Diary.onTrust(owner, ally.rider(), level(after));
         }
         return e;
     }

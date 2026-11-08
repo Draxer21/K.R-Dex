@@ -116,6 +116,7 @@ public class DexDriverItem extends Item {
                 setDeck(driver, updated);
                 if (card.family() == DexCard.Family.KAMEN_RIDE && player instanceof net.minecraft.server.level.ServerPlayer sp) {
                     com.draxer.dexrider.rider.KTouch.onKamenRideAdded(sp, driver, updated);
+                    com.draxer.dexrider.rider.Diary.onCard(sp, card, false);
                 }
             }
         }

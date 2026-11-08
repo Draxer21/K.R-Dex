@@ -83,6 +83,10 @@ public final class DexItems {
     public static final DeferredItem<com.draxer.dexrider.item.RiderGuideItem> RIDER_GUIDE = ITEMS.registerItem("rider_guide",
             props -> new com.draxer.dexrider.item.RiderGuideItem(props.stacksTo(1)));
 
+    // ---------- Diario de Yusuke (0.55): lo que haces, contado por el ----------
+    public static final DeferredItem<com.draxer.dexrider.item.DiaryItem> DIARY = ITEMS.registerItem("yusuke_diary",
+            props -> new com.draxer.dexrider.item.DiaryItem(props.stacksTo(1)));
+
     // ---------- K-Touch y carta de Complete Form (los forja el Driver con nueve Kamen Ride) ----------
     public static final DeferredItem<KTouchItem> K_TOUCH = ITEMS.registerItem("k_touch",
             props -> new KTouchItem(props.stacksTo(1).rarity(Rarity.EPIC)));
@@ -201,6 +205,7 @@ public final class DexItems {
                     .displayItems((params, output) -> {
                         output.accept(DEX_DRIVER.get());
                         output.accept(RIDER_GUIDE.get());
+                        output.accept(DIARY.get());
                         for (DexCard card : DexCard.values()) {
                             output.accept(CARDS.get(card).get());
                         }

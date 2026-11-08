@@ -22,6 +22,7 @@ public final class DexConfig {
     public static final ModConfigSpec.DoubleValue ALLY_CHATTER;
     public static final ModConfigSpec.BooleanValue ALLY_REACTIONS;
     public static final ModConfigSpec.BooleanValue SHOW_ZONES;
+    public static final ModConfigSpec.BooleanValue DIARY_NOTICE;
 
     static {
         ModConfigSpec.Builder b = new ModConfigSpec.Builder();
@@ -55,6 +56,9 @@ public final class DexConfig {
         VOICE_VOLUME = b.comment("Volumen de las voces del Driver (Kamen Ride, Attack Ride...). 0 = sin voces.")
                 .translation("dexrider.configuration.voiceVolume")
                 .defineInRange("voiceVolume", 1.0, 0.0, 1.0);
+        DIARY_NOTICE = b.comment("Aviso sobre la barra cuando el diario de Yusuke anota algo nuevo.")
+                .translation("dexrider.configuration.diaryNotice")
+                .define("diaryNotice", true);
         b.pop();
         b.push("allies");
         ALLY_CHATTER = b.comment("Cuanto hablan los amigos y los Riders por su cuenta (charlas entre ellos, comentarios, reacciones). 0 = nada, 1 = normal.")
@@ -87,6 +91,7 @@ public final class DexConfig {
     public static boolean ambush() { return bool(AMBUSH, true); }
     public static boolean targetRead() { return bool(TARGET_READ, true); }
     public static float voiceVolume() { return (float) d(VOICE_VOLUME, 1.0); }
+    public static boolean diaryNotice() { return bool(DIARY_NOTICE, true); }
     public static double allyChatter() { return d(ALLY_CHATTER, 1.0); }
     public static boolean allyReactions() { return bool(ALLY_REACTIONS, true); }
     public static boolean showZones() { return bool(SHOW_ZONES, true); }
