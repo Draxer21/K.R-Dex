@@ -373,11 +373,11 @@ public final class ShotDirector {
         // menu de un amigo Rider (datos de ejemplo)
         s.add(new Step(t + 186, () -> Minecraft.getInstance().setScreen(new AllyMenuScreen(new com.draxer.dexrider.network.AllyMenuPayload(
                 -1, "spore", false, true, "farm", 40, 130, 260, 0, "Piedra", 7, 4, 7, 12, 2, 4, 55, 24)))));
+        s.add(new Step(t + 192, () -> shoot("ally_menu")));
         s.add(new Step(t + 195, () -> Minecraft.getInstance().setScreen(new AllyTalkScreen(new com.draxer.dexrider.network.AllyTalkPayload(
                 -1, "spore", 55, 0b01111, "dialog.dexrider.spore.topic_deep.1")))));
         s.add(new Step(t + 199, () -> shoot("ally_talk")));
         s.add(new Step(t + 201, () -> Minecraft.getInstance().setScreen(null)));
-        s.add(new Step(t + 192, () -> shoot("ally_menu")));
         s.add(new Step(t + 194, () -> Minecraft.getInstance().setScreen(null)));
         t += 96;
         // 8: la Lectura del Driver (primera persona, frente a un golem que ya intercambio golpes contigo)

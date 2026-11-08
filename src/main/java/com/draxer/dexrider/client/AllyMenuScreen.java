@@ -18,10 +18,10 @@ import net.neoforged.neoforge.client.network.ClientPacketDistributor;
  */
 public class AllyMenuScreen extends Screen {
 
-    private static final int W = 320, H = 274;
+    private static final int W = 320, H = 222;
     private static final String[] SKILLS = {"mine", "chop", "farm", "craft"};
     private AllyMenuPayload data;
-    private int left, top;
+    private int left, top, workY, zoneY;
 
     public AllyMenuScreen(AllyMenuPayload data) {
         super(Component.translatable("screen.dexrider.ally_menu"));
@@ -63,26 +63,27 @@ public class AllyMenuScreen extends Screen {
         left = (width - W) / 2;
         top = (height - H) / 2;
         clearWidgets();
-        int bx = left + 168, bw = 70, gap = 4, y = top + 24;
+        int bx = left + 168, bw = 70, gap = 4, y = top + 20;
         addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.ally_menu.chat"), b -> send(AllyActionPayload.CHAT))
-                .bounds(bx, y, bw, 16).build());
+                .bounds(bx, y, bw, 15).build());
         addRenderableWidget(Button.builder(Component.translatable(data.summoned() ? "screen.dexrider.ally_menu.go_home" : "screen.dexrider.ally_menu.follow"),
-                b -> send(AllyActionPayload.TOGGLE)).bounds(bx + bw + gap, y, bw, 16).build());
-        y += 20;
+                b -> send(AllyActionPayload.TOGGLE)).bounds(bx + bw + gap, y, bw, 15).build());
+        y += 17;
         addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.ally_menu.live_here"), b -> send(AllyActionPayload.LIVE_HERE))
-                .bounds(bx, y, bw * 2 + gap, 16).build());
+                .bounds(bx, y, bw * 2 + gap, 15).build());
 
         // trabajos
-        y += 26;
+        y += 29;
+        workY = y - 10;
         String[] jobs = {"mine", "chop", "farm", "craft", "flatten", "fish", "breed", "smelt", "guard"};
         int[] acts = {AllyActionPayload.JOB_MINE, AllyActionPayload.JOB_CHOP, AllyActionPayload.JOB_FARM, AllyActionPayload.JOB_CRAFT, AllyActionPayload.JOB_FLATTEN,
                 AllyActionPayload.JOB_FISH, AllyActionPayload.JOB_BREED, AllyActionPayload.JOB_SMELT, AllyActionPayload.JOB_GUARD};
         for (int i = 0; i < jobs.length; i++) {
             String skill = jobs[i].equals("flatten") ? "mine" : jobs[i];
-            int x = bx + (i % 2) * (bw + gap), yy = y + (i / 2) * 20;
+            int x = bx + (i % 2) * (bw + gap), yy = y + (i / 2) * 17;
             final int act = acts[i];
             Button b = addRenderableWidget(Button.builder(cap(Component.translatable("job.dexrider." + jobs[i])), c -> send(act))
-                    .bounds(x, yy, bw, 16).build());
+                    .bounds(x, yy, bw, 15).build());
             boolean chore = i >= 5;      // quehaceres: no se aprenden
             boolean knows = chore || xp(skill) >= AllySkills.LEARNED;
             boolean current = jobs[i].equals(data.job());
@@ -97,35 +98,36 @@ public class AllyMenuScreen extends Screen {
             }
         }
         Button stop = addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.ally_menu.rest"), c -> send(AllyActionPayload.JOB_STOP))
-                .bounds(bx + bw + gap, y + 80, bw, 16).build());
+                .bounds(bx + bw + gap, y + 68, bw, 15).build());
         stop.active = !data.job().isEmpty();
 
         // zona y filtro
-        y += 106;
+        y += 97;
+        zoneY = y - 10;
         addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.ally_menu.zone_mark"), c -> send(AllyActionPayload.ZONE_MARK))
-                .bounds(bx, y, bw, 16).build());
+                .bounds(bx, y, bw, 15).build());
         Button zc = addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.ally_menu.zone_clear"), c -> send(AllyActionPayload.ZONE_CLEAR))
-                .bounds(bx + bw + gap, y, bw, 16).build());
+                .bounds(bx + bw + gap, y, bw, 15).build());
         zc.active = data.zoneX() > 0;
-        y += 20;
+        y += 17;
         Button fh = addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.ally_menu.filter_hand"), c -> send(AllyActionPayload.FILTER_HAND))
-                .bounds(bx, y, bw, 16).build());
+                .bounds(bx, y, bw, 15).build());
         fh.setTooltip(Tooltip.create(Component.translatable("screen.dexrider.ally_menu.filter_hand.tip")));
         Button fc = addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.ally_menu.filter_clear"), c -> send(AllyActionPayload.FILTER_CLEAR))
-                .bounds(bx + bw + gap, y, bw, 16).build());
+                .bounds(bx + bw + gap, y, bw, 15).build());
         fc.active = !data.filter().isEmpty();
-        y += 20;
+        y += 17;
         Button pc = addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.ally_menu.plan_copy"), c -> send(AllyActionPayload.PLAN_COPY))
-                .bounds(bx, y, bw, 16).build());
+                .bounds(bx, y, bw, 15).build());
         pc.active = data.zoneX() > 0;
         pc.setTooltip(Tooltip.create(Component.translatable("screen.dexrider.ally_menu.plan_copy.tip")));
         Button bp = addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.ally_menu.build"), c -> send(AllyActionPayload.BUILD_PICK))
-                .bounds(bx + bw + gap, y, bw, 16).build());
+                .bounds(bx + bw + gap, y, bw, 15).build());
         bp.active = data.plan() > 0 && !"build".equals(data.job());
         bp.setTooltip(Tooltip.create(Component.translatable("screen.dexrider.ally_menu.build.tip")));
-        y += 20;
+        y += 17;
         Button bag = addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.ally_menu.take_bag", data.bag()), c -> send(AllyActionPayload.TAKE_BAG))
-                .bounds(bx, y, bw * 2 + gap, 16).build());
+                .bounds(left + 8, top + 172, 148, 15).build());
         bag.active = data.bag() > 0;
     }
 
@@ -174,7 +176,8 @@ public class AllyMenuScreen extends Screen {
         line(g, x, y, "screen.dexrider.ally_menu.plan", data.plan() == 0 ? Component.translatable("screen.dexrider.ally_menu.none")
                 : Component.translatable("screen.dexrider.ally_menu.plan_blocks", data.plan())); y += 12;
         line(g, x, y, "screen.dexrider.ally_menu.carrying", Component.literal(String.valueOf(data.bag()))); y += 12;
-        line(g, x, y, "screen.dexrider.ally_menu.recipes", Component.literal(String.valueOf(data.recipes()))); y += 16;
+        line(g, x, y, "screen.dexrider.ally_menu.recipes", Component.literal(String.valueOf(data.recipes())));
+        y = top + 191;      // debajo del boton de recoger
         for (var l : font.split(Component.translatable("screen.dexrider.ally_menu.hint"), 148)) {
             if (y > top + H - 12) break;
             g.text(font, l, x, y, 0xFF8A8E9A, false);
@@ -182,8 +185,8 @@ public class AllyMenuScreen extends Screen {
         }
 
         // titulos de la columna de botones
-        g.text(font, Component.translatable("screen.dexrider.ally_menu.work"), left + 168, top + 60, 0xFFF2C230, false);
-        g.text(font, Component.translatable("screen.dexrider.ally_menu.zone_filter"), left + 168, top + 166, 0xFFF2C230, false);
+        g.text(font, Component.translatable("screen.dexrider.ally_menu.work"), left + 168, workY, 0xFFF2C230, false);
+        g.text(font, Component.translatable("screen.dexrider.ally_menu.zone_filter"), left + 168, zoneY, 0xFFF2C230, false);
         super.extractRenderState(g, mouseX, mouseY, partialTick);
     }
 
