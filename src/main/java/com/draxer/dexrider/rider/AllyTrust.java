@@ -70,7 +70,7 @@ public final class AllyTrust {
 
     /** Dia de juego (cada 24000 ticks). */
     private static long day(ServerLevel level) {
-        return level.getDayTime() / 24000L;
+        return level.getGameTime() / 24000L;
     }
 
     /** Entrada con el contador del dia al dia (si cambio el dia, se borran banderas y peleas). */
