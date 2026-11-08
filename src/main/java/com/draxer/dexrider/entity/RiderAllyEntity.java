@@ -62,6 +62,10 @@ public class RiderAllyEntity extends RiderMob {
     private com.draxer.dexrider.item.AllySkills.Entry skills = com.draxer.dexrider.item.AllySkills.Entry.EMPTY;
     private final java.util.List<net.minecraft.world.item.ItemStack> bag = new java.util.ArrayList<>();
     public static final int BAG_SLOTS = 9;
+    // rutina en casa (AllyRoutine)
+    @Nullable RiderAllyEntity momentPartner;
+    boolean momentLeader, momentSpoke, saidGoodnight, routineBusy;
+    int momentTicks;
 
     public RiderAllyEntity(EntityType<? extends PathfinderMob> type, Level level, KamenRide rider) {
         super(type, level, rider);
@@ -113,10 +117,14 @@ public class RiderAllyEntity extends RiderMob {
         this.goalSelector.addGoal(2, new MeleeAttackGoal(this, 1.25, true));
         this.goalSelector.addGoal(3, new AllyWorkGoal(this));
         this.goalSelector.addGoal(6, new WaterAvoidingRandomStrollGoal(this, 0.7) {
-            @Override public boolean canUse() { return mode == Mode.WANDER && workJob() == null && super.canUse(); }
+            @Override public boolean canUse() { return mode == Mode.WANDER && workJob() == null && !routineBusy && !isSleeping() && super.canUse(); }
         });
-        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 10.0F));
-        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this));
+        this.goalSelector.addGoal(7, new LookAtPlayerGoal(this, Player.class, 10.0F) {
+            @Override public boolean canUse() { return !isSleeping() && super.canUse(); }
+        });
+        this.goalSelector.addGoal(8, new RandomLookAroundGoal(this) {
+            @Override public boolean canUse() { return !isSleeping() && super.canUse(); }
+        });
     }
 
     @Override
@@ -205,6 +213,8 @@ public class RiderAllyEntity extends RiderMob {
         }
         if (tickCount % 10 == 0) pickTarget(level);
         if (helpJob != null && level.getGameTime() > helpUntil) { helpJob = null; helpPos = null; }
+        routineBusy = AllyRoutine.tick(this, level);
+        if (routineBusy) return;                                 // durmiendo, yendo a la cama o en un momento
         if (workJob() != null && getTarget() == null) return;   // trabajando: AllyWorkGoal manda
         if (mode == Mode.SUMMONED) followOwner(level);
         else stayNearHome(level);
