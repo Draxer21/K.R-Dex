@@ -119,7 +119,9 @@ public final class AllyChores {
         }
         Vec3 w = Vec3.atCenterOf(st.water);
         ally.getLookControl().setLookAt(w.x, w.y, w.z);
-        if (ally.distanceToSqr(Vec3.atBottomCenterOf(st.stand)) > 1.5) {
+        double wx = w.x - ally.getX(), wz = w.z - ally.getZ();
+        boolean reach = wx * wx + wz * wz <= 9 && Math.abs(st.water.getY() - ally.getY()) <= 2.5;   // a la orilla, o cerca
+        if (!reach && ally.distanceToSqr(Vec3.atBottomCenterOf(st.stand)) > 1.5) {
             walk(ally, st.stand, 0.9);
             if (++st.stuck > 300) st.reset();
             return;
