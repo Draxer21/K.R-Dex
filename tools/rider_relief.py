@@ -405,7 +405,7 @@ def process(model, spec, parts, base_bones, side, clean, report):
     for key in sorted(reqs, key=lambda k: (-k[2], -k[1], k[0], k[3])):
         sheet.put(key, styles[key[0]], key[1], key[2], CLASS_FACE[key[3]])
     for grp, cubes in use.items():
-        if cubes:
+        if cubes or grp in spec.get('skip', {}).get(model, ()):   # una zona con diseno propio deja el hueso vacio
             g['bones'].append({'name': PREFIX + grp, 'parent': PARENT[grp], 'pivot': bones[PARENT[grp]].get('pivot', [0, 0, 0]),
                                'cubes': [to_geo(c, sheet) for c in cubes]})
     g['description']['texture_height'] = sheet.tex.shape[0]
@@ -626,7 +626,9 @@ def proto():
 
 
 SUITS = {
-    'cipher': {'model': 'rider_cipher', 'variants': ['rider_cipher_accel', 'rider_cipher_blaster'], 'parts': cipher, 'styles': {
+    'cipher': {'model': 'rider_cipher', 'variants': ['rider_cipher_accel', 'rider_cipher_blaster'], 'parts': cipher,
+               'skip': {'rider_cipher': ['head', 'body', 'rarm', 'larm', 'rleg', 'lleg', 'rboot', 'lboot']},   # Cipher Base tiene diseno propio completo (tools/cipher_base.py); Accel y Blaster siguen igual
+               'styles': {
         'sil': {'col': '#c4ccdc'}, 'silr': {'col': '#c4ccdc', 'rivets': '#6c7484'}, 'sils': {'col': '#c4ccdc', 'slots': '#6c7484'},
         'navy': {'col': '#1c2c5c'}, 'navyr': {'col': '#1c2c5c', 'rivets': '#c4ccdc'}, 'navys': {'col': '#1c2c5c', 'slots': '#0c142c'},
         'dnavy': {'col': '#121a36'}, 'gray': {'col': '#6c7484'}, 'lit': {'kind': 'glow', 'col': '#e8f6ff'}}},
@@ -678,7 +680,10 @@ def main():
         base = load(spec['model'])['minecraft:geometry'][0]
         base_bones = {b['name']: {sig(c) for c in b.get('cubes', [])} for b in base['bones'] if not b['name'].startswith(PREFIX)}
         for model in [spec['model']] + spec.get('variants', []):
-            process(model, spec, parts, base_bones, side, clean, report)
+            # 'skip': zonas que un modelo ya no recibe porque tiene diseno propio (el casco nuevo de Cipher Base)
+            skip = spec.get('skip', {}).get(model, ())
+            mparts = {z: ([] if z in skip else cs) for z, cs in parts.items()}
+            process(model, spec, mparts, base_bones, side, clean, report)
     json.dump(side, open(SIDE, 'w'), indent=1, sort_keys=True)
     print('\n'.join(report))
 
