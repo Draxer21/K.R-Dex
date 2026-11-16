@@ -148,6 +148,12 @@ public final class DexComponents {
                     .persistent(Codec.BOOL)
                     .networkSynchronized(ByteBufCodecs.BOOL));
 
+    /** Escaneo en curso (en el peto, para que todos lo vean): tick de juego en que termina; negativo = recien completado. */
+    public static final Supplier<DataComponentType<Long>> SCAN_FX =
+            COMPONENTS.registerComponentType("scan_fx", builder -> builder
+                    .persistent(Codec.LONG)
+                    .networkSynchronized(ByteBufCodecs.VAR_LONG));
+
     /** El Driver ya forjo el K-Touch (para no darlo dos veces). */
     public static final Supplier<DataComponentType<Boolean>> KTOUCH_FORGED =
             COMPONENTS.registerComponentType("ktouch_forged", builder -> builder

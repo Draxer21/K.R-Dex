@@ -585,7 +585,7 @@ Los trajes guardados antes de la 0.33 pasan solos a la primera ranura.
 
 
 **Etapa 3 del editor (0.48.0):**
-- **Líneas del visor**: clásico, horizontal, vertical o diagonal; finas o gruesas; juntas o separadas; y su propio
+- **Líneas del visor**: clásico, horizontal, vertical, diagonal u ondas; finas o gruesas; juntas o separadas; y su propio
   color (zona *Líneas visor*). "Ninguna" deja el lente liso.
 - **Upgrade Form**: cuernos (hoja o dobles), hombros (tapa o cuchillas), pecho (placa o núcleo de cristal que brilla) y
   espalda (capa o bufanda). Usan tus colores de acento, plata, cristal y bufanda.
@@ -801,7 +801,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
-- **0.49.0** — Más relieve en los trajes de Nine, Forge, Cipher, Warden, Spore, Mirage y Proto: piezas 3D nuevas con diseño propio (sombrero de seta de Spore, cristales de Mirage, puertos y aro del visor de Proto, placas desmontables de Forge, gorra y placa de Warden, rieles y cartuchos de Cipher, espina y guardas de Nine). Herramientas `tools/rider_relief.py` y `tools/geo_preview.py`.
+- **0.49.0** — Escanear se ve: mientras el Driver toma muestras, los ojos de Dex brillan y pasan por magenta, dorado, verde, rojo y azul; al completar, parpadean en blanco (lo ven todos). Visor nuevo: **ondas** (líneas onduladas paralelas, sin centro). Más relieve en los trajes de Nine, Forge, Cipher, Warden, Spore, Mirage y Proto: piezas 3D nuevas con diseño propio (sombrero de seta de Spore, cristales de Mirage, puertos y aro del visor de Proto, placas desmontables de Forge, gorra y placa de Warden, rieles y cartuchos de Cipher, espina y guardas de Nine). Herramientas `tools/rider_relief.py` y `tools/geo_preview.py`.
 - **0.48.0** — Editor del traje, etapa 3: líneas del visor (orientación, grosor, separación y color), piezas para la Upgrade Form (cuernos, hombros, pecho, capa o bufanda) y una pieza propia para cada Form Ride (alerón, tanques, placas, cristales, llamas, aletas).
 - **0.47.0** — Construir copiando: el amigo memoriza lo que hay en su zona (**Copiar plano**) y levanta una copia donde le digas (**Construir** + Shift + clic derecho), con los materiales del cofre.
 - **0.46.0** — Quehaceres nuevos para los amigos (no hace falta enseñarlos): pescar, criar animales, usar los hornos y vigilar la casa de noche. Se encargan desde el menú o con caña, rienda, horno o espada.

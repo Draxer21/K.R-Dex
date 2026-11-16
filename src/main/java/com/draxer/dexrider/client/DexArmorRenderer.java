@@ -42,6 +42,9 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
     public static final DataTicket<String> CIPHER_MODE = DataTicket.create("dexrider_cipher_mode", String.class);
     public static final DataTicket<SuitLooks.Resolved> LOOK = DataTicket.create("dexrider_look", SuitLooks.Resolved.class);
     /** Alas de Sky: nivel (0 = sin alas), cuanto estan abiertas (0-1) y el tiempo para el aleteo. */
+    /** Escaneo: -1 nada, 0..1 fase del ciclo de colores, 2 destello de escaneo completado. */
+    public static final DataTicket<Float> SCAN = DataTicket.create("dexrider_scan", Float.class);
+    private static final int[] SCAN_COLORS = {0xFF2BD6, 0xF2C230, 0x28D250, 0xE0202C, 0x2AA8FF};
     public static final DataTicket<Integer> SKY = DataTicket.create("dexrider_sky", Integer.class);
     public static final DataTicket<Float> SKY_OPEN = DataTicket.create("dexrider_sky_open", Float.class);
     public static final DataTicket<Float> SKY_TIME = DataTicket.create("dexrider_sky_time", Float.class);
@@ -74,7 +77,7 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
                 (s, seg) -> look(s).color(SuitLook.VISOR), s -> false));
         withRenderLayer(new TintLayer<>(this,
                 s -> !custom(s) ? null : tex(s, eyesLayer(s), false),
-                (s, seg) -> look(s).color(SuitLook.EYES), s -> look(s).on("glow_eyes")));
+                (s, seg) -> scanColor(s, look(s).color(SuitLook.EYES)), s -> look(s).on("glow_eyes") || scanning(s)));
         // Ojos y luces de los demas Riders, a plena luz
         withRenderLayer(new TintLayer<>(this,
                 state -> custom(state) ? null : RiderArmorModel.glowTexture(state),
@@ -82,6 +85,27 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
     }
 
     /** Dex en su forma de Dex (sin Upgrade). */
+    private static boolean scanning(GeoRenderState s) {
+        Float f = s.getGeckolibData(SCAN);
+        return f != null && f >= 0;
+    }
+
+    /** Mientras escanea, los ojos pasan suavemente por los colores de Dex; al completar, destello blanco. */
+    private static int scanColor(GeoRenderState s, int base) {
+        Float f = s.getGeckolibData(SCAN);
+        if (f == null || f < 0) return base;
+        if (f >= 2) return 0xFFFFFF;
+        float x = f * SCAN_COLORS.length;
+        int i = (int) x % SCAN_COLORS.length, j = (i + 1) % SCAN_COLORS.length;
+        float t = x - (int) x;
+        int a = SCAN_COLORS[i], b = SCAN_COLORS[j], out = 0;
+        for (int sh = 0; sh <= 16; sh += 8) {
+            int ca = (a >> sh) & 0xFF, cb = (b >> sh) & 0xFF;
+            out |= Math.round(ca + (cb - ca) * t) << sh;
+        }
+        return out;
+    }
+
     private static boolean isDex(GeoRenderState state) {
         return RiderArmorModel.rider(state) == KamenRide.DEX && !Boolean.TRUE.equals(state.getGeckolibData(UPGRADE));
     }
@@ -183,6 +207,12 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
         renderState.addGeckolibData(SKY, sky);
         renderState.addGeckolibData(SKY_OPEN, open);
         renderState.addGeckolibData(SKY_TIME, entity.tickCount + partialTick);
+        Long scan = chest.get(DexComponents.SCAN_FX.get());
+        long now = entity.level().getGameTime();
+        float scanPhase = -1;
+        if (scan != null && scan > 0 && now < scan) scanPhase = ((now % 40) + partialTick) / 40F;   // un ciclo cada 2 s
+        else if (scan != null && scan < 0 && now < -scan && (now / 3) % 2 == 0) scanPhase = 2;      // parpadeo al completar
+        renderState.addGeckolibData(SCAN, scanPhase);
     }
 
     /** Oculta las variantes de piezas que el jugador no eligio. */
