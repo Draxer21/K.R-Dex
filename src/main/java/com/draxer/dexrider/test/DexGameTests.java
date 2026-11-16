@@ -61,6 +61,7 @@ public final class DexGameTests {
         FUNCTIONS.register("lent_driver", () -> DexGameTests::lentDriver);
         FUNCTIONS.register("guard", () -> DexGameTests::guard);
         FUNCTIONS.register("combos", () -> DexGameTests::combos);
+        FUNCTIONS.register("double_kick", () -> DexGameTests::doubleKick);
         FUNCTIONS.register("architect", () -> DexGameTests::architect);
         FUNCTIONS.register("combat_read", () -> DexGameTests::combatRead);
         FUNCTIONS.register("starter", () -> DexGameTests::starter);
@@ -498,6 +499,38 @@ public final class DexGameTests {
             int pair = com.draxer.dexrider.rider.Combos.onFinisher(level, p);
             if (pair != 1) fail(h, t, "dos jugadores rematando juntos no hicieron combo");
             log(t, "ok: combo con Kaixa (golem " + hp0 + " -> " + (golem.isAlive() ? golem.getHealth() : 0) + ") y combo entre jugadores");
+            h.succeed();
+        });
+    }
+
+    /** Ataque combinado: Dex y Nine saltan juntos, pican sobre el golem y le hacen mucho dano. */
+    static void doubleKick(GameTestHelper h) {
+        String t = "double_kick";
+        ServerPlayer p = player(h, DexCard.values());
+        transform(h, t, p);
+        faceEast(p);
+        tickPlayer(h, p);
+        ServerLevel level = h.getLevel();
+        com.draxer.dexrider.rider.AllyManager.befriend(level, p, KamenRide.NINE, h.absolutePos(new BlockPos(5, 1, 12)));
+        for (var a : level.getEntitiesOfClass(com.draxer.dexrider.entity.RiderAllyEntity.class, p.getBoundingBox().inflate(16))) a.setCivilian(false);
+        var golem = h.spawn(net.minecraft.world.entity.EntityType.IRON_GOLEM, new BlockPos(11, 1, 8));
+        golem.setNoAi(true);
+        golem.setLastHurtByMob(p);
+        float hp0 = golem.getHealth();
+        if (!com.draxer.dexrider.rider.DoubleKick.tryStart(level, p)) { fail(h, t, "no empezo el ataque combinado"); return; }
+        var ally = com.draxer.dexrider.rider.DoubleKick.partner(level, p);
+        final boolean[] rose = {false};
+        final long t0 = level.getGameTime();
+        h.onEachTick(() -> {
+            if (ally != null && ally.getY() > p.getY() - 0.5 && p.getY() > h.absolutePos(new BlockPos(0, 1, 0)).getY() + 1.5) rose[0] = true;
+            if (com.draxer.dexrider.rider.DoubleKick.isActive(p)) {
+                if (level.getGameTime() - t0 > 90) fail(h, t, "el ataque combinado no termino");
+                return;
+            }
+            float hp = golem.isAlive() ? golem.getHealth() : 0;
+            if (hp0 - hp < 25) { fail(h, t, "poco dano: " + hp0 + " -> " + hp); return; }
+            if (!rose[0]) { fail(h, t, "no saltaron juntos"); return; }
+            log(t, "ok: Dex + Nine, golem " + hp0 + " -> " + hp + " en " + (level.getGameTime() - t0) + " ticks");
             h.succeed();
         });
     }

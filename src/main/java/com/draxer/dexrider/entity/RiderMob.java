@@ -308,6 +308,10 @@ public abstract class RiderMob extends PathfinderMob implements GeoEntity {
         if (!isCivilian()) ambientFx(level);
         talkAndForm(level);
         if (isCivilian()) return;
+        if (comboLock > 0) {
+            comboLock--;
+            return;
+        }
         if (kickPhase > 0) {
             kickTick(level);
             return;
@@ -594,6 +598,14 @@ public abstract class RiderMob extends PathfinderMob implements GeoEntity {
         kickCooldown = 400 + getRandom().nextInt(200);
         setDeltaMovement(getDeltaMovement().scale(0.2).add(0, 0.3, 0));
         hurtMarked = true;
+    }
+
+    /** Ataque combinado con el jugador (DoubleKick): mientras sea > 0, su propia IA de combate no actua. */
+    public int comboLock;
+
+    /** Pose de patada para el ataque combinado (la anima el cliente, igual que su Rider Kick). */
+    public void setComboPose(boolean on) {
+        this.entityData.set(DATA_KICK, on);
     }
 
     public boolean isKicking() {

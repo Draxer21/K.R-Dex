@@ -38,6 +38,7 @@ public final class DexEvents {
         if (!(player.level() instanceof ServerLevel level)) return;
 
         RiderKick.tick(level, player);
+        DoubleKick.tick(level, player);
         Guard.tick(player);
         if (player.tickCount % 100 == 0) AllyManager.tickPlayer(player);
         if (player.tickCount % 100 == 50) DaiShocker.tickPlayer(player);
