@@ -116,6 +116,54 @@
           ]
         }
       ]
+    },
+    {
+      "rolls": 1,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:written_book",
+          "functions": [
+            {
+              "function": "minecraft:set_book_cover",
+              "title": "Cuaderno de Takumi (17)",
+              "author": "Takumi Kagami",
+              "generation": 2
+            },
+            {
+              "function": "minecraft:set_written_book_pages",
+              "mode": "replace_all",
+              "pages": [
+                {
+                  "translate": "book.dexrider.takumi_notes.p1"
+                },
+                {
+                  "translate": "book.dexrider.takumi_notes.p2"
+                },
+                {
+                  "translate": "book.dexrider.takumi_notes.p3"
+                },
+                {
+                  "translate": "book.dexrider.takumi_notes.p4"
+                },
+                {
+                  "translate": "book.dexrider.takumi_notes.p5"
+                },
+                {
+                  "translate": "book.dexrider.takumi_notes.p6"
+                }
+              ]
+            },
+            {
+              "function": "minecraft:set_name",
+              "target": "item_name",
+              "name": {
+                "translate": "book.dexrider.takumi_notes.title"
+              }
+            }
+          ]
+        }
+      ]
     }
   ]
 }

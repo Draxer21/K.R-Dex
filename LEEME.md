@@ -254,8 +254,11 @@ casco rojo con espolones dorados, cruz X blanca sobre el torso negro, púas roja
   junglas y pantanos), **Kaijin Rinoceronte** (blindado, embiste; sabanas y montes). Aparecen de noche como cualquier monstruo.
 - **Quimera** (jefe, 180 corazones, barra de jefe): salta y aplasta, embiste, barre con la guadaña y, herida, llama a combatientes.
 - **Emboscadas**: de noche, transformado y con 3+ Kamen Ride, a veces Dai-Shocker te tiende una; con 6+ puede venir la Quimera.
-- **Casa de la montaña de los Kagami** (biomas de montaña): cabaña con chimenea, mesa del té y la cama roja de Nagisa;
-  en el sótano, el taller con el **equipo Blaster** (cofre), vigilado por combatientes.
+- **Casa de la montaña de los Kagami** (biomas de montaña, 21×18, tres plantas): porche con faroles, sala con la mesa del té
+  y la chimenea, rincón de recuerdos, cocina con despensa (cofre) y el garaje de Tetsuya con el banco de la moto; arriba, los
+  cuartos de Nagisa (cama roja), Genzo y Tetsuya, un estudio y el cuarto de invitados. Por la escotilla junto a la sala se
+  baja al **sótano**: el taller de Takumi con el **equipo Blaster** (cofre), la forja y una zona de entrenamiento con dianas,
+  vigilado por combatientes. En el cofre del taller está el **Cuaderno de Takumi**. Se genera con `tools/mountain_house.py`.
 - **Depósito de la Comisión** (llanuras y sabanas): Dai-Shocker lo está asaltando; cofres con cartas y materiales.
 - Escanear: la Mantis da Sword, el Rinoceronte Power Knuckle y la Quimera Ground Wave.
 
@@ -838,6 +841,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.54.0** — La casa de la montaña crece: tres plantas (porche, sala con chimenea, cocina, garaje de Tetsuya, cuartos de Nagisa, Genzo y Tetsuya, estudio) y un sótano con el taller de Takumi, el equipo Blaster y una zona de entrenamiento. Nuevo: el Cuaderno de Takumi en el cofre del taller.
 - **0.53.0** — Encargos de los amigos de U.A.: Izuku, Momo, Kinoko, Toru y Mei tienen tres encargos cada uno (botón *Encargo* en su menú), con diálogos propios, recompensas, confianza y un logro por amigo.
 - **0.52.0** — Jefes de Dai-Shocker: Sello de desafío que levanta una arena y llama a la Mantis Reina, el Rinoceronte Titán o el Comandante, cada uno con tres fases; dejan las cartas raras Queen Blink, Titan Quake y Command.
 - **0.51.0** — Mazos por tipo en el Ride Booker: Kamen Ride, Form Ride, Attack Ride, Armed Ride y Vehicle Ride (en vez de Rescate, Multitudes, etc.). Las cartas nuevas van solas a su mazo y los Booker existentes se reordenan una vez; las favoritas del selector y la carta elegida se conservan.
