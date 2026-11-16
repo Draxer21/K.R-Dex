@@ -70,7 +70,11 @@ public class AllyMenuScreen extends Screen {
                 b -> send(AllyActionPayload.TOGGLE)).bounds(bx + bw + gap, y, bw, 15).build());
         y += 17;
         addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.ally_menu.live_here"), b -> send(AllyActionPayload.LIVE_HERE))
-                .bounds(bx, y, bw * 2 + gap, 15).build());
+                .bounds(bx, y, bw, 15).build());
+        Button mission = addRenderableWidget(Button.builder(Component.translatable("screen.dexrider.ally_menu.mission"), b -> { send(AllyActionPayload.MISSION); onClose(); })
+                .bounds(bx + bw + gap, y, bw, 15).build());
+        mission.active = java.util.Set.of("nine", "forge", "spore", "mirage", "proto").contains(data.rider());
+        mission.setTooltip(Tooltip.create(Component.translatable(mission.active ? "screen.dexrider.ally_menu.mission.tip" : "screen.dexrider.ally_menu.mission.none")));
 
         // trabajos
         y += 29;

@@ -63,6 +63,7 @@ public final class DexGameTests {
         FUNCTIONS.register("combos", () -> DexGameTests::combos);
         FUNCTIONS.register("double_kick", () -> DexGameTests::doubleKick);
         FUNCTIONS.register("arena_bosses", () -> DexGameTests::arenaBosses);
+        FUNCTIONS.register("ua_missions", () -> DexGameTests::uaMissions);
         FUNCTIONS.register("architect", () -> DexGameTests::architect);
         FUNCTIONS.register("combat_read", () -> DexGameTests::combatRead);
         FUNCTIONS.register("starter", () -> DexGameTests::starter);
@@ -585,6 +586,40 @@ public final class DexGameTests {
                 default -> {}
             }
         });
+    }
+
+    /** Encargos de U.A.: pedir, cumplir (traer objetos / derrotar enemigos con el amigo cerca) y entregar. */
+    static void uaMissions(GameTestHelper h) {
+        String t = "ua_missions";
+        ServerPlayer p = player(h, DexCard.KAMEN_RIDE_DEX);
+        ServerLevel level = h.getLevel();
+        com.draxer.dexrider.rider.AllyManager.befriend(level, p, KamenRide.SPORE, h.absolutePos(new BlockPos(6, 1, 8)));
+        com.draxer.dexrider.rider.AllyManager.befriend(level, p, KamenRide.NINE, h.absolutePos(new BlockPos(10, 1, 8)));
+        java.util.function.Function<KamenRide, com.draxer.dexrider.entity.RiderAllyEntity> find = r -> level.getEntitiesOfClass(
+                com.draxer.dexrider.entity.RiderAllyEntity.class, p.getBoundingBox().inflate(16), a -> a.rider() == r).stream().findFirst().orElse(null);
+        var spore = find.apply(KamenRide.SPORE);
+        var nine = find.apply(KamenRide.NINE);
+        if (spore == null || nine == null) { fail(h, t, "no aparecieron Kinoko o Izuku"); return; }
+        // Kinoko: setas
+        com.draxer.dexrider.rider.UaMissions.talk(level, p, spore);
+        if (com.draxer.dexrider.rider.UaMissions.state(p, KamenRide.SPORE)[2] != 1) { fail(h, t, "no se acepto el encargo de Kinoko"); return; }
+        p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.RED_MUSHROOM, 10));
+        p.getInventory().add(new ItemStack(net.minecraft.world.item.Items.BROWN_MUSHROOM, 6));
+        com.draxer.dexrider.rider.UaMissions.talk(level, p, spore);
+        if (com.draxer.dexrider.rider.UaMissions.state(p, KamenRide.SPORE)[0] != 1) { fail(h, t, "no se entrego el encargo de Kinoko"); return; }
+        if (p.getInventory().contains(new ItemStack(net.minecraft.world.item.Items.RED_MUSHROOM))) { fail(h, t, "no gasto las setas"); return; }
+        if (!p.getInventory().contains(new ItemStack(net.minecraft.world.item.Items.MUSHROOM_STEW))) { fail(h, t, "no dio la recompensa"); return; }
+        // Izuku: derrotar monstruos con el cerca
+        com.draxer.dexrider.rider.UaMissions.talk(level, p, nine);
+        var zombie = h.spawn(net.minecraft.world.entity.EntityType.ZOMBIE, new BlockPos(8, 1, 12));
+        zombie.setNoAi(true);
+        for (int i = 0; i < 10; i++) com.draxer.dexrider.rider.UaMissions.onKill(p, zombie);
+        if (com.draxer.dexrider.rider.UaMissions.state(p, KamenRide.NINE)[1] != 10) { fail(h, t, "no conto los monstruos de Izuku"); return; }
+        com.draxer.dexrider.rider.UaMissions.talk(level, p, nine);
+        if (com.draxer.dexrider.rider.UaMissions.state(p, KamenRide.NINE)[0] != 1) { fail(h, t, "no se entrego el encargo de Izuku"); return; }
+        zombie.discard();
+        log(t, "ok: encargo de objetos (Kinoko) y de derrotas (Izuku) pedidos, cumplidos y entregados");
+        h.succeed();
     }
 
     static void architect(GameTestHelper h) {

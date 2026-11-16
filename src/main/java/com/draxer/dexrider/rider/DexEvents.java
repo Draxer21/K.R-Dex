@@ -44,7 +44,7 @@ public final class DexEvents {
         if (player.tickCount % 100 == 50) DaiShocker.tickPlayer(player);
         AllyManager.tickReunion(player);
         Scheduler.tick(player);
-        if (player.tickCount % 40 == 20) Missions.tick(player);
+        if (player.tickCount % 40 == 20) { Missions.tick(player); UaMissions.tick(player); }
 
         if (Transformation.isTransformed(player)) {
             if (player.tickCount % 20 == 0) {

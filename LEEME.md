@@ -663,6 +663,21 @@ a la vez y en orden. Cada misión se cumple sola cuando haces lo que pide: da su
 
 Si ya habías hecho algo de esto antes de la 0.36, se cumplen solas al entrar, una cada 2 segundos.
 
+### Encargos de los amigos de U.A.
+Izuku, Momo, Kinoko, Toru y Mei tienen **tres encargos cada uno**, en orden. Abre su menú y pulsa **Encargo**: la primera
+vez te lo piden; luego te muestra cómo vas; cuando está listo te avisan en el chat y vuelves a pulsar para entregarlo
+(los objetos se gastan al entregar). Cada encargo da objetos, niveles y confianza; al terminar los tres, un logro.
+
+| Amigo | 1 | 2 | 3 |
+|---|---|---|---|
+| Izuku | derrota 10 monstruos con él cerca | llega a *Buen amigo* | derrota un jefe de Dai-Shocker con él cerca |
+| Momo | 32 lingotes de hierro | 24 de redstone o polvo de piedra luminosa | derrota 3 Kaijin Rinoceronte con ella cerca |
+| Kinoko | 16 setas | derrota 15 monstruos de noche con ella cerca | llévala a un bosque oscuro, campo de champiñones o jardín pálido |
+| Toru | 12 fragmentos de amatista | llega a *Amigo* | derrota a la Mantis Reina con ella cerca |
+| Mei | 32 lingotes de cobre | que trabaje para ti (30 acciones) | 1 lingote de netherita |
+
+"Cerca" es a 24 bloques (16 para el bioma); cuentan los enemigos que derribas tú o tus amigos.
+
 ### Escaneo (cómo conseguir cartas en supervivencia)
 Transformado y con el Driver encima, el Driver registra lo que **ve en uso real** a 20 bloques o
 menos (con línea de visión y mirando hacia ahí). Lo que te hacen a ti no cuenta.
@@ -823,6 +838,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.53.0** — Encargos de los amigos de U.A.: Izuku, Momo, Kinoko, Toru y Mei tienen tres encargos cada uno (botón *Encargo* en su menú), con diálogos propios, recompensas, confianza y un logro por amigo.
 - **0.52.0** — Jefes de Dai-Shocker: Sello de desafío que levanta una arena y llama a la Mantis Reina, el Rinoceronte Titán o el Comandante, cada uno con tres fases; dejan las cartas raras Queen Blink, Titan Quake y Command.
 - **0.51.0** — Mazos por tipo en el Ride Booker: Kamen Ride, Form Ride, Attack Ride, Armed Ride y Vehicle Ride (en vez de Rescate, Multitudes, etc.). Las cartas nuevas van solas a su mazo y los Booker existentes se reordenan una vez; las favoritas del selector y la carta elegida se conservan.
 - **0.50.0** — Ataque combinado: Shift + Final Attack Ride con un amigo Rider cerca hace una doble Rider Kick coreografiada (llamada, salto juntos, dos filas de cartas, picada con estelas trenzadas, impacto con los dos colores) con frases propias de cada amigo.

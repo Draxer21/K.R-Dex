@@ -167,6 +167,11 @@ public final class DexComponents {
 
     /** Amigos Rider: version, descanso, invocacion activa y casa de cada uno (en el Driver). */
     /** Lo que los amigos Rider aprendieron mirandote trabajar (solo servidor). */
+    /** Encargos de los amigos de U.A. (rider -> [encargo, progreso, aceptado, avisado]). */
+    public static final Supplier<DataComponentType<java.util.Map<String, java.util.List<Integer>>>> UA_MISSIONS =
+            COMPONENTS.registerComponentType("ua_missions", builder -> builder
+                    .persistent(Codec.unboundedMap(Codec.STRING, Codec.INT.listOf())));
+
     public static final Supplier<DataComponentType<com.draxer.dexrider.item.AllySkills>> ALLY_SKILLS =
             COMPONENTS.registerComponentType("ally_skills", builder -> builder
                     .persistent(com.draxer.dexrider.item.AllySkills.CODEC));
