@@ -511,6 +511,34 @@ public final class ShotDirector {
         }));
         s.add(new Step(mt + 6, () -> shoot("hud_moveset")));
         t = mt + 12;
+        // 10: Cipher puesto por el jugador: forma base, un golpe animado, Accel, Blaster y vuelta a la base
+        s.add(new Step(t, () -> {
+            Minecraft.getInstance().options.setCameraType(net.minecraft.client.CameraType.THIRD_PERSON_FRONT);
+            Minecraft.getInstance().options.hideGui = true;
+            com.draxer.dexrider.network.CombatSyncPayload.last = com.draxer.dexrider.network.CombatSyncPayload.EMPTY;
+            server(srv -> {
+                ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+                p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                com.draxer.dexrider.rider.KamenRide.set(p.level(), p, com.draxer.dexrider.rider.KamenRide.CIPHER);
+            });
+        }));
+        s.add(new Step(t + 20, () -> shoot("cipher_jugador")));
+        s.add(new Step(t + 22, () -> server(srv -> com.draxer.dexrider.network.PosePayload.send(srv.getPlayerList().getPlayers().get(0), "m_heavy"))));
+        s.add(new Step(t + 30, () -> shoot("cipher_jugador_golpe")));
+        s.add(new Step(t + 40, () -> server(srv -> {
+            ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+            com.draxer.dexrider.rider.CipherModes.startAccel(p.level(), p);
+        })));
+        s.add(new Step(t + 52, () -> shoot("cipher_jugador_accel")));
+        s.add(new Step(t + 60, () -> server(srv -> {
+            ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+            com.draxer.dexrider.rider.CipherModes.clear(p);
+            p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, new ItemStack(DexItems.CIPHER_BLASTER.get()));
+        })));
+        s.add(new Step(t + 80, () -> shoot("cipher_jugador_blaster")));
+        s.add(new Step(t + 84, () -> server(srv -> srv.getPlayerList().getPlayers().get(0).setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, ItemStack.EMPTY))));
+        s.add(new Step(t + 100, () -> shoot("cipher_jugador_vuelta")));
+        t += 108;
         s.add(new Step(t + 10, () -> {
             DexRider.LOGGER.info("SHOTS: terminado");
             Minecraft.getInstance().stop();
