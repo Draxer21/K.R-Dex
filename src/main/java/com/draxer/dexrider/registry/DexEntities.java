@@ -72,6 +72,7 @@ public final class DexEntities {
             KAIJIN.put(kind, ENTITIES.register(kind.id, () -> EntityType.Builder.<com.draxer.dexrider.entity.KaijinEntity>of(
                             (type, level) -> kind == com.draxer.dexrider.entity.KaijinEntity.Kind.ARCHITECT
                                     ? new com.draxer.dexrider.entity.ArchitectEntity(type, level)
+                                    : kind.arenaBoss() ? new com.draxer.dexrider.entity.KaijinBossEntity(type, level, kind)
                                     : new com.draxer.dexrider.entity.KaijinEntity(type, level, kind), MobCategory.MONSTER)
                     .sized(0.6F * kind.scale, 1.95F * kind.scale)
                     .clientTrackingRange(kind.boss() ? 16 : 10)

@@ -35,6 +35,10 @@ public enum DexCard {
     ATTACK_RIDE_RHINO_CHARGE(Family.ATTACK_RIDE, 2),  // ver atacar a un Kaijin Rinoceronte
     ATTACK_RIDE_CHIMERA_DIVE(Family.ATTACK_RIDE, 3),  // ver atacar a la Quimera
     ATTACK_RIDE_SEVERANCE(Family.ATTACK_RIDE, 0),     // cortar la correa: la deja el Arquitecto al caer
+    // cartas raras: las dejan los jefes de la arena de Dai-Shocker (0.52)
+    ATTACK_RIDE_QUEEN_BLINK(Family.ATTACK_RIDE, 0),   // Mantis Reina: aparecer detras del enemigo y cortar
+    ATTACK_RIDE_TITAN_QUAKE(Family.ATTACK_RIDE, 0),   // Rinoceronte Titan: onda sismica en anillo
+    ATTACK_RIDE_COMMAND(Family.ATTACK_RIDE, 0),       // Comandante: tus amigos Rider atacan potenciados
     FINAL_ATTACK_RIDE_DEX(Family.FINAL_ATTACK_RIDE, 0),
 
     ARMED_RIDE_RIDE_BOOKER(Family.ARMED_RIDE, 0),

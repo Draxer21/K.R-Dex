@@ -62,6 +62,7 @@ public final class DexGameTests {
         FUNCTIONS.register("guard", () -> DexGameTests::guard);
         FUNCTIONS.register("combos", () -> DexGameTests::combos);
         FUNCTIONS.register("double_kick", () -> DexGameTests::doubleKick);
+        FUNCTIONS.register("arena_bosses", () -> DexGameTests::arenaBosses);
         FUNCTIONS.register("architect", () -> DexGameTests::architect);
         FUNCTIONS.register("combat_read", () -> DexGameTests::combatRead);
         FUNCTIONS.register("starter", () -> DexGameTests::starter);
@@ -532,6 +533,57 @@ public final class DexGameTests {
             if (!rose[0]) { fail(h, t, "no saltaron juntos"); return; }
             log(t, "ok: Dex + Nine, golem " + hp0 + " -> " + hp + " en " + (level.getGameTime() - t0) + " ticks");
             h.succeed();
+        });
+    }
+
+    /** Jefes de la arena: el sello levanta muros, cada jefe pasa por sus tres fases y deja su carta rara. */
+    static void arenaBosses(GameTestHelper h) {
+        String t = "arena_bosses";
+        ServerPlayer p = player(h, DexCard.KAMEN_RIDE_DEX);
+        transform(h, t, p);
+        ServerLevel level = h.getLevel();
+        if (com.draxer.dexrider.item.DaiShockerSealItem.next(p) != com.draxer.dexrider.entity.KaijinEntity.Kind.MANTIS_QUEEN) { fail(h, t, "el primer jefe no es la Mantis Reina"); return; }
+        var kinds = new com.draxer.dexrider.entity.KaijinEntity.Kind[]{com.draxer.dexrider.entity.KaijinEntity.Kind.MANTIS_QUEEN,
+                com.draxer.dexrider.entity.KaijinEntity.Kind.RHINO_TITAN, com.draxer.dexrider.entity.KaijinEntity.Kind.COMMANDER};
+        BlockPos center = h.absolutePos(new BlockPos(8, 1, 8));
+        final int[] step = {0};
+        final com.draxer.dexrider.entity.KaijinBossEntity[] cur = {null};
+        final java.util.List<BlockPos> walls = new java.util.ArrayList<>();
+        h.onEachTick(() -> {
+            int i = step[0] / 10, sub = step[0] % 10;
+            step[0]++;
+            if (i >= kinds.length) return;
+            var k = kinds[i];
+            switch (sub) {
+                case 0 -> {
+                    cur[0] = com.draxer.dexrider.item.DaiShockerSealItem.challenge(level, p, center, k);
+                    if (cur[0] == null || cur[0].arena.size() < 100) { fail(h, t, k + ": sin jefe o sin arena"); return; }
+                    walls.clear(); walls.addAll(cur[0].arena);
+                    cur[0].setNoAi(true);
+                    cur[0].setHealth(cur[0].getMaxHealth() * 0.6F);
+                }
+                case 2 -> {
+                    if (cur[0].phase() != 2) { fail(h, t, k + ": no paso a la fase 2"); return; }
+                    cur[0].setHealth(cur[0].getMaxHealth() * 0.3F);
+                }
+                case 4 -> {
+                    if (cur[0].phase() != 3) { fail(h, t, k + ": no paso a la fase 3"); return; }
+                    cur[0].die(level.damageSources().genericKill());
+                    cur[0].discard();
+                }
+                case 6 -> {
+                    var card = DexItems.card(com.draxer.dexrider.entity.KaijinBossEntity.rareCard(k)).get();
+                    boolean dropped = !level.getEntitiesOfClass(net.minecraft.world.entity.item.ItemEntity.class, new net.minecraft.world.phys.AABB(center).inflate(14),
+                            e -> e.getItem().is(card)).isEmpty();
+                    if (!dropped) { fail(h, t, k + ": no dejo su carta rara"); return; }
+                    if (!level.getBlockState(walls.get(0)).isAir()) { fail(h, t, k + ": la arena no desaparecio"); return; }
+                    if (i == kinds.length - 1) {
+                        log(t, "ok: Mantis Reina, Rinoceronte Titan y Comandante con arena, 3 fases y carta rara");
+                        h.succeed();
+                    }
+                }
+                default -> {}
+            }
         });
     }
 
