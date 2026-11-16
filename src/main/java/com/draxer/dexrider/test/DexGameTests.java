@@ -64,6 +64,7 @@ public final class DexGameTests {
         FUNCTIONS.register("double_kick", () -> DexGameTests::doubleKick);
         FUNCTIONS.register("arena_bosses", () -> DexGameTests::arenaBosses);
         FUNCTIONS.register("ua_missions", () -> DexGameTests::uaMissions);
+        FUNCTIONS.register("diary", () -> DexGameTests::diary);
         FUNCTIONS.register("architect", () -> DexGameTests::architect);
         FUNCTIONS.register("combat_read", () -> DexGameTests::combatRead);
         FUNCTIONS.register("starter", () -> DexGameTests::starter);
@@ -597,6 +598,35 @@ public final class DexGameTests {
         });
     }
 
+    /** Diario de Yusuke: el comienzo, entradas unicas (logros, cartas, amigos) y como mucho una caida al dia. */
+    static void diary(GameTestHelper h) {
+        String t = "diary";
+        ServerPlayer p = player(h, DexCard.KAMEN_RIDE_DEX);
+        ServerLevel level = h.getLevel();
+        com.draxer.dexrider.rider.Diary.onAdvancement(p, "henshin");
+        com.draxer.dexrider.rider.Diary.onAdvancement(p, "henshin");          // repetido: no se anota otra vez
+        com.draxer.dexrider.rider.Diary.onAdvancement(p, "root");             // sin entrada propia
+        com.draxer.dexrider.rider.Diary.onCard(p, DexCard.KAMEN_RIDE_NINE, false);
+        com.draxer.dexrider.rider.Diary.onCard(p, DexCard.ATTACK_RIDE_SLASH, true);
+        com.draxer.dexrider.rider.Diary.onCard(p, DexCard.ATTACK_RIDE_SLASH, true);
+        com.draxer.dexrider.rider.AllyManager.befriend(level, p, KamenRide.SPORE, h.absolutePos(new BlockPos(6, 1, 8)));
+        com.draxer.dexrider.rider.Diary.onTrust(p, KamenRide.SPORE, 2);
+        com.draxer.dexrider.rider.Diary.onKill(p, com.draxer.dexrider.entity.KaijinEntity.Kind.MANTIS);
+        com.draxer.dexrider.rider.Diary.onFall(p);
+        com.draxer.dexrider.rider.Diary.onFall(p);                            // misma jornada
+        var e = com.draxer.dexrider.rider.Diary.entries(com.draxer.dexrider.item.DexDriverItem.findDriver(p));
+        log(t, "entradas: " + e);
+        if (e.isEmpty() || !com.draxer.dexrider.rider.Diary.keyOf(e.get(0)).equals("diary.dexrider.start")) { fail(h, t, "falta la entrada de comienzo"); return; }
+        java.util.function.Function<String, Long> count = k -> e.stream().filter(x -> x.contains(k)).count();
+        if (count.apply("adv.henshin") != 1 || count.apply("diary.dexrider.scan.") != 1 || count.apply("diary.dexrider.fell.") != 1
+                || count.apply("diary.dexrider.kamen_ride.") != 1 || count.apply("kaijin.kaijin_mantis") != 1) { fail(h, t, "entradas repetidas o que faltan"); return; }
+        if (count.apply("adv.root") != 0) { fail(h, t, "anoto un logro sin entrada"); return; }
+        if (e.stream().noneMatch(x -> x.contains("diary.dexrider.friend.spore"))) { fail(h, t, "hacerse amigo de Kinoko no quedo anotado"); return; }
+        if (e.stream().noneMatch(x -> x.contains("|#diary.dexrider.who.spore"))) { fail(h, t, "la confianza no lleva el nombre"); return; }
+        log(t, "ok: " + e.size() + " entradas, sin repetidas");
+        h.succeed();
+    }
+
     /** Encargos de U.A.: pedir, cumplir (traer objetos / derrotar enemigos con el amigo cerca) y entregar. */
     static void uaMissions(GameTestHelper h) {
         String t = "ua_missions";
@@ -710,6 +740,7 @@ public final class DexGameTests {
         ServerPlayer p = mockPlayer(h);
         if (!com.draxer.dexrider.rider.Starter.onLogin(p)) { fail(h, t, "la primera vez no entrego nada"); return; }
         if (!p.getInventory().contains(new ItemStack(DexItems.KAGAMI_COMPASS.get()))) { fail(h, t, "no recibio la brujula de los Kagami"); return; }
+        if (!p.getInventory().contains(new ItemStack(DexItems.DIARY.get()))) { fail(h, t, "no recibio el diario de Yusuke"); return; }
         if (com.draxer.dexrider.rider.Starter.onLogin(p)) { fail(h, t, "la segunda vez volvio a entregar"); return; }
         log(t, "ok: carta de Genzo y brujula la primera vez, nada la segunda");
         h.succeed();

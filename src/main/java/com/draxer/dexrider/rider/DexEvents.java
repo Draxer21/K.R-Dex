@@ -281,6 +281,7 @@ public final class DexEvents {
             return;
         }
         if (event.getEntity() instanceof ServerPlayer player) {
+            Diary.onFall(player);
             RiderKick.cancel(player);
             Scheduler.cancel(player);
             if (hasStrayDexArmor(player) || Transformation.isTransformed(player)) {
@@ -288,6 +289,14 @@ public final class DexEvents {
             }
             ArmedRide.removeWeapons(player);
         }
+    }
+
+    /** Diario de Yusuke: los logros del mod dejan una entrada. */
+    @SubscribeEvent
+    public static void onAdvancement(net.neoforged.neoforge.event.entity.player.AdvancementEvent.AdvancementEarnEvent event) {
+        if (!(event.getEntity() instanceof ServerPlayer p)) return;
+        var id = event.getAdvancement().id();
+        if (id.getNamespace().equals(com.draxer.dexrider.DexRider.MODID)) Diary.onAdvancement(p, id.getPath());
     }
 
     /** Las cartas que recoges del suelo van directas al Ride Booker (si llevas el Driver y no son repetidas). */

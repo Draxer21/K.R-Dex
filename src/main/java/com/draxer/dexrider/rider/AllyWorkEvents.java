@@ -52,6 +52,7 @@ public final class AllyWorkEvents {
         ServerPlayer killer = event.getSource().getEntity() instanceof ServerPlayer sp ? sp
                 : event.getSource().getEntity() instanceof com.draxer.dexrider.entity.RiderAllyEntity a ? a.ownerPlayer() : null;
         if (killer != null) UaMissions.onKill(killer, event.getEntity());
+        if (killer != null && event.getEntity() instanceof com.draxer.dexrider.entity.KaijinEntity k) Diary.onKill(killer, k.kind());
         if (!(event.getSource().getEntity() instanceof com.draxer.dexrider.entity.RiderAllyEntity ally)) return;
         if (!(event.getEntity() instanceof net.minecraft.world.entity.monster.Enemy)) return;
         ServerPlayer o = ally.ownerPlayer();

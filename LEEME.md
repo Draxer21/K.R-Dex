@@ -626,6 +626,12 @@ repuesto con sus primeras cartas: **Kamen Ride: Dex**, **Attack Ride: Slash**, *
 **Armed Ride: Ride Booker** (el arma espada / pistola).
 Si pierdes la brújula: brújula + tinte rojo + lingote de oro.
 
+**Diario de Yusuke** (también viene al empezar; o libro + tinte rojo + pluma): el Driver va anotando lo que haces y el
+diario lo cuenta con la voz de Yusuke, día a día. Anota la primera transformación, cada logro del mod, las Kamen Ride
+nuevas y las cartas que escaneas, cada amigo que se queda y cuándo sube la confianza, el primer kaijin de cada tipo, los
+jefes de la arena y los días en que caes (uno por día). Las entradas viven en el Driver, así que el diario tiene que ir
+con él. El aviso "entrada nueva" se puede apagar en la configuración.
+
 El **estuche de cartas** del Ride Booker no es un objeto aparte: va dentro del Dex Driver y se abre con **G**.
 La carta **Armed Ride: Ride Booker** (el arma) también se fabrica, una vez que tienes el Driver:
 
@@ -841,6 +847,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.55.0** — Diario de Yusuke: un cuaderno que cuenta con su voz lo que vas haciendo (logros, Kamen Ride, cartas escaneadas, amigos, confianza, kaijin, jefes y caídas), con 80 entradas escritas y un aviso que se puede apagar.
 - **0.54.0** — La casa de la montaña crece: tres plantas (porche, sala con chimenea, cocina, garaje de Tetsuya, cuartos de Nagisa, Genzo y Tetsuya, estudio) y un sótano con el taller de Takumi, el equipo Blaster y una zona de entrenamiento. Nuevo: el Cuaderno de Takumi en el cofre del taller.
 - **0.53.0** — Encargos de los amigos de U.A.: Izuku, Momo, Kinoko, Toru y Mei tienen tres encargos cada uno (botón *Encargo* en su menú), con diálogos propios, recompensas, confianza y un logro por amigo.
 - **0.52.0** — Jefes de Dai-Shocker: Sello de desafío que levanta una arena y llama a la Mantis Reina, el Rinoceronte Titán o el Comandante, cada uno con tres fases; dejan las cartas raras Queen Blink, Titan Quake y Command.

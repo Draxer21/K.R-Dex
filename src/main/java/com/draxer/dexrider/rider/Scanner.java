@@ -254,6 +254,7 @@ public final class Scanner {
         ItemStack newCard = new ItemStack(DexItems.card(card).get());
         com.draxer.dexrider.menu.Booker.give(player, newCard);
         DexAdvancements.award(player, "first_scan");
+        Diary.onCard(player, card, true);
         player.sendSystemMessage(Component.translatable("message.dexrider.scan_complete",
                 Component.translatable(card.translationKey())), true);
     }

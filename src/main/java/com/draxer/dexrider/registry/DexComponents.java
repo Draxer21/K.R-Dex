@@ -172,6 +172,12 @@ public final class DexComponents {
             COMPONENTS.registerComponentType("ua_missions", builder -> builder
                     .persistent(Codec.unboundedMap(Codec.STRING, Codec.INT.listOf())));
 
+    /** Diario de Yusuke (0.55): entradas "dia|clave|arg|arg" (los args con # se traducen). */
+    public static final Supplier<DataComponentType<java.util.List<String>>> DIARY =
+            COMPONENTS.registerComponentType("diary", builder -> builder
+                    .persistent(Codec.STRING.listOf())
+                    .networkSynchronized(ByteBufCodecs.STRING_UTF8.apply(ByteBufCodecs.list())));
+
     public static final Supplier<DataComponentType<com.draxer.dexrider.item.AllySkills>> ALLY_SKILLS =
             COMPONENTS.registerComponentType("ally_skills", builder -> builder
                     .persistent(com.draxer.dexrider.item.AllySkills.CODEC));
