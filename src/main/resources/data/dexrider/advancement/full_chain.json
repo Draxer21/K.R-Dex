@@ -1,0 +1,23 @@
+{
+  "parent": "dexrider:parry",
+  "display": {
+    "icon": {
+      "id": "minecraft:iron_sword"
+    },
+    "title": {
+      "translate": "advancements.dexrider.full_chain.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.full_chain.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

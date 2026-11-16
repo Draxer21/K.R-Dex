@@ -65,6 +65,7 @@ public final class DexGameTests {
         FUNCTIONS.register("arena_bosses", () -> DexGameTests::arenaBosses);
         FUNCTIONS.register("ua_missions", () -> DexGameTests::uaMissions);
         FUNCTIONS.register("diary", () -> DexGameTests::diary);
+        FUNCTIONS.register("moveset", () -> DexGameTests::moveset);
         FUNCTIONS.register("architect", () -> DexGameTests::architect);
         FUNCTIONS.register("combat_read", () -> DexGameTests::combatRead);
         FUNCTIONS.register("starter", () -> DexGameTests::starter);
@@ -477,6 +478,69 @@ public final class DexGameTests {
                 log(t, "ok: parada anula, contraataque listo, bloqueo " + plain + " -> " + blocked);
                 h.succeed();
             });
+        });
+    }
+
+    /** Moveset: la cadena ligera avanza y vuelve a empezar, el arco alcanza al de al lado, el pesado gasta aguante y la esquiva anula un golpe y prepara el golpe tras esquiva. */
+    static void moveset(GameTestHelper h) {
+        String t = "moveset";
+        ServerPlayer p = player(h, DexCard.KAMEN_RIDE_DEX);
+        transform(h, t, p);
+        faceEast(p);
+        tickPlayer(h, p);
+        try { net.minecraft.world.entity.player.Player.class.getMethod("setClientLoaded", boolean.class).invoke(p, true); }
+        catch (ReflectiveOperationException ignored) { }
+        ServerLevel level = h.getLevel();
+        p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(DexItems.DEX_SWORD.get()));
+        var a = h.spawn(net.minecraft.world.entity.EntityType.IRON_GOLEM, new BlockPos(7, 1, 8));
+        var b = h.spawn(net.minecraft.world.entity.EntityType.ZOMBIE, new BlockPos(7, 1, 9));
+        a.setNoAi(true); b.setNoAi(true);
+        h.runAfterDelay(70, () -> {
+            var M = com.draxer.dexrider.rider.Moveset.class;
+            com.draxer.dexrider.rider.Moveset.testFullStrength = true;
+            try {
+                faceEast(p);
+                p.teleportTo(a.getX() - 1.8, a.getY(), a.getZ() + 0.5);
+                faceEast(p);
+                p.setShiftKeyDown(false); p.setSprinting(false);
+                StringBuilder steps = new StringBuilder();
+                float bHp = b.getHealth();
+                for (int i = 0; i < 5; i++) {
+                    a.invulnerableTime = 0; a.setHealth(a.getMaxHealth());
+                    p.attack(a);
+                    steps.append(com.draxer.dexrider.rider.Moveset.shownStep(p));
+                }
+                log(t, "pasos " + steps + ", ultimo " + com.draxer.dexrider.rider.Moveset.shownMove(p));
+                if (!steps.toString().equals("12341")) { fail(h, t, "la cadena de la espada no avanzo bien: " + steps); return; }
+                if (b.getHealth() >= bHp) { fail(h, t, "el corte en arco no alcanzo al zombi de al lado"); return; }
+                // pesado: Shift + golpe
+                int st0 = com.draxer.dexrider.rider.Stamina.get(p);
+                p.setShiftKeyDown(true);
+                a.invulnerableTime = 0;
+                p.attack(a);
+                p.setShiftKeyDown(false);
+                String heavy = com.draxer.dexrider.rider.Moveset.shownMove(p);
+                if (heavy == null || !heavy.endsWith("great_cleave")) { fail(h, t, "Shift + golpe no fue el pesado: " + heavy); return; }
+                if (com.draxer.dexrider.rider.Stamina.get(p) > st0 - 20) { fail(h, t, "el pesado no gasto aguante"); return; }
+                // esquiva: anula un golpe y el siguiente golpe es el de tras esquiva
+                com.draxer.dexrider.rider.Stamina.give(p, 200);
+                if (!com.draxer.dexrider.rider.Dodge.dodge(p, 0, 0)) { fail(h, t, "no esquivo"); return; }
+                float hp = life(p);
+                p.invulnerableTime = 0;
+                p.hurtServer(level, level.damageSources().mobAttack(b), 6.0F);
+                if (life(p) < hp) { fail(h, t, "la esquiva no anulo el golpe"); return; }
+                a.invulnerableTime = 0;
+                p.attack(a);
+                String evade = com.draxer.dexrider.rider.Moveset.shownMove(p);
+                if (evade == null || !evade.endsWith("wheel_cut")) { fail(h, t, "tras esquivar no salio el golpe de esquiva: " + evade); return; }
+                // sin arma: el juego de Dex
+                p.setItemInHand(InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+                if (com.draxer.dexrider.rider.Moveset.setFor(p) == null || M == null) { fail(h, t, "sin arma no hay juego"); return; }
+                log(t, "ok: cadena 1-2-3-4-1, arco, pesado, esquiva perfecta y golpe tras esquiva");
+                h.succeed();
+            } finally {
+                com.draxer.dexrider.rider.Moveset.testFullStrength = false;
+            }
         });
     }
 

@@ -78,6 +78,10 @@ public class DexRiderClient {
     public static final Lazy<KeyMapping> QUICK_SELECT_KEY = Lazy.of(() -> new KeyMapping(
             "key.dexrider.quick_select", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_MIDDLE, CATEGORY));
     /** J: misiones de los Kagami. */
+    /** Esquiva (boton lateral del raton por defecto): salto corto con invulnerabilidad; gasta aguante. */
+    public static final Lazy<KeyMapping> DODGE_KEY = Lazy.of(() -> new KeyMapping(
+            "key.dexrider.dodge", InputConstants.Type.MOUSE, GLFW.GLFW_MOUSE_BUTTON_4, CATEGORY));
+
     public static final Lazy<KeyMapping> MISSIONS_KEY = Lazy.of(() -> new KeyMapping(
             "key.dexrider.missions", InputConstants.Type.KEYSYM, GLFW.GLFW_KEY_J, CATEGORY));
     /** Alt mantenido + rueda del raton = pasar carta; al soltar Alt sin girar la rueda, se usa la carta. */
@@ -104,6 +108,7 @@ public class DexRiderClient {
         event.register(CARD_WHEEL_KEY.get());
         event.register(ARCHIVE_KEY.get());
         event.register(MISSIONS_KEY.get());
+        event.register(DODGE_KEY.get());
         event.register(QUICK_SELECT_KEY.get());
         for (Lazy<KeyMapping> k : SUMMON_SLOTS) event.register(k.get());
         event.register(KTOUCH_DEX_KEY.get());
@@ -169,6 +174,15 @@ public class DexRiderClient {
 
     @SubscribeEvent
     static void onClientTick(ClientTickEvent.Post event) {
+        while (DODGE_KEY.get().consumeClick()) {
+            var mc = Minecraft.getInstance();
+            if (mc.player != null && mc.screen == null) {
+                var o = mc.options;
+                int fwd = (o.keyUp.isDown() ? 1 : 0) - (o.keyDown.isDown() ? 1 : 0);
+                int str = (o.keyLeft.isDown() ? 1 : 0) - (o.keyRight.isDown() ? 1 : 0);
+                ClientPacketDistributor.sendToServer(new com.draxer.dexrider.network.DodgePayload(fwd, str));
+            }
+        }
         while (TRANSFORM_KEY.get().consumeClick()) {
             if (Minecraft.getInstance().player != null) {
                 ClientPacketDistributor.sendToServer(TransformPayload.INSTANCE);

@@ -28,7 +28,7 @@ public final class Diary {
             "final_attack", "ally", "kamen_ride", "accel", "ktouch", "complete_form", "violent_emotion", "heroic_emotion",
             "daishocker", "chimera", "mountain_house", "commission_depot", "scarab", "upgrade_form", "kaixa", "gunma_lab",
             "complete_form_2", "signal_base", "architect", "said_no", "parry", "combo", "daishocker_boss",
-            "ua_nine", "ua_forge", "ua_spore", "ua_mirage", "ua_proto");
+            "ua_nine", "ua_forge", "ua_spore", "ua_mirage", "ua_proto", "perfect_dodge", "full_chain");
 
     public static int day(ServerPlayer p) {
         return (int) (p.level().getGameTime() / 24000L) + 1;

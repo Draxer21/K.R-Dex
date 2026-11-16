@@ -1,0 +1,23 @@
+{
+  "parent": "dexrider:parry",
+  "display": {
+    "icon": {
+      "id": "minecraft:feather"
+    },
+    "title": {
+      "translate": "advancements.dexrider.perfect_dodge.title"
+    },
+    "description": {
+      "translate": "advancements.dexrider.perfect_dodge.description"
+    },
+    "frame": "task",
+    "show_toast": true,
+    "announce_to_chat": true,
+    "hidden": false
+  },
+  "criteria": {
+    "done": {
+      "trigger": "minecraft:impossible"
+    }
+  }
+}

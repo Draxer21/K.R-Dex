@@ -109,6 +109,14 @@ public class DexRider {
                 com.draxer.dexrider.network.TargetSyncPayload.TYPE,
                 com.draxer.dexrider.network.TargetSyncPayload.STREAM_CODEC,
                 com.draxer.dexrider.network.TargetSyncPayload::handleOnClient);
+        event.registrar("1").playToClient(
+                com.draxer.dexrider.network.CombatSyncPayload.TYPE,
+                com.draxer.dexrider.network.CombatSyncPayload.STREAM_CODEC,
+                com.draxer.dexrider.network.CombatSyncPayload::handleOnClient);
+        event.registrar("1").playToServer(
+                com.draxer.dexrider.network.DodgePayload.TYPE,
+                com.draxer.dexrider.network.DodgePayload.STREAM_CODEC,
+                com.draxer.dexrider.network.DodgePayload::handleOnServer);
     }
 
     public static Identifier id(String path) {

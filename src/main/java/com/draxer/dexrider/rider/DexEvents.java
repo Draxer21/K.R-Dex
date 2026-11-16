@@ -40,6 +40,7 @@ public final class DexEvents {
         RiderKick.tick(level, player);
         DoubleKick.tick(level, player);
         Guard.tick(player);
+        if (player.tickCount % 2 == 0) com.draxer.dexrider.network.CombatSyncPayload.sync(player);
         if (player.tickCount % 100 == 0) AllyManager.tickPlayer(player);
         if (player.tickCount % 100 == 50) DaiShocker.tickPlayer(player);
         AllyManager.tickReunion(player);
@@ -56,6 +57,7 @@ public final class DexEvents {
             DexEmotions.tick(level, player);
             if (player.tickCount % 5 == 0) com.draxer.dexrider.network.HudSyncPayload.send(level, player);
             if (player.tickCount % 5 == 2) CombatRead.sync(level, player);
+            Stamina.tick(player);
             KamenRide identity = KamenRide.current(player);
             if (identity != KamenRide.DEX) RiderPowers.tick(level, player, identity);
             if (player.tickCount % 200 == 0) KTouch.retroCheck(player);
@@ -112,6 +114,7 @@ public final class DexEvents {
         // Debilidades e inmunidades de la Form Ride activa del que recibe el golpe
         if (victim instanceof ServerPlayer target && Transformation.isTransformed(target)) {
             // Parada (Shift justo a tiempo) o bloqueo (Shift mantenido) contra golpes de frente
+            if (Dodge.onIncoming(level, target, event.getSource())) { event.setCanceled(true); return; }
             if (Guard.onIncoming(level, target, event)) return;
             FormRide form = FormRide.current(target);
             // El traje del Rider System absorbe parte de cada golpe
@@ -171,6 +174,7 @@ public final class DexEvents {
                     * (UpgradeForm.isActive(attacker) ? 1.2F : 1.0F) * ArmedRide.weaponScale(attacker);
             if (FormRide.current(attacker) != null) mult *= deck.multiplier(DexCard.Family.FORM_RIDE);
             if (KamenRide.current(attacker) == KamenRide.COMPLETE) mult *= RiderPowers.completeMultiplier(attacker);
+            if (event.getSource().getDirectEntity() == attacker) mult *= Moveset.onPlayerHit(level, attacker, victim, event.getAmount());
             mult *= Guard.counterScale(attacker, victim);
             event.setAmount(event.getAmount() * mult);
             return;   // los ataques del propio Dex no se escanean
@@ -291,6 +295,12 @@ public final class DexEvents {
         }
     }
 
+    /** Moveset: antes de cada golpe cuerpo a cuerpo, cuanto estaba cargado y a quien va. */
+    @SubscribeEvent
+    public static void onAttack(net.neoforged.neoforge.event.entity.player.AttackEntityEvent event) {
+        if (event.getEntity() instanceof ServerPlayer p && Transformation.isTransformed(p)) Moveset.beforeAttack(p, event.getTarget());
+    }
+
     /** Diario de Yusuke: los logros del mod dejan una entrada. */
     @SubscribeEvent
     public static void onAdvancement(net.neoforged.neoforge.event.entity.player.AdvancementEvent.AdvancementEarnEvent event) {
@@ -328,6 +338,10 @@ public final class DexEvents {
             DexMachineEntity.dismissFor(player);
             AllyManager.cancelReunion(player);
             Guard.forget(player.getUUID());
+            Moveset.forget(player.getUUID());
+            Stamina.forget(player.getUUID());
+            Dodge.forget(player.getUUID());
+            com.draxer.dexrider.network.CombatSyncPayload.forget(player.getUUID());
             Combos.forget(player.getUUID());
             CombatRead.forget(player.getUUID());
         }
