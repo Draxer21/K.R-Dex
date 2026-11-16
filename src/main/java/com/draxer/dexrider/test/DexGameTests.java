@@ -286,7 +286,7 @@ public final class DexGameTests {
         List<KaijinEntity> mobs = new ArrayList<>();
         int i = 0;
         for (KaijinEntity.Kind k : KaijinEntity.Kind.values()) {
-            if (k == KaijinEntity.Kind.ARCHITECT) continue;   // tiene su propia prueba
+            if (k == KaijinEntity.Kind.ARCHITECT || k.arenaBoss()) continue;   // tienen su propia prueba
             KaijinEntity e = h.spawn(DexEntities.KAIJIN.get(k).get(), new BlockPos(2 + i * 4, 1, 2));
             e.setTarget(p);
             mobs.add(e);
