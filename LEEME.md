@@ -283,14 +283,15 @@ Booker como cofre para meter, sacar y mover cartas.
 **Selector rápido** (transformado): **mantén la rueda del ratón** y aparecen en círculo tus cartas de uso rápido;
 mueve el ratón hacia una y **suéltala**: se usa. Para elegir cuáles salen, en el libro activa **★ Selector** y haz clic
 en hasta **8** cartas (la estrella marca las elegidas; otro clic la quita). Transformado, la rueda deja de copiar el
-bloque que miras. La tecla se cambia en Controles. Tiene **5 mazos** de 27 cartas (135 en total), como en el fanfic: *Rescate, Multitudes,
-1 vs 1, Persecución* y *Todo salió mal*. Solo admite cartas (y la carta de Complete Form).
+bloque que miras. La tecla se cambia en Controles. Tiene **5 mazos** de 27 cartas (135 en total), **uno por tipo de carta**: *Kamen Ride* (con las de Complete Form),
+*Form Ride*, *Attack Ride* (con la Final Attack Ride), *Armed Ride* y *Vehicle Ride*. Cada carta nueva va sola a su mazo
+(si se llena, a otro con sitio), y los Booker de antes de la 0.51 se reordenan por tipo la primera vez que se abren. Solo admite cartas (y la carta de Complete Form).
 - **Guardar**: mueves cartas como en un cofre (Shift + clic las pasa entre el Booker y tu inventario).
 - **Insertar**: haces clic en una carta y **se activa al instante sin sacarla del Booker** (inserción directa).
   Un Armed Ride aparece en tu mano principal y lo que tenías ahí pasa al inventario.
 - **Guardar todo**: el botón a la derecha mueve todas las cartas de tu inventario al Booker de una vez.
 - **Guardado automático**: las cartas nuevas (escaneadas, recogidas del suelo, de un eco derrotado, del K-Touch…)
-  van **directas al Booker** si llevas el Driver, empezando por el mazo elegido. Las repetidas sí van al inventario.
+  van **directas al Booker** si llevas el Driver, al mazo de su tipo. Las repetidas sí van al inventario.
   Los Booker de versiones anteriores (18 por mazo) se reordenan solos al abrirlos.
 
 **Uso rápido en combate (sin abrir el Booker)**:
@@ -807,6 +808,7 @@ ser un nombre de API que cambió; pega el error y se arregla.
 
 ## Historial de versiones
 
+- **0.51.0** — Mazos por tipo en el Ride Booker: Kamen Ride, Form Ride, Attack Ride, Armed Ride y Vehicle Ride (en vez de Rescate, Multitudes, etc.). Las cartas nuevas van solas a su mazo y los Booker existentes se reordenan una vez; las favoritas del selector y la carta elegida se conservan.
 - **0.50.0** — Ataque combinado: Shift + Final Attack Ride con un amigo Rider cerca hace una doble Rider Kick coreografiada (llamada, salto juntos, dos filas de cartas, picada con estelas trenzadas, impacto con los dos colores) con frases propias de cada amigo.
 - **0.49.0** — Escanear se ve: mientras el Driver toma muestras, los ojos de Dex brillan y pasan por magenta, dorado, verde, rojo y azul; al completar, parpadean en blanco (lo ven todos). Visor nuevo: **ondas** (líneas onduladas paralelas, sin centro). Más relieve en los trajes de Nine, Forge, Cipher, Warden, Spore, Mirage y Proto: piezas 3D nuevas con diseño propio (sombrero de seta de Spore, cristales de Mirage, puertos y aro del visor de Proto, placas desmontables de Forge, gorra y placa de Warden, rieles y cartuchos de Cipher, espina y guardas de Nine). Herramientas `tools/rider_relief.py` y `tools/geo_preview.py`.
 - **0.48.0** — Editor del traje, etapa 3: líneas del visor (orientación, grosor, separación y color), piezas para la Upgrade Form (cuernos, hombros, pecho, capa o bufanda) y una pieza propia para cada Form Ride (alerón, tanques, placas, cristales, llamas, aletas).

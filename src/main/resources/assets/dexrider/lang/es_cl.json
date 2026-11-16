@@ -2548,5 +2548,15 @@
   "combo.dexrider.after.spore": "¡Fue genial, noko!",
   "combo.dexrider.after.mirage": "¡¿Vieron eso?! ¡Brillé!",
   "combo.dexrider.after.proto": "¡Datos de impacto guardados! ¡Hay que repetirlo!",
-  "combo.dexrider.after.kaixa": "...No estuvo mal."
+  "combo.dexrider.after.kaixa": "...No estuvo mal.",
+  "booker.dexrider.deck.kamen_ride": "Kamen Ride",
+  "booker.dexrider.deck.kamen_ride.short": "KR",
+  "booker.dexrider.deck.form_ride": "Form Ride",
+  "booker.dexrider.deck.form_ride.short": "Form",
+  "booker.dexrider.deck.attack_ride": "Attack Ride",
+  "booker.dexrider.deck.attack_ride.short": "Atk",
+  "booker.dexrider.deck.armed_ride": "Armed Ride",
+  "booker.dexrider.deck.armed_ride.short": "Arm",
+  "booker.dexrider.deck.vehicle_ride": "Vehicle Ride",
+  "booker.dexrider.deck.vehicle_ride.short": "Veh"
 }

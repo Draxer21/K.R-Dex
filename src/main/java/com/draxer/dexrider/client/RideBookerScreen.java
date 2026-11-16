@@ -14,7 +14,7 @@ import net.minecraft.world.entity.player.Inventory;
  */
 public class RideBookerScreen extends AbstractContainerScreen<RideBookerMenu> {
 
-    private static final String[] DECKS = {"rescue", "crowd", "duel", "chase", "everything_wrong"};
+    private static final String[] DECKS = com.draxer.dexrider.menu.RideBookerMenu.DECK_KEYS;
     private final Button[] deckButtons = new Button[RideBookerMenu.DECKS];
     private Button insertButton;
 

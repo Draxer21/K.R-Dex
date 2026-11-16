@@ -203,7 +203,8 @@ public class RideBookerMenu extends AbstractContainerMenu {
     /** Rueda de cartas: QUICK_SLOT + ranura = usar esa ranura. QUICK_FAV + ranura = marcar/desmarcar para el selector. */
     public static final int QUICK_SLOT = 100, QUICK_FAV = 1000;
     public static final int MAX_PICKS = 8;
-    public static final String[] DECK_KEYS = {"rescue", "crowd", "duel", "chase", "everything_wrong"};
+    /** Un mazo por tipo de carta (desde la 0.51). */
+    public static final String[] DECK_KEYS = {"kamen_ride", "form_ride", "attack_ride", "armed_ride", "vehicle_ride"};
 
     /**
      * Teclas rapidas: elegir la carta anterior/siguiente del mazo, cambiar de mazo, o insertar la elegida.

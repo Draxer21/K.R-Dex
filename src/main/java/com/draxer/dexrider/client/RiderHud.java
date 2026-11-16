@@ -27,7 +27,7 @@ import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
 public final class RiderHud {
     private RiderHud() {}
 
-    private static final String[] DECKS = {"rescue", "crowd", "duel", "chase", "everything_wrong"};
+    private static final String[] DECKS = com.draxer.dexrider.menu.RideBookerMenu.DECK_KEYS;
 
     @SubscribeEvent
     static void register(RegisterGuiLayersEvent event) {

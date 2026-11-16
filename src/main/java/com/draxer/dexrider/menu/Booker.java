@@ -43,6 +43,17 @@ public final class Booker {
             Integer sel = driver.get(DexComponents.BOOKER_SEL.get());
             if (sel != null) driver.set(DexComponents.BOOKER_SEL.get(), remap(sel));
         }
+        if (!Boolean.TRUE.equals(driver.get(DexComponents.BOOKER_TYPED.get()))) {
+            // 0.51: los mazos pasan a ser por tipo de carta; la carta elegida sigue elegida
+            Integer sel = driver.get(DexComponents.BOOKER_SEL.get());
+            ItemStack chosen = sel == null ? ItemStack.EMPTY : items.get(Math.floorMod(sel, items.size()));
+            NonNullList<ItemStack> sorted = sortByType(items);
+            for (int i = 0; i < items.size(); i++) items.set(i, sorted.get(i));
+            driver.set(DexComponents.BOOKER_TYPED.get(), true);
+            if (saved != null) driver.set(DexComponents.BOOKER.get(), BookerContents.of(items));
+            if (!chosen.isEmpty()) for (int i = 0; i < items.size(); i++)
+                if (items.get(i).is(chosen.getItem())) { driver.set(DexComponents.BOOKER_SEL.get(), i); break; }
+        }
         return items;
     }
 
@@ -57,7 +68,46 @@ public final class Booker {
             int to = migrated ? e.slot() : remap(e.slot());
             if (to >= 0 && to < items.size()) items.set(to, e.stack().copy());
         }
-        return items;
+        return Boolean.TRUE.equals(driver.get(DexComponents.BOOKER_TYPED.get())) ? items : sortByType(items);
+    }
+
+    /** Mazo que le toca a una carta: Kamen Ride, Form Ride, Attack Ride (y Final Attack), Armed Ride, Vehicle Ride. */
+    public static int deckOf(ItemStack card) {
+        if (card.getItem() instanceof com.draxer.dexrider.item.RiderCardItem rc) {
+            return switch (rc.card().family()) {
+                case KAMEN_RIDE -> 0;
+                case FORM_RIDE -> 1;
+                case ATTACK_RIDE, FINAL_ATTACK_RIDE -> 2;
+                case ARMED_RIDE -> 3;
+                case VEHICLE_RIDE -> 4;
+            };
+        }
+        return 0;   // cartas de Complete Form: junto a las Kamen Ride
+    }
+
+    private static int order(ItemStack s) {
+        return s.getItem() instanceof com.draxer.dexrider.item.RiderCardItem rc ? rc.card().ordinal() : -1;
+    }
+
+    /** Reparte las cartas en su mazo por tipo (en orden de carta); si un mazo se llena, sobran a otro con sitio. */
+    public static NonNullList<ItemStack> sortByType(NonNullList<ItemStack> items) {
+        NonNullList<ItemStack> out = NonNullList.withSize(items.size(), ItemStack.EMPTY);
+        java.util.List<ItemStack> cards = new java.util.ArrayList<>();
+        for (ItemStack s : items) if (!s.isEmpty()) cards.add(s);
+        cards.sort(java.util.Comparator.comparingInt(Booker::order));
+        java.util.List<ItemStack> overflow = new java.util.ArrayList<>();
+        int[] used = new int[RideBookerMenu.DECKS];
+        for (ItemStack s : cards) {
+            int d = deckOf(s);
+            if (used[d] < RideBookerMenu.PER_DECK) out.set(d * RideBookerMenu.PER_DECK + used[d]++, s);
+            else overflow.add(s);
+        }
+        int i = 0;
+        for (ItemStack s : overflow) {
+            while (i < out.size() && !out.get(i).isEmpty()) i++;
+            if (i < out.size()) out.set(i, s);
+        }
+        return out;
     }
 
     /** Vecina con carta dentro del mazo de {@code sel} (step +1/-1), o -1. */
@@ -81,7 +131,7 @@ public final class Booker {
     }
 
     /**
-     * Guarda una carta en el Booker del Driver del jugador: primero en el mazo elegido, luego en cualquier otro.
+     * Guarda una carta en el Booker del Driver del jugador: en el mazo de su tipo, o en otro si ese esta lleno.
      * No guarda copias de una carta que ya esta en el Booker, ni si el Booker esta abierto (se guardaria encima).
      */
     public static boolean store(ServerPlayer p, ItemStack card) {
@@ -91,8 +141,7 @@ public final class Booker {
         if (driver.isEmpty()) return false;
         NonNullList<ItemStack> items = load(driver);
         for (ItemStack s : items) if (!s.isEmpty() && s.is(card.getItem())) return false;
-        Integer selBox = driver.get(DexComponents.BOOKER_SEL.get());
-        int deck = selBox == null ? 0 : Math.floorMod(selBox, RideBookerMenu.SIZE) / RideBookerMenu.PER_DECK;
+        int deck = deckOf(card);       // cada carta a su mazo por tipo; si esta lleno, al siguiente con sitio
         int free = -1;
         for (int d = 0; d < RideBookerMenu.DECKS && free < 0; d++) {
             int dd = (deck + d) % RideBookerMenu.DECKS;

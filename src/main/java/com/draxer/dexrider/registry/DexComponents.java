@@ -33,6 +33,11 @@ public final class DexComponents {
                     .networkSynchronized(com.draxer.dexrider.item.BookerContents.STREAM_CODEC));
 
     /** El Booker ya usa mazos de 27 (migrado desde los de 18). */
+    /** El Booker ya se ordeno en mazos por tipo de carta (0.51). */
+    public static final Supplier<DataComponentType<Boolean>> BOOKER_TYPED =
+            COMPONENTS.registerComponentType("booker_typed", builder -> builder
+                    .persistent(com.mojang.serialization.Codec.BOOL)
+                    .networkSynchronized(net.minecraft.network.codec.ByteBufCodecs.BOOL));
     public static final Supplier<DataComponentType<Boolean>> BOOKER_V27 =
             COMPONENTS.registerComponentType("booker_v27", builder -> builder
                     .persistent(com.mojang.serialization.Codec.BOOL)

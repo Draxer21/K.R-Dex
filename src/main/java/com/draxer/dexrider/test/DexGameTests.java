@@ -623,23 +623,26 @@ public final class DexGameTests {
         String t = "booker";
         ServerPlayer p = player(h);
         ItemStack driver = DexDriverItem.findDriver(p);
-        DexCard[] all = DexCard.values();
-        ItemStack a = new ItemStack(DexItems.card(all[0]).get()), b = new ItemStack(DexItems.card(all[1]).get()), c = new ItemStack(DexItems.card(all[2]).get());
-        // formato viejo (18 por mazo): ranura 19 = mazo 1, carta 2 -> ahora 27 + 1
+        java.util.function.Function<DexCard.Family, DexCard> first = f -> java.util.Arrays.stream(DexCard.values()).filter(x -> x.family() == f).findFirst().orElseThrow();
+        ItemStack a = new ItemStack(DexItems.card(first.apply(DexCard.Family.FORM_RIDE)).get());
+        ItemStack b = new ItemStack(DexItems.card(first.apply(DexCard.Family.ARMED_RIDE)).get());
+        ItemStack c = new ItemStack(DexItems.card(first.apply(DexCard.Family.VEHICLE_RIDE)).get());
+        int per = com.draxer.dexrider.menu.RideBookerMenu.PER_DECK;
+        // formato viejo (18 por mazo, mazos tematicos): al leerlo, cada carta pasa al mazo de su tipo
         driver.set(com.draxer.dexrider.registry.DexComponents.BOOKER.get(),
                 new com.draxer.dexrider.item.BookerContents(java.util.List.of(new com.draxer.dexrider.item.BookerContents.Entry(19, a.copy()))));
         var items = com.draxer.dexrider.menu.Booker.load(driver);
-        if (!items.get(28).is(a.getItem())) { fail(h, t, "no remapeo el Booker viejo a 27 por mazo"); return; }
+        if (!items.get(per).is(a.getItem())) { fail(h, t, "la Form Ride no paso al mazo Form Ride"); return; }
         if (!com.draxer.dexrider.menu.Booker.store(p, b)) { fail(h, t, "no guardo una carta nueva"); return; }
-        if (!com.draxer.dexrider.menu.Booker.load(driver).get(0).is(b.getItem())) { fail(h, t, "la carta nueva no fue al primer hueco del mazo"); return; }
+        if (!com.draxer.dexrider.menu.Booker.load(driver).get(3 * per).is(b.getItem())) { fail(h, t, "la Armed Ride no fue a su mazo"); return; }
         if (com.draxer.dexrider.menu.Booker.store(p, a.copy())) { fail(h, t, "guardo una carta repetida"); return; }
         var cItem = c.getItem();
         com.draxer.dexrider.menu.Booker.give(p, c);
         if (p.getInventory().contains(new ItemStack(cItem))) { fail(h, t, "la carta entregada fue al inventario y no al Booker"); return; }
-        if (!com.draxer.dexrider.menu.Booker.load(driver).get(1).is(cItem)) { fail(h, t, "la carta entregada no esta en el Booker"); return; }
+        if (!com.draxer.dexrider.menu.Booker.load(driver).get(4 * per).is(cItem)) { fail(h, t, "la Vehicle Ride no fue a su mazo"); return; }
         var recipe = net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.RECIPE, DexRider.id("card_armed_ride_ride_booker"));
         if (h.getLevel().getServer().getRecipeManager().byKey(recipe).isEmpty()) { fail(h, t, "falta la receta de la carta Armed Ride: Ride Booker"); return; }
-        log(t, "ok: Booker viejo remapeado, guardado automatico sin repetidas, receta del arma");
+        log(t, "ok: Booker viejo reordenado por tipo, cada carta a su mazo, sin repetidas, receta del arma");
         h.succeed();
     }
 
