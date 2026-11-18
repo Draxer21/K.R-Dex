@@ -117,7 +117,7 @@ public final class VisorHud {
         Minecraft mc = Minecraft.getInstance();
         Player p = mc.player;
         VisorSettings s = VisorSettings.get();
-        if (p == null || !DexConfig.hud() || s.mode == VisorSettings.Mode.CLASSIC) return;
+        if (p == null || mc.gui.hud.isHidden() || !DexConfig.hud() || s.mode == VisorSettings.Mode.CLASSIC) return;
         if (!Transformation.isTransformed(p)) return;
         opacity = s.opacity;
         int color = visorColor(p, s);
@@ -152,7 +152,7 @@ public final class VisorHud {
         Minecraft mc = Minecraft.getInstance();
         Player p = mc.player;
         VisorSettings s = VisorSettings.get();
-        if (p == null || !DexConfig.hud() || s.mode == VisorSettings.Mode.CLASSIC || !Transformation.isTransformed(p)) return;
+        if (p == null || mc.gui.hud.isHidden() || !DexConfig.hud() || s.mode == VisorSettings.Mode.CLASSIC || !Transformation.isTransformed(p)) return;
         if (!s.filter && !s.vignette) return;
         if (!mc.options.getCameraType().isFirstPerson()) return;
         int sw = mc.getWindow().getGuiScaledWidth(), sh = mc.getWindow().getGuiScaledHeight();

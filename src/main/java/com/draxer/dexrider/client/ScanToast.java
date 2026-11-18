@@ -71,7 +71,7 @@ public final class ScanToast {
 
     private static void draw(GuiGraphicsExtractor g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
-        if (timer <= 0 || card == null || mc.player == null) return;
+        if (timer <= 0 || card == null || mc.player == null || mc.gui.hud.isHidden()) return;
         int sw = mc.getWindow().getGuiScaledWidth(), sh = mc.getWindow().getGuiScaledHeight();
         int w = 150, h = 30;
         if (!HudLayout.begin(g, "toast", w, h, sw, sh)) return;

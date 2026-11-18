@@ -202,5 +202,7 @@ public final class DexComponents {
     /** Ride Booker: tiempo de juego del ultimo cambio espada/pistola (el cliente anima la transformacion con el). */
     public static final Supplier<DataComponentType<Long>> BOOKER_SHIFT =
             COMPONENTS.registerComponentType("booker_shift", builder -> builder
+                    // Container hashes in 26.2 encode component values through the persistent codec.
+                    .persistent(Codec.LONG)
                     .networkSynchronized(ByteBufCodecs.VAR_LONG));
 }

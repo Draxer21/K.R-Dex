@@ -1,23 +1,25 @@
-# Kamen Rider Dex — mod para Minecraft 26.1.2 (NeoForge)
+# Kamen Rider Dex — mod para Minecraft 26.2 (NeoForge)
 
 Dex Driver, cartas, transformación, armas Armed Ride con sus Final Attack Ride
 y escaneo de cartas como en el fanfic.
 
+Para continuar el desarrollo: [flujo de trabajo, referencias de los Riders y edición de modelos](FLUJO_DE_TRABAJO.md).
 
-> **Versión para Minecraft 26.2**: la rama `mc-26.2` del repositorio compila el mismo mod para 26.2
+
+> **Esta copia está configurada para Minecraft 26.2**
 > (NeoForge 26.2.0.88, GeckoLib 5.5.6, Curios 16.0.0+26.2, Player Animation Library 1.2.8+mc.26.2).
-> El jar se llama `dexrider-<versión>+26.2.jar`. La rama `main` sigue siendo para 26.1.2.
+> El jar actual se llama `dexrider-0.56.1+26.2.jar`. Corrige el cierre al sincronizar el Ride Booker después de cambiar entre espada y pistola. La configuración anterior está respaldada en `diseno/migracion-26.2/`.
 
 ## Cómo abrirlo y probarlo
 
 1. Necesitas **JDK 25** (26.1 lo exige). En IntelliJ: *File → Project Structure → SDK → 25*.
 2. Abre la carpeta `dexmod` en IntelliJ como proyecto Gradle y espera a que sincronice
-   (la primera vez descarga Minecraft y NeoForge 26.1.2.122; tarda unos minutos).
+   (la primera vez descarga Minecraft y NeoForge 26.2.0.88; tarda unos minutos).
 3. Ejecuta la tarea `runClient` (panel de Gradle → `Tasks → mod development → runClient`)
    o desde terminal: `./gradlew runClient` (Windows: `gradlew.bat runClient`).
 4. Para el `.jar` final: `./gradlew build` → queda en `build/libs/dexrider-<versión>.jar`.
 5. Para jugarlo en tu Minecraft normal, en la carpeta `mods` van tres jar: **dexrider**, **GeckoLib 5.5.x**
-   y **Curios 15.x** (versiones para NeoForge 26.1.2). En el entorno de desarrollo se descargan solos.
+   y **Curios 16.x** (versiones para NeoForge 26.2). En el entorno de desarrollo se descargan solos.
 
 ## Cómo se juega
 

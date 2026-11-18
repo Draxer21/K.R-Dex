@@ -673,6 +673,9 @@ def main():
     for name, spec in SUITS.items():
         if only and name not in only:
             continue
+        if name == 'nine' and os.path.exists(os.path.join(HERE, '..', 'diseno', 'nine', 'recursos-originales.zip')):
+            report.append('Nine: generado por tools/nine_reference_model.py; se conserva sin cambios.')
+            continue
         parts = spec['parts']()
         # las piezas se disenan sobre el modelo base SIN relieve: sus cubos sirven para saber que es propio de cada variante
         base = load(spec['model'])['minecraft:geometry'][0]

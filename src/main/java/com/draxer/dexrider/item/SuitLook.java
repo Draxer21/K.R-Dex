@@ -25,7 +25,7 @@ public record SuitLook(Map<String, Integer> colors, Map<String, String> parts) {
     public static final List<String> COLOR_KEYS = List.of(HELMET, CHEST, ARMS, LEGS, BOOTS, ACCENT, EYES, SILVER, INNER,
             CRYSTAL, SCARF, HALF_RIGHT, HALF_LEFT, VISOR);
 
-    // ---- piezas y opciones: clave -> variantes posibles (la primera es la de fabrica en la forma base)
+    // ---- piezas y opciones: clave -> variantes posibles (SuitLooks resuelve los valores de fabrica)
     public static final Map<String, List<String>> PART_VALUES = new java.util.LinkedHashMap<>();
     static {
         PART_VALUES.put("horns", List.of("straight", "curved", "short", "none"));
