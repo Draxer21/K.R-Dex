@@ -701,6 +701,8 @@ def main():
     for name, spec in SUITS.items():
         if only and name not in only:
             continue
+        if name == 'mirage':
+            continue  # The finalized Mirage model has its own atlas.
         if name == 'spore':
             continue  # Fungus Arms uses its own finalized atlas.
         if name == 'forge':
