@@ -1010,6 +1010,19 @@ public final class DexGameTests {
         float b = com.draxer.dexrider.item.DexWeaponItem.morph(booker, start + com.draxer.dexrider.item.DexWeaponItem.MORPH_TICKS);
         if (a != 0.0F || Math.abs(mid - 0.5F) > 0.01F || b != 1.0F) { fail(h, t, "avance raro: " + a + " / " + mid + " / " + b); return; }
         if (!p.getCooldowns().isOnCooldown(booker)) { fail(h, t, "sin espera durante la transformacion"); return; }
+        // Inventory synchronization hashes the persistent representation, not the network codec.
+        // Regression: changing Booker mode used to crash container clicks in Minecraft 26.2.
+        var hashOps = net.minecraft.resources.RegistryOps.create(net.minecraft.util.HashOps.CRC32C_INSTANCE, h.getLevel().registryAccess());
+        net.minecraft.network.HashedPatchMap.HashGenerator hasher = component -> component.encodeValue(hashOps).getOrThrow().asInt();
+        var remote = net.minecraft.network.HashedStack.create(booker, hasher);
+        if (!remote.matches(booker.copy(), hasher)) { fail(h, t, "el inventario no reconoce la copia del Booker"); return; }
+        booker.set(DexComponents.BOOKER_SHIFT.get(), start + 1);
+        if (remote.matches(booker, hasher)) { fail(h, t, "el hash ignora el cambio del Booker"); return; }
+        booker.set(DexComponents.BOOKER_SHIFT.get(), start);
+        var encoded = DexComponents.BOOKER_SHIFT.get().codec().encodeStart(com.mojang.serialization.JsonOps.INSTANCE, 1253591L).getOrThrow();
+        long decoded = DexComponents.BOOKER_SHIFT.get().codec().parse(com.mojang.serialization.JsonOps.INSTANCE, encoded).getOrThrow();
+        if (decoded != 1253591L) { fail(h, t, "se pierde el instante de la transformacion al guardar"); return; }
+        log(t, "ok: hash de inventario, cambios y persistencia del instante del crash");
         log(t, "ok: espada -> pistola en " + com.draxer.dexrider.item.DexWeaponItem.MORPH_TICKS + " ticks");
         h.succeed();
     }

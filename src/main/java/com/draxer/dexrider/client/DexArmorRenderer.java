@@ -78,6 +78,10 @@ public final class DexArmorRenderer<R extends HumanoidRenderState & GeoRenderSta
         withRenderLayer(new TintLayer<>(this,
                 s -> !custom(s) ? null : tex(s, eyesLayer(s), false),
                 (s, seg) -> scanColor(s, look(s).color(SuitLook.EYES)), s -> look(s).on("glow_eyes") || scanning(s)));
+        // La lente roja y los indicadores del Driver conservan su color al personalizar el traje.
+        withRenderLayer(new TintLayer<>(this,
+                s -> isDex(s) ? tex(s, "driver_glow", false) : null,
+                s -> 0xFFFFFF, true));
         // Ojos y luces de los demas Riders, a plena luz
         withRenderLayer(new TintLayer<>(this,
                 state -> custom(state) ? null : RiderArmorModel.glowTexture(state),

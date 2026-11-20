@@ -93,7 +93,7 @@ Kamen Rider Dex: Driver, cartas, transformacion y Final Attack Ride.
     modId="curios"
     type="required"
     reason="Ranura de cinturon para el Dex Driver"
-    versionRange="[15,)"
+    versionRange="[16,)"
     ordering="AFTER"
     side="BOTH"
 

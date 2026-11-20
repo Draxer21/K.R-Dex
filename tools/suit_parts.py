@@ -270,4 +270,8 @@ if __name__ == '__main__':
     add_bones('dex_upgrade', upgrade_spec())
     add_bones('dex_armor', FORMS)
     visor()
+    # El casco basado en la referencia usa una segunda zona de UV para las lentes.
+    # Mantenerla al regenerar las variantes del visor clasico.
+    from dex_reference_model import refresh_visor_tiles
+    refresh_visor_tiles()
     print('ok')
