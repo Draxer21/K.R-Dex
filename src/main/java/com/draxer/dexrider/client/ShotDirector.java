@@ -602,14 +602,9 @@ public final class ShotDirector {
         return a;
     }
 
-    /** 26.2: el "ocultar interfaz" vive en Hud y es privado; para las fotos se cambia por reflexion. */
+    /** Cambia la visibilidad para las capturas usando la API publica de 26.2. */
     private static void hudHidden(boolean hidden) {
-        try {
-            var f = net.minecraft.client.gui.Hud.class.getDeclaredField("isHidden");
-            f.setAccessible(true);
-            f.setBoolean(Minecraft.getInstance().gui.hud, hidden);
-        } catch (ReflectiveOperationException | RuntimeException e) {
-            DexRider.LOGGER.warn("SHOTS: no se pudo cambiar la interfaz: {}", e.toString());
-        }
+        var hud = Minecraft.getInstance().gui.hud;
+        if (hud.isHidden() != hidden) hud.toggle();
     }
 }

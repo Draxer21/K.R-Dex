@@ -39,7 +39,7 @@ public final class RiderHud {
     private static void draw(GuiGraphicsExtractor g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         HudSyncPayload s = HudState.last;
-        if (mc.player == null || !s.active() || !DexConfig.hud()) return;
+        if (mc.player == null || !s.active() || !DexConfig.hud() || mc.gui.hud.isHidden()) return;
         if (VisorSettings.get().mode != VisorSettings.Mode.CLASSIC) return;   // lo dibuja el visor
         if (System.currentTimeMillis() - HudState.receivedAt > 3000) return;   // datos viejos: no mostrar
         Font font = mc.font;
@@ -131,7 +131,7 @@ public final class RiderHud {
     private static void drawTarget(GuiGraphicsExtractor g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         var s = com.draxer.dexrider.network.TargetSyncPayload.last;
-        if (mc.player == null || mc.level == null || !s.active() || !DexConfig.hud() || !DexConfig.targetRead()) return;
+        if (mc.player == null || mc.level == null || !s.active() || !DexConfig.hud() || !DexConfig.targetRead() || mc.gui.hud.isHidden()) return;
         if (VisorSettings.get().mode != VisorSettings.Mode.CLASSIC) return;   // lo dibuja el visor
         if (System.currentTimeMillis() - com.draxer.dexrider.network.TargetSyncPayload.receivedAt > 3000) return;
         var entity = mc.level.getEntity(s.entityId());
@@ -176,7 +176,7 @@ public final class RiderHud {
     private static void drawCombat(GuiGraphicsExtractor g, DeltaTracker delta) {
         Minecraft mc = Minecraft.getInstance();
         var s = com.draxer.dexrider.network.CombatSyncPayload.last;
-        if (mc.player == null || s.stamina() < 0 || !DexConfig.hud()) return;
+        if (mc.player == null || s.stamina() < 0 || !DexConfig.hud() || mc.gui.hud.isHidden()) return;
         if (System.currentTimeMillis() - com.draxer.dexrider.network.CombatSyncPayload.receivedAt > 4000) return;
         Font font = mc.font;
         int cx = mc.getWindow().getGuiScaledWidth() / 2, cy = mc.getWindow().getGuiScaledHeight() / 2;

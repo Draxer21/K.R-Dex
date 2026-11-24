@@ -29,12 +29,12 @@ public final class SuitLooks {
     private static final Map<String, Integer> BASE_COLORS = Map.ofEntries(
             Map.entry(SuitLook.HELMET, 0xCD1C28), Map.entry(SuitLook.CHEST, 0xCD1C28), Map.entry(SuitLook.ARMS, 0xCD1C28),
             Map.entry(SuitLook.LEGS, 0xCD1C28), Map.entry(SuitLook.BOOTS, 0xCD1C28),
-            Map.entry(SuitLook.ACCENT, 0xE8B630), Map.entry(SuitLook.EYES, 0x28D250),
+            Map.entry(SuitLook.ACCENT, 0xE8B630), Map.entry(SuitLook.EYES, 0xDE23CB),
             Map.entry(SuitLook.SILVER, 0xFFFFFF), Map.entry(SuitLook.INNER, 0x51545D), Map.entry(SuitLook.SCARF, 0xFFFFFF),
-            Map.entry(SuitLook.CRYSTAL, 0x28D250), Map.entry(SuitLook.VISOR, 0x1C1C24),
+            Map.entry(SuitLook.CRYSTAL, 0xDE23CB), Map.entry(SuitLook.VISOR, 0x1C1C24),
             Map.entry(SuitLook.HALF_RIGHT, FormRide.HALF.suitColor()), Map.entry(SuitLook.HALF_LEFT, FormRide.HALF_FIRE_COLOR));
     private static final Map<String, Integer> UPGRADE_COLORS = Map.of(
-            SuitLook.SILVER, 0xF4F4FA, SuitLook.INNER, 0x504F5E);
+            SuitLook.SILVER, 0xF4F4FA, SuitLook.INNER, 0x504F5E, SuitLook.EYES, 0x28D250);
 
     /** Estado a dibujar: la Upgrade Form manda; luego la Emotion; luego la Form Ride. */
     public static String stateFor(boolean upgrade, String emotion, FormRide form) {
@@ -55,6 +55,12 @@ public final class SuitLooks {
         Map<String, Integer> colors = new HashMap<>(BASE_COLORS);
         Map<String, String> parts = new HashMap<>();
         SuitLook.PART_VALUES.forEach((k, v) -> parts.put(k, v.get(0)));
+        // Referencia del autor: lentes continuas magenta y cuatro cuernos curvos.
+        // Los valores explicitos del perfil (incluidos los migrados) se aplican despues.
+        if (!SuitProfile.UPGRADE.equals(state)) {
+            parts.put("horns", "curved");
+            parts.put("stripes", "off");
+        }
         SuitLook base = profile.look(SuitProfile.BASE);
         boolean crystalSet;
 

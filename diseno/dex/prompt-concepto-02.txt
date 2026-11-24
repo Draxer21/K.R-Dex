@@ -1,0 +1,25 @@
+Use case: stylized-concept.
+Asset type: reference-based design sheet for an existing Minecraft Java GeckoLib mod.
+Primary request: adapt the full suit and transformation belt of the user-supplied Kamen Rider Dex image into a buildable Minecraft / Blockbench character design. The attached image is the PRIMARY and controlling visual reference for this revision. This is a concept sheet, not a screenshot or actual exported model.
+Input image 1 role: authoritative visual reference for the helmet, chest pattern, colors, armor and Driver. Translate this exact character to cuboid Minecraft geometry, keeping the most recognizable shapes. Do not substitute an older design.
+
+Layout: landscape clean light-gray production sheet. Left two-thirds: full-body front, side and back views of the same character in a neutral stance. Right third: large helmet close-up above a large three-quarter detail of the Driver belt. Consistent design and proportions across all views. No character or horn cropped; enough spacing for the horn tips. No scene, no portal, no ruined city, no weapon held. Keep a compact rectangular card book case on the character's left hip as in reference.
+Style: polished Blockbench-style game model, large cuboid head, straight box limbs, simple beveled/stepped armor shells, rotated and tapered-looking stacks of cubes, crisp pixel textures. Roughly Minecraft humanoid proportions, not realistic movie-suit proportions. Detailed enough to convey the source armor but clearly practical for GeckoLib models.
+
+HELMET: source image red helmet with black VERTICAL ridges/stripes running over crown and down central face. Two very large MAGENTA / FUCHSIA insect-eye lenses, elongated upright tapered shapes angled outward, thick dark borders and subtle dotted/faceted texture. These are two broad magenta panels with NO horizontal grille across their surfaces. Separate the eyes with red-and-black central facial ridges. FOUR golden curved horns, exactly two inner horns rising high near forehead and two outer horns sweeping outward and upward. Approximate curves with a few rotated cuboid segments; avoid massive block stairs. Silver lower jaw rim and a light silver collar just as source.
+TORSO: reproduce the black pectoral panel with the source's distinctive broad GOLD DIAGONAL BANDS and crossing off-center vertical branch. Trace the asymmetric gold chest design from the reference, rather than replacing it with a generic symmetrical X. Red side torso plates, segmented black abdomen with six angular panels, narrow gold vertical edges down the sides.
+SHOULDERS: red caps, each crossed by two separate gold bands with dark gap between them, following the source. Reduce volume only enough for Minecraft arm movement.
+ARMS: black undersuit visible at upper-arm and elbow joints, red outer upper-arm plates, gold forearm guards with flared gold cuff edges, black gloves with gold back-of-hand plate.
+LOWER BODY: red outer hip/thigh plates edged in gold, black inner legs, gold frontal thigh guards as shown in source. The lower legs and the back are not fully visible in the reference: propose a restrained continuation with red side shin plates, gold kneecaps and gold shin faces broken by a dark center groove, black boot soles. Back proposal: red shoulderblade panels, black center, gold diagonal bands continuing the front motif. No cape, wings, spikes, backpack or new gadgets.
+DRIVER: essential feature is the large ROUND RED CENTRAL LENS encircled by a SILVER RING in a red round/octagonal housing. Model its roundness with an octagonal ring and stepped box segments appropriate for Minecraft. Black horizontal sideplates attached to black belt, small magenta/silver emblem dots along the sides, subtle top card slot. Match source silhouette and proportions. Clearly circular red lens, not a square jewel. Same Driver design on the worn belt and enlarged detail. Keep the belt visually separate from the gold armor.
+Palette: deep red armor, charcoal-black undersuit, warm metallic gold trims, vivid MAGENTA eyes, silver collar and lens ring, RED Driver core. Restrained localized glow.
+
+Exact short Spanish text only:
+"DEX · PROPUESTA 02"
+"BASADO EN TU REFERENCIA"
+"FRENTE"
+"PERFIL"
+"ESPALDA PROPUESTA"
+"DEX DRIVER"
+"CONCEPTO PARA MINECRAFT"
+No extraneous annotations, franchise logos or watermark. No green eye color anywhere. Highest priority: magenta solid lenses, four curved gold horns, diagonal source chest pattern, circular red Driver with silver ring.
