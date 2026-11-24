@@ -11,7 +11,7 @@ public final class Voices {
     private Voices() {}
 
     /** Ticks que dura "Kamen Ride" antes de decir el nombre. */
-    private static final int AFTER_KAMEN_RIDE = 24;
+    private static final int AFTER_KAMEN_RIDE = 39;
 
     public static void say(ServerLevel level, ServerPlayer p, DeferredHolder<SoundEvent, SoundEvent> voice) {
         float vol = com.draxer.dexrider.config.DexConfig.voiceVolume();
